@@ -1,0 +1,254 @@
+{
+ "version": 1,
+ "meta": {
+  "title": "fig-dsp",
+  "description": "Digital compensation pipeline: ADCs, chain select, per-tap calibration, range-switch correction, timestamp shift by group delay, then power, charge and averaging"
+ },
+ "page": {
+  "width": 962,
+  "height": 170,
+  "auto": false,
+  "margin": 0,
+  "grid": 5,
+  "junctions": false
+ },
+ "theme": "instrix",
+ "elements": [
+  {
+   "type": "comp",
+   "sym": "block",
+   "x": 16,
+   "y": 40,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "w": 140,
+    "h": 70,
+    "title": "3 current ADCs",
+    "lines": "2 MS/s, same edge\nas the voltage ADC",
+    "accent": false,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e1"
+  },
+  {
+   "type": "comp",
+   "sym": "block",
+   "x": 174,
+   "y": 40,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "w": 140,
+    "h": 70,
+    "title": "Chain select",
+    "lines": "owner chain, or\na bridge chain",
+    "accent": false,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e2"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     156,
+     75
+    ],
+    [
+     168,
+     75
+    ]
+   ],
+   "style": "",
+   "id": "e3"
+  },
+  {
+   "type": "raw",
+   "svg": "<polygon class=\"arrow\" points=\"168,71.0 168,79.0 174,75.0\"/>",
+   "x": 0,
+   "y": 0,
+   "id": "e4"
+  },
+  {
+   "type": "comp",
+   "sym": "block",
+   "x": 332,
+   "y": 40,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "w": 140,
+    "h": 70,
+    "title": "Calibrate",
+    "lines": "offset and gain\nper tap (2 points)",
+    "accent": false,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e5"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     314,
+     75
+    ],
+    [
+     326,
+     75
+    ]
+   ],
+   "style": "",
+   "id": "e6"
+  },
+  {
+   "type": "raw",
+   "svg": "<polygon class=\"arrow\" points=\"326,71.0 326,79.0 332,75.0\"/>",
+   "x": 0,
+   "y": 0,
+   "id": "e7"
+  },
+  {
+   "type": "comp",
+   "sym": "block",
+   "x": 490,
+   "y": 40,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "w": 140,
+    "h": 70,
+    "title": "Switch correction",
+    "lines": "÷ R_eff(t),\n− a(n) − b(n)·Î",
+    "accent": false,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e8"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     472,
+     75
+    ],
+    [
+     484,
+     75
+    ]
+   ],
+   "style": "",
+   "id": "e9"
+  },
+  {
+   "type": "raw",
+   "svg": "<polygon class=\"arrow\" points=\"484,71.0 484,79.0 490,75.0\"/>",
+   "x": 0,
+   "y": 0,
+   "id": "e10"
+  },
+  {
+   "type": "comp",
+   "sym": "block",
+   "x": 648,
+   "y": 40,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "w": 140,
+    "h": 70,
+    "title": "Timestamp",
+    "lines": "− group delay\nof the chain",
+    "accent": false,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e11"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     630,
+     75
+    ],
+    [
+     642,
+     75
+    ]
+   ],
+   "style": "",
+   "id": "e12"
+  },
+  {
+   "type": "raw",
+   "svg": "<polygon class=\"arrow\" points=\"642,71.0 642,79.0 648,75.0\"/>",
+   "x": 0,
+   "y": 0,
+   "id": "e13"
+  },
+  {
+   "type": "comp",
+   "sym": "block",
+   "x": 806,
+   "y": 40,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "w": 140,
+    "h": 70,
+    "title": "Use",
+    "lines": "I × V, charge,\naverage / decimate",
+    "accent": false,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e14"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     788,
+     75
+    ],
+    [
+     800,
+     75
+    ]
+   ],
+   "style": "",
+   "id": "e15"
+  },
+  {
+   "type": "raw",
+   "svg": "<polygon class=\"arrow\" points=\"800,71.0 800,79.0 806,75.0\"/>",
+   "x": 0,
+   "y": 0,
+   "id": "e16"
+  },
+  {
+   "type": "text",
+   "x": 16,
+   "y": 140,
+   "text": "Per-unit tables: six offsets and gains, the chains' step response s(t), and two correction vectors",
+   "cls": "note",
+   "anchor": "start",
+   "id": "e17"
+  },
+  {
+   "type": "text",
+   "x": 16,
+   "y": 158,
+   "text": "per switch type (~30 samples each). The range comparators and tap enables run alongside.",
+   "cls": "note",
+   "anchor": "start",
+   "id": "e18"
+  }
+ ]
+}

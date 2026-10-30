@@ -1,0 +1,386 @@
+{
+ "version": 1,
+ "meta": {
+  "title": "fig-guard-mechanism",
+  "description": "Equivalent circuit of the rejected low-resistance guard: the guard follower drives the isolated node through R_s into C_g, so the node lags I minus and current flows through the coupling capacitance C."
+ },
+ "page": {
+  "width": 780,
+  "height": 340,
+  "auto": false,
+  "margin": 0,
+  "grid": 5,
+  "junctions": false
+ },
+ "theme": "instrix",
+ "elements": [
+  {
+   "type": "wire",
+   "points": [
+    [
+     60,
+     100
+    ],
+    [
+     300,
+     100
+    ]
+   ],
+   "style": "",
+   "id": "e1"
+  },
+  {
+   "type": "text",
+   "x": 66,
+   "y": 90,
+   "text": "I−",
+   "cls": "node",
+   "anchor": "start",
+   "id": "e2"
+  },
+  {
+   "type": "raw",
+   "svg": "<polygon class=\"arrow\" points=\"60,96 60,104 70,100\"/>",
+   "x": 0,
+   "y": 0,
+   "id": "e3"
+  },
+  {
+   "type": "text",
+   "x": 40,
+   "y": 104,
+   "text": "I_DUT",
+   "cls": "valsm",
+   "anchor": "end",
+   "id": "e4"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 110,
+   "y": 100,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e5"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 110,
+   "y": 150,
+   "rot": 270,
+   "mirror": true,
+   "props": {
+    "length": 100,
+    "body": 40,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e6"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 110,
+   "y": 200,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e7"
+  },
+  {
+   "type": "text",
+   "x": 124,
+   "y": 146,
+   "text": "R_tap",
+   "cls": "ref",
+   "anchor": "start",
+   "id": "e8"
+  },
+  {
+   "type": "text",
+   "x": 124,
+   "y": 160,
+   "text": "10 kΩ / 100 kΩ",
+   "cls": "valsm",
+   "anchor": "start",
+   "id": "e9"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 190,
+   "y": 100,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e10"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     190,
+     100
+    ],
+    [
+     190,
+     280
+    ],
+    [
+     284,
+     280
+    ]
+   ],
+   "style": "",
+   "id": "e11"
+  },
+  {
+   "type": "comp",
+   "sym": "opamp",
+   "x": 320,
+   "y": 265,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "top": "-",
+    "ref": ""
+   },
+   "style": "",
+   "id": "e12"
+  },
+  {
+   "type": "text",
+   "x": 320,
+   "y": 320,
+   "text": "guard (OPA2156), not fitted",
+   "cls": "ref",
+   "anchor": "middle",
+   "id": "e13"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     356,
+     265
+    ],
+    [
+     380,
+     265
+    ]
+   ],
+   "style": "",
+   "id": "e14"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 380,
+   "y": 265,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e15"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     380,
+     265
+    ],
+    [
+     380,
+     215
+    ],
+    [
+     270,
+     215
+    ],
+    [
+     270,
+     250
+    ],
+    [
+     284,
+     250
+    ]
+   ],
+   "style": "",
+   "id": "e16"
+  },
+  {
+   "type": "comp",
+   "sym": "capacitor",
+   "x": 370,
+   "y": 100,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "length": 140,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e17"
+  },
+  {
+   "type": "text",
+   "x": 370,
+   "y": 78,
+   "text": "C",
+   "cls": "ref",
+   "anchor": "middle",
+   "id": "e18"
+  },
+  {
+   "type": "text",
+   "x": 370,
+   "y": 128,
+   "text": "Qi / Qi2 C_oss",
+   "cls": "valsm",
+   "anchor": "middle",
+   "id": "e19"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 520,
+   "y": 100,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e20"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     440,
+     100
+    ],
+    [
+     640,
+     100
+    ]
+   ],
+   "style": "",
+   "id": "e21"
+  },
+  {
+   "type": "text",
+   "x": 526,
+   "y": 90,
+   "text": "ihi / ilo",
+   "cls": "node",
+   "anchor": "start",
+   "id": "e22"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     380,
+     265
+    ],
+    [
+     520,
+     265
+    ]
+   ],
+   "style": "",
+   "id": "e23"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 520,
+   "y": 182.5,
+   "rot": 90,
+   "mirror": true,
+   "props": {
+    "length": 165,
+    "body": 44,
+    "ref": ""
+   },
+   "style": "acc",
+   "id": "e24"
+  },
+  {
+   "type": "text",
+   "x": 534,
+   "y": 178,
+   "text": "R_s",
+   "cls": "accl",
+   "anchor": "start",
+   "id": "e25"
+  },
+  {
+   "type": "text",
+   "x": 534,
+   "y": 192,
+   "text": "Rgo + Qg R_on",
+   "cls": "valsm",
+   "anchor": "start",
+   "id": "e26"
+  },
+  {
+   "type": "comp",
+   "sym": "capacitor",
+   "x": 640,
+   "y": 150,
+   "rot": 270,
+   "mirror": true,
+   "props": {
+    "length": 100,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e27"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 640,
+   "y": 200,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e28"
+  },
+  {
+   "type": "text",
+   "x": 656,
+   "y": 146,
+   "text": "C_g ≈ 9.6 nF",
+   "cls": "ref",
+   "anchor": "start",
+   "id": "e29"
+  },
+  {
+   "type": "text",
+   "x": 656,
+   "y": 160,
+   "text": "mostly off tap-FET C_GS",
+   "cls": "valsm",
+   "anchor": "start",
+   "id": "e30"
+  },
+  {
+   "type": "text",
+   "x": 656,
+   "y": 174,
+   "text": "to their driver rails",
+   "cls": "valsm",
+   "anchor": "start",
+   "id": "e31"
+  }
+ ]
+}

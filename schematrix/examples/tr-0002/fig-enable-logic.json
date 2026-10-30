@@ -1,0 +1,1051 @@
+{
+ "version": 1,
+ "meta": {
+  "title": "fig-enable-logic",
+  "description": "EN_ISO and EN_B derived on the island from EN1 to EN3: a diode-OR of the three enables charges an RC node through a small resistor and discharges it through a large one, and the UCC27525 input thresholds turn each node into a delayed edge: EN_ISO through the non-inverting channel to Qi, EN_B through the inverting channel to Qb."
+ },
+ "page": {
+  "width": 1180,
+  "height": 500,
+  "auto": false,
+  "margin": 0,
+  "grid": 5,
+  "junctions": false
+ },
+ "theme": "instrix",
+ "elements": [
+  {
+   "type": "text",
+   "x": 40,
+   "y": 32,
+   "text": "EN_ISO: Qi on ~0.14 µs after any of EN1–3, off ~0.55 µs after all low",
+   "cls": "accl",
+   "anchor": "start",
+   "id": "e1"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 110,
+   "y": 60,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "EN1",
+    "side": "left"
+   },
+   "style": "",
+   "id": "e2"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     110,
+     60
+    ],
+    [
+     140,
+     60
+    ]
+   ],
+   "style": "",
+   "id": "e3"
+  },
+  {
+   "type": "raw",
+   "svg": "<polygon class=\"amp\" points=\"140,53 140,67 153,60\"/>",
+   "x": 0,
+   "y": 0,
+   "id": "e4"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     153,
+     53
+    ],
+    [
+     153,
+     67
+    ]
+   ],
+   "style": "plate",
+   "id": "e5"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     153,
+     60
+    ],
+    [
+     180,
+     60
+    ]
+   ],
+   "style": "",
+   "id": "e6"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 110,
+   "y": 90,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "EN2",
+    "side": "left"
+   },
+   "style": "",
+   "id": "e7"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     110,
+     90
+    ],
+    [
+     140,
+     90
+    ]
+   ],
+   "style": "",
+   "id": "e8"
+  },
+  {
+   "type": "raw",
+   "svg": "<polygon class=\"amp\" points=\"140,83 140,97 153,90\"/>",
+   "x": 0,
+   "y": 0,
+   "id": "e9"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     153,
+     83
+    ],
+    [
+     153,
+     97
+    ]
+   ],
+   "style": "plate",
+   "id": "e10"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     153,
+     90
+    ],
+    [
+     180,
+     90
+    ]
+   ],
+   "style": "",
+   "id": "e11"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 110,
+   "y": 120,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "EN3",
+    "side": "left"
+   },
+   "style": "",
+   "id": "e12"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     110,
+     120
+    ],
+    [
+     140,
+     120
+    ]
+   ],
+   "style": "",
+   "id": "e13"
+  },
+  {
+   "type": "raw",
+   "svg": "<polygon class=\"amp\" points=\"140,113 140,127 153,120\"/>",
+   "x": 0,
+   "y": 0,
+   "id": "e14"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     153,
+     113
+    ],
+    [
+     153,
+     127
+    ]
+   ],
+   "style": "plate",
+   "id": "e15"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     153,
+     120
+    ],
+    [
+     180,
+     120
+    ]
+   ],
+   "style": "",
+   "id": "e16"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     180,
+     60
+    ],
+    [
+     180,
+     120
+    ]
+   ],
+   "style": "",
+   "id": "e17"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 180,
+   "y": 90,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e18"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 240,
+   "y": 90,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "length": 120,
+    "body": 36,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e19"
+  },
+  {
+   "type": "text",
+   "x": 240,
+   "y": 76,
+   "text": "680 Ω",
+   "cls": "val",
+   "anchor": "middle",
+   "id": "e20"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     300,
+     90
+    ],
+    [
+     500,
+     90
+    ]
+   ],
+   "style": "",
+   "id": "e21"
+  },
+  {
+   "type": "text",
+   "x": 346,
+   "y": 80,
+   "text": "A",
+   "cls": "node",
+   "anchor": "start",
+   "id": "e22"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 340,
+   "y": 135,
+   "rot": 270,
+   "mirror": true,
+   "props": {
+    "length": 90,
+    "body": 36,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e23"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 340,
+   "y": 180,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e24"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 340,
+   "y": 90,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e25"
+  },
+  {
+   "type": "text",
+   "x": 352,
+   "y": 140,
+   "text": "6.8 kΩ",
+   "cls": "val",
+   "anchor": "start",
+   "id": "e26"
+  },
+  {
+   "type": "comp",
+   "sym": "capacitor",
+   "x": 450,
+   "y": 135,
+   "rot": 270,
+   "mirror": true,
+   "props": {
+    "length": 90,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e27"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 450,
+   "y": 180,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e28"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 450,
+   "y": 90,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e29"
+  },
+  {
+   "type": "text",
+   "x": 468,
+   "y": 140,
+   "text": "100 pF C0G",
+   "cls": "val",
+   "anchor": "start",
+   "id": "e30"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     500,
+     90
+    ],
+    [
+     520,
+     90
+    ]
+   ],
+   "style": "",
+   "id": "e31"
+  },
+  {
+   "type": "raw",
+   "svg": "<polygon class=\"amp\" points=\"520,74 520,106 552,90\"/>",
+   "x": 0,
+   "y": 0,
+   "id": "e32"
+  },
+  {
+   "type": "text",
+   "x": 534,
+   "y": 60,
+   "text": "UCC27525 non-inverting",
+   "cls": "valsm",
+   "anchor": "middle",
+   "id": "e33"
+  },
+  {
+   "type": "text",
+   "x": 534,
+   "y": 122,
+   "text": "GND = I+, VDD +5 V",
+   "cls": "valsm",
+   "anchor": "middle",
+   "id": "e34"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 597,
+   "y": 90,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "length": 90,
+    "body": 30,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e35"
+  },
+  {
+   "type": "text",
+   "x": 597,
+   "y": 76,
+   "text": "330 Ω",
+   "cls": "val",
+   "anchor": "middle",
+   "id": "e36"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 642,
+   "y": 90,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "Qi gate",
+    "side": "right"
+   },
+   "style": "",
+   "id": "e37"
+  },
+  {
+   "type": "text",
+   "x": 612,
+   "y": 122,
+   "text": "EN_ISO",
+   "cls": "accl",
+   "anchor": "start",
+   "id": "e38"
+  },
+  {
+   "type": "text",
+   "x": 900,
+   "y": 64,
+   "text": "rise: A charges via 680 Ω ‖ 6.8 kΩ",
+   "cls": "note",
+   "anchor": "start",
+   "id": "e39"
+  },
+  {
+   "type": "text",
+   "x": 900,
+   "y": 82,
+   "text": "  τ ≈ 62 ns → ~0.14 µs to 2.1 V",
+   "cls": "note",
+   "anchor": "start",
+   "id": "e40"
+  },
+  {
+   "type": "text",
+   "x": 900,
+   "y": 100,
+   "text": "fall: A discharges via 6.8 kΩ",
+   "cls": "note",
+   "anchor": "start",
+   "id": "e41"
+  },
+  {
+   "type": "text",
+   "x": 900,
+   "y": 118,
+   "text": "  τ = 0.68 µs → ~0.55 µs to 1.2 V",
+   "cls": "note",
+   "anchor": "start",
+   "id": "e42"
+  },
+  {
+   "type": "text",
+   "x": 40,
+   "y": 242,
+   "text": "EN_B: Qb off ~50 ns after any of EN1–3, on ~3.5 µs after all low",
+   "cls": "accl",
+   "anchor": "start",
+   "id": "e43"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 110,
+   "y": 270,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "EN1",
+    "side": "left"
+   },
+   "style": "",
+   "id": "e44"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     110,
+     270
+    ],
+    [
+     140,
+     270
+    ]
+   ],
+   "style": "",
+   "id": "e45"
+  },
+  {
+   "type": "raw",
+   "svg": "<polygon class=\"amp\" points=\"140,263 140,277 153,270\"/>",
+   "x": 0,
+   "y": 0,
+   "id": "e46"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     153,
+     263
+    ],
+    [
+     153,
+     277
+    ]
+   ],
+   "style": "plate",
+   "id": "e47"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     153,
+     270
+    ],
+    [
+     180,
+     270
+    ]
+   ],
+   "style": "",
+   "id": "e48"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 110,
+   "y": 300,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "EN2",
+    "side": "left"
+   },
+   "style": "",
+   "id": "e49"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     110,
+     300
+    ],
+    [
+     140,
+     300
+    ]
+   ],
+   "style": "",
+   "id": "e50"
+  },
+  {
+   "type": "raw",
+   "svg": "<polygon class=\"amp\" points=\"140,293 140,307 153,300\"/>",
+   "x": 0,
+   "y": 0,
+   "id": "e51"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     153,
+     293
+    ],
+    [
+     153,
+     307
+    ]
+   ],
+   "style": "plate",
+   "id": "e52"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     153,
+     300
+    ],
+    [
+     180,
+     300
+    ]
+   ],
+   "style": "",
+   "id": "e53"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 110,
+   "y": 330,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "EN3",
+    "side": "left"
+   },
+   "style": "",
+   "id": "e54"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     110,
+     330
+    ],
+    [
+     140,
+     330
+    ]
+   ],
+   "style": "",
+   "id": "e55"
+  },
+  {
+   "type": "raw",
+   "svg": "<polygon class=\"amp\" points=\"140,323 140,337 153,330\"/>",
+   "x": 0,
+   "y": 0,
+   "id": "e56"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     153,
+     323
+    ],
+    [
+     153,
+     337
+    ]
+   ],
+   "style": "plate",
+   "id": "e57"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     153,
+     330
+    ],
+    [
+     180,
+     330
+    ]
+   ],
+   "style": "",
+   "id": "e58"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     180,
+     270
+    ],
+    [
+     180,
+     330
+    ]
+   ],
+   "style": "",
+   "id": "e59"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 180,
+   "y": 300,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e60"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 240,
+   "y": 300,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "length": 120,
+    "body": 36,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e61"
+  },
+  {
+   "type": "text",
+   "x": 240,
+   "y": 286,
+   "text": "100 Ω",
+   "cls": "val",
+   "anchor": "middle",
+   "id": "e62"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     300,
+     300
+    ],
+    [
+     500,
+     300
+    ]
+   ],
+   "style": "",
+   "id": "e63"
+  },
+  {
+   "type": "text",
+   "x": 346,
+   "y": 290,
+   "text": "B",
+   "cls": "node",
+   "anchor": "start",
+   "id": "e64"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 340,
+   "y": 345,
+   "rot": 270,
+   "mirror": true,
+   "props": {
+    "length": 90,
+    "body": 36,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e65"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 340,
+   "y": 390,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e66"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 340,
+   "y": 300,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e67"
+  },
+  {
+   "type": "text",
+   "x": 352,
+   "y": 350,
+   "text": "15 kΩ",
+   "cls": "val",
+   "anchor": "start",
+   "id": "e68"
+  },
+  {
+   "type": "comp",
+   "sym": "capacitor",
+   "x": 450,
+   "y": 345,
+   "rot": 270,
+   "mirror": true,
+   "props": {
+    "length": 90,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e69"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 450,
+   "y": 390,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e70"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 450,
+   "y": 300,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e71"
+  },
+  {
+   "type": "text",
+   "x": 468,
+   "y": 350,
+   "text": "270 pF C0G",
+   "cls": "val",
+   "anchor": "start",
+   "id": "e72"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     500,
+     300
+    ],
+    [
+     520,
+     300
+    ]
+   ],
+   "style": "",
+   "id": "e73"
+  },
+  {
+   "type": "raw",
+   "svg": "<polygon class=\"amp\" points=\"520,284 520,316 552,300\"/>",
+   "x": 0,
+   "y": 0,
+   "id": "e74"
+  },
+  {
+   "type": "raw",
+   "svg": "<circle class=\"pad\" cx=\"556\" cy=\"300\" r=\"4\"/>",
+   "x": 0,
+   "y": 0,
+   "id": "e75"
+  },
+  {
+   "type": "text",
+   "x": 534,
+   "y": 270,
+   "text": "UCC27525 inverting",
+   "cls": "valsm",
+   "anchor": "middle",
+   "id": "e76"
+  },
+  {
+   "type": "text",
+   "x": 534,
+   "y": 332,
+   "text": "GND = I+, VDD +5 V",
+   "cls": "valsm",
+   "anchor": "middle",
+   "id": "e77"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 605,
+   "y": 300,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "length": 90,
+    "body": 30,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e78"
+  },
+  {
+   "type": "text",
+   "x": 605,
+   "y": 286,
+   "text": "22 Ω",
+   "cls": "val",
+   "anchor": "middle",
+   "id": "e79"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 650,
+   "y": 300,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "Qb gate",
+    "side": "right"
+   },
+   "style": "",
+   "id": "e80"
+  },
+  {
+   "type": "text",
+   "x": 620,
+   "y": 332,
+   "text": "EN_B",
+   "cls": "accl",
+   "anchor": "start",
+   "id": "e81"
+  },
+  {
+   "type": "text",
+   "x": 900,
+   "y": 274,
+   "text": "rise: B charges via 100 Ω",
+   "cls": "note",
+   "anchor": "start",
+   "id": "e82"
+  },
+  {
+   "type": "text",
+   "x": 900,
+   "y": 292,
+   "text": "  τ = 27 ns → Qb off before Qi on",
+   "cls": "note",
+   "anchor": "start",
+   "id": "e83"
+  },
+  {
+   "type": "text",
+   "x": 900,
+   "y": 310,
+   "text": "fall: B discharges via 15 kΩ",
+   "cls": "note",
+   "anchor": "start",
+   "id": "e84"
+  },
+  {
+   "type": "text",
+   "x": 900,
+   "y": 328,
+   "text": "  τ = 4.05 µs → ~3.5 µs to 1.2 V,",
+   "cls": "note",
+   "anchor": "start",
+   "id": "e85"
+  },
+  {
+   "type": "text",
+   "x": 900,
+   "y": 346,
+   "text": "  ~3.0 µs after Qi off (≥ 1.56 µs",
+   "cls": "note",
+   "anchor": "start",
+   "id": "e86"
+  },
+  {
+   "type": "text",
+   "x": 900,
+   "y": 364,
+   "text": "  over all corners)",
+   "cls": "note",
+   "anchor": "start",
+   "id": "e87"
+  },
+  {
+   "type": "text",
+   "x": 40,
+   "y": 466,
+   "text": "EN1–EN3 are the tap enables already on the island (3.3 V logic, referenced to I+). Diodes: Schottky (BAT54-class).",
+   "cls": "note",
+   "anchor": "start",
+   "id": "e88"
+  },
+  {
+   "type": "text",
+   "x": 40,
+   "y": 484,
+   "text": "Thresholds: UCC27525 inputs, VIN_H 2.1 V / VIN_L 1.2 V typical (1.9–2.3 / 1.0–1.4 V limits). Timing holds at every limit; simulated in every deck.",
+   "cls": "note",
+   "anchor": "start",
+   "id": "e89"
+  }
+ ]
+}

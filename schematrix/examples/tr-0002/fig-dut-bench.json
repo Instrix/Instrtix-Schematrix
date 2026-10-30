@@ -1,0 +1,365 @@
+{
+ "version": 1,
+ "meta": {
+  "title": "fig-dut-bench",
+  "description": "DUT test bench: a 3.3 volt supply returns through the ladder; the DUT is a switched load conductance with its decoupling capacitor and ESR between I minus and the supply return"
+ },
+ "page": {
+  "width": 900,
+  "height": 470,
+  "auto": false,
+  "margin": 0,
+  "grid": 5,
+  "junctions": false
+ },
+ "theme": "instrix",
+ "elements": [
+  {
+   "type": "wire",
+   "points": [
+    [
+     80,
+     400
+    ],
+    [
+     80,
+     90
+    ],
+    [
+     140,
+     90
+    ]
+   ],
+   "style": "",
+   "id": "e1"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 80,
+   "y": 400,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e2"
+  },
+  {
+   "type": "text",
+   "x": 80,
+   "y": 436,
+   "text": "I+ = node 0",
+   "cls": "node",
+   "anchor": "middle",
+   "id": "e3"
+  },
+  {
+   "type": "comp",
+   "sym": "block",
+   "x": 140,
+   "y": 60,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "w": 170,
+    "h": 60,
+    "title": "Ladder, switches",
+    "lines": "as the ladder bench",
+    "accent": false,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e4"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     310,
+     90
+    ],
+    [
+     420,
+     90
+    ]
+   ],
+   "style": "",
+   "id": "e5"
+  },
+  {
+   "type": "text",
+   "x": 330,
+   "y": 80,
+   "text": "I− (im)",
+   "cls": "node",
+   "anchor": "start",
+   "id": "e6"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     420,
+     90
+    ],
+    [
+     420,
+     130
+    ]
+   ],
+   "style": "",
+   "id": "e7"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 420,
+   "y": 90,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e8"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     420,
+     90
+    ],
+    [
+     560,
+     90
+    ],
+    [
+     560,
+     130
+    ]
+   ],
+   "style": "",
+   "id": "e9"
+  },
+  {
+   "type": "raw",
+   "svg": "<rect class=\"pad\" x=\"404\" y=\"150\" width=\"32\" height=\"60\" rx=\"2\"/>",
+   "x": 0,
+   "y": 0,
+   "id": "e10"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     420,
+     130
+    ],
+    [
+     420,
+     150
+    ]
+   ],
+   "style": "",
+   "id": "e11"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     420,
+     210
+    ],
+    [
+     420,
+     250
+    ]
+   ],
+   "style": "",
+   "id": "e12"
+  },
+  {
+   "type": "text",
+   "x": 394,
+   "y": 172,
+   "text": "Bload",
+   "cls": "lbl",
+   "anchor": "end",
+   "id": "e13"
+  },
+  {
+   "type": "text",
+   "x": 394,
+   "y": 188,
+   "text": "I = V(im,dsup) × G(t)",
+   "cls": "valsm",
+   "anchor": "end",
+   "id": "e14"
+  },
+  {
+   "type": "text",
+   "x": 394,
+   "y": 202,
+   "text": "G: 1 µA → 50 mA at 3.3 V",
+   "cls": "valsm",
+   "anchor": "end",
+   "id": "e15"
+  },
+  {
+   "type": "comp",
+   "sym": "capacitor",
+   "x": 560,
+   "y": 160,
+   "rot": 270,
+   "mirror": true,
+   "props": {
+    "length": 60,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e16"
+  },
+  {
+   "type": "text",
+   "x": 578,
+   "y": 164,
+   "text": "Cdut 10 µF (1 µF, 100 nF)",
+   "cls": "val",
+   "anchor": "start",
+   "id": "e17"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 560,
+   "y": 220,
+   "rot": 270,
+   "mirror": true,
+   "props": {
+    "length": 60,
+    "body": 30,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e18"
+  },
+  {
+   "type": "text",
+   "x": 578,
+   "y": 224,
+   "text": "ESR 10 mΩ",
+   "cls": "val",
+   "anchor": "start",
+   "id": "e19"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     420,
+     250
+    ],
+    [
+     560,
+     250
+    ]
+   ],
+   "style": "",
+   "id": "e20"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 490,
+   "y": 250,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e21"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     490,
+     250
+    ],
+    [
+     490,
+     280
+    ]
+   ],
+   "style": "",
+   "id": "e22"
+  },
+  {
+   "type": "text",
+   "x": 500,
+   "y": 272,
+   "text": "dsup",
+   "cls": "node",
+   "anchor": "start",
+   "id": "e23"
+  },
+  {
+   "type": "comp",
+   "sym": "vsrc",
+   "x": 490,
+   "y": 330,
+   "rot": 270,
+   "mirror": false,
+   "props": {
+    "length": 100,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e24"
+  },
+  {
+   "type": "text",
+   "x": 514,
+   "y": 328.0,
+   "text": "Vsup 3.3 V",
+   "cls": "lbl",
+   "anchor": "start",
+   "id": "e25"
+  },
+  {
+   "type": "text",
+   "x": 514,
+   "y": 343.0,
+   "text": "dsup at −3.3 V against I+",
+   "cls": "valsm",
+   "anchor": "start",
+   "id": "e26"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     490,
+     380
+    ],
+    [
+     490,
+     400
+    ],
+    [
+     80,
+     400
+    ]
+   ],
+   "style": "",
+   "id": "e27"
+  },
+  {
+   "type": "text",
+   "x": 80,
+   "y": 30,
+   "text": "DUT voltage = V(im) − V(dsup); DUT current = i(Vsup) (load + capacitor); Cdut starts charged (ic = 3.3 V)",
+   "cls": "note",
+   "anchor": "start",
+   "id": "e28"
+  }
+ ]
+}

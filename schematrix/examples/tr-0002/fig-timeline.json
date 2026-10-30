@@ -1,0 +1,522 @@
+{
+ "version": 1,
+ "meta": {
+  "title": "fig-timeline",
+  "description": "Timeline of a ladder deck: start from initial conditions on tap 1, move to the deck tap at 5 microseconds, ramp the DUT current in from 12 to 17, events at 40 and 60 microseconds"
+ },
+ "page": {
+  "width": 920,
+  "height": 200,
+  "auto": false,
+  "margin": 0,
+  "grid": 5,
+  "junctions": false
+ },
+ "theme": "instrix",
+ "elements": [
+  {
+   "type": "wire",
+   "points": [
+    [
+     100,
+     120
+    ],
+    [
+     830,
+     120
+    ]
+   ],
+   "style": "",
+   "id": "e1"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     100,
+     114
+    ],
+    [
+     100,
+     126
+    ]
+   ],
+   "style": "",
+   "id": "e2"
+  },
+  {
+   "type": "text",
+   "x": 100.0,
+   "y": 144,
+   "text": "0 µs",
+   "cls": "lbl",
+   "anchor": "middle",
+   "id": "e3"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     100,
+     114
+    ],
+    [
+     100,
+     103
+    ]
+   ],
+   "style": "para",
+   "id": "e4"
+  },
+  {
+   "type": "text",
+   "x": 100.0,
+   "y": 98,
+   "text": "start (uic), tap 1 on",
+   "cls": "valsm",
+   "anchor": "middle",
+   "id": "e5"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     181.11,
+     114
+    ],
+    [
+     181.11,
+     126
+    ]
+   ],
+   "style": "",
+   "id": "e6"
+  },
+  {
+   "type": "text",
+   "x": 181.11111111111111,
+   "y": 144,
+   "text": "5 µs",
+   "cls": "lbl",
+   "anchor": "middle",
+   "id": "e7"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     181.11,
+     114
+    ],
+    [
+     181.11,
+     81
+    ]
+   ],
+   "style": "para",
+   "id": "e8"
+  },
+  {
+   "type": "text",
+   "x": 181.11111111111111,
+   "y": 76,
+   "text": "T_CFG: the deck's tap",
+   "cls": "valsm",
+   "anchor": "middle",
+   "id": "e9"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     262.22,
+     114
+    ],
+    [
+     262.22,
+     126
+    ]
+   ],
+   "style": "",
+   "id": "e10"
+  },
+  {
+   "type": "text",
+   "x": 262.22222222222223,
+   "y": 144,
+   "text": "10 µs",
+   "cls": "lbl",
+   "anchor": "middle",
+   "id": "e11"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     262.22,
+     114
+    ],
+    [
+     262.22,
+     59
+    ]
+   ],
+   "style": "para",
+   "id": "e12"
+  },
+  {
+   "type": "text",
+   "x": 262.22222222222223,
+   "y": 54,
+   "text": "follower settled",
+   "cls": "valsm",
+   "anchor": "middle",
+   "id": "e13"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     343.33,
+     114
+    ],
+    [
+     343.33,
+     126
+    ]
+   ],
+   "style": "",
+   "id": "e14"
+  },
+  {
+   "type": "text",
+   "x": 343.33333333333337,
+   "y": 144,
+   "text": "12 µs",
+   "cls": "lbl",
+   "anchor": "middle",
+   "id": "e15"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     343.33,
+     114
+    ],
+    [
+     343.33,
+     103
+    ]
+   ],
+   "style": "para",
+   "id": "e16"
+  },
+  {
+   "type": "text",
+   "x": 343.33333333333337,
+   "y": 98,
+   "text": "DUT ramp starts",
+   "cls": "valsm",
+   "anchor": "middle",
+   "id": "e17"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     424.44,
+     114
+    ],
+    [
+     424.44,
+     126
+    ]
+   ],
+   "style": "",
+   "id": "e18"
+  },
+  {
+   "type": "text",
+   "x": 424.44444444444446,
+   "y": 144,
+   "text": "17 µs",
+   "cls": "lbl",
+   "anchor": "middle",
+   "id": "e19"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     424.44,
+     114
+    ],
+    [
+     424.44,
+     81
+    ]
+   ],
+   "style": "para",
+   "id": "e20"
+  },
+  {
+   "type": "text",
+   "x": 424.44444444444446,
+   "y": 76,
+   "text": "DUT at its level",
+   "cls": "valsm",
+   "anchor": "middle",
+   "id": "e21"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     505.56,
+     114
+    ],
+    [
+     505.56,
+     126
+    ]
+   ],
+   "style": "",
+   "id": "e22"
+  },
+  {
+   "type": "text",
+   "x": 505.55555555555554,
+   "y": 144,
+   "text": "31 µs",
+   "cls": "lbl",
+   "anchor": "middle",
+   "id": "e23"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     505.56,
+     114
+    ],
+    [
+     505.56,
+     59
+    ]
+   ],
+   "style": "para",
+   "id": "e24"
+  },
+  {
+   "type": "text",
+   "x": 505.55555555555554,
+   "y": 54,
+   "text": "noise sources on",
+   "cls": "valsm",
+   "anchor": "middle",
+   "id": "e25"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     586.67,
+     114
+    ],
+    [
+     586.67,
+     126
+    ]
+   ],
+   "style": "",
+   "id": "e26"
+  },
+  {
+   "type": "text",
+   "x": 586.6666666666667,
+   "y": 144,
+   "text": "40 µs",
+   "cls": "lbl",
+   "anchor": "middle",
+   "id": "e27"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     586.67,
+     114
+    ],
+    [
+     586.67,
+     103
+    ]
+   ],
+   "style": "para",
+   "id": "e28"
+  },
+  {
+   "type": "text",
+   "x": 586.6666666666667,
+   "y": 98,
+   "text": "TEV: switch, event",
+   "cls": "valsm",
+   "anchor": "middle",
+   "id": "e29"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     667.78,
+     114
+    ],
+    [
+     667.78,
+     126
+    ]
+   ],
+   "style": "",
+   "id": "e30"
+  },
+  {
+   "type": "text",
+   "x": 667.7777777777778,
+   "y": 144,
+   "text": "60 µs",
+   "cls": "lbl",
+   "anchor": "middle",
+   "id": "e31"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     667.78,
+     114
+    ],
+    [
+     667.78,
+     81
+    ]
+   ],
+   "style": "para",
+   "id": "e32"
+  },
+  {
+   "type": "text",
+   "x": 667.7777777777778,
+   "y": 76,
+   "text": "T_STEP / T_UP: step",
+   "cls": "valsm",
+   "anchor": "middle",
+   "id": "e33"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     748.89,
+     114
+    ],
+    [
+     748.89,
+     126
+    ]
+   ],
+   "style": "",
+   "id": "e34"
+  },
+  {
+   "type": "text",
+   "x": 748.8888888888889,
+   "y": 144,
+   "text": "160 µs",
+   "cls": "lbl",
+   "anchor": "middle",
+   "id": "e35"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     748.89,
+     114
+    ],
+    [
+     748.89,
+     59
+    ]
+   ],
+   "style": "para",
+   "id": "e36"
+  },
+  {
+   "type": "text",
+   "x": 748.8888888888889,
+   "y": 54,
+   "text": "T_DN: step back",
+   "cls": "valsm",
+   "anchor": "middle",
+   "id": "e37"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     830,
+     114
+    ],
+    [
+     830,
+     126
+    ]
+   ],
+   "style": "",
+   "id": "e38"
+  },
+  {
+   "type": "text",
+   "x": 830.0,
+   "y": 144,
+   "text": "200 µs",
+   "cls": "lbl",
+   "anchor": "middle",
+   "id": "e39"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     830,
+     114
+    ],
+    [
+     830,
+     103
+    ]
+   ],
+   "style": "para",
+   "id": "e40"
+  },
+  {
+   "type": "text",
+   "x": 830.0,
+   "y": 98,
+   "text": "stop (tran, bw)",
+   "cls": "valsm",
+   "anchor": "middle",
+   "id": "e41"
+  },
+  {
+   "type": "text",
+   "x": 100,
+   "y": 180,
+   "text": "Not to scale. lin: 0 A held 17–100 µs, then 7 levels × 40 µs; noise runs 2.05 ms (samples from 100 µs); walks 250 µs.",
+   "cls": "note",
+   "anchor": "start",
+   "id": "e42"
+  }
+ ]
+}

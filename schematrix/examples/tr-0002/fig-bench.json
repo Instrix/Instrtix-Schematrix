@@ -1,0 +1,737 @@
+{
+ "version": 1,
+ "meta": {
+  "title": "fig-bench",
+  "description": "Ladder test bench: I+ is the simulator ground; the ladder, tap switches, isolation network and enable network sit between it and I minus; an ideal current source draws the DUT current from I minus; three stage-1 amplifiers and their downstream blocks give the ADC nodes"
+ },
+ "page": {
+  "width": 880,
+  "height": 600,
+  "auto": false,
+  "margin": 0,
+  "grid": 5,
+  "junctions": false
+ },
+ "theme": "instrix",
+ "elements": [
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 60,
+   "y": 300,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e1"
+  },
+  {
+   "type": "text",
+   "x": 60,
+   "y": 336,
+   "text": "I+ = node 0",
+   "cls": "node",
+   "anchor": "middle",
+   "id": "e2"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     60,
+     300
+    ],
+    [
+     60,
+     120
+    ],
+    [
+     110,
+     120
+    ]
+   ],
+   "style": "",
+   "id": "e3"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 150,
+   "y": 120,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "length": 80,
+    "body": 30,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e4"
+  },
+  {
+   "type": "text",
+   "x": 150,
+   "y": 104,
+   "text": "Rhd 1 µΩ",
+   "cls": "val",
+   "anchor": "middle",
+   "id": "e5"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 200,
+   "y": 120,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e6"
+  },
+  {
+   "type": "text",
+   "x": 200,
+   "y": 104,
+   "text": "hd",
+   "cls": "node",
+   "anchor": "middle",
+   "id": "e7"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     190,
+     120
+    ],
+    [
+     230,
+     120
+    ]
+   ],
+   "style": "",
+   "id": "e8"
+  },
+  {
+   "type": "comp",
+   "sym": "block",
+   "x": 230,
+   "y": 70,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "w": 170,
+    "h": 110,
+    "title": "Ladder R1–R6",
+    "lines": "10 mΩ … 1 kΩ cumulative\nnodes t1 … t6",
+    "accent": false,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e9"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     400,
+     120
+    ],
+    [
+     450,
+     120
+    ]
+   ],
+   "style": "",
+   "id": "e10"
+  },
+  {
+   "type": "comp",
+   "sym": "block",
+   "x": 450,
+   "y": 60,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "w": 200,
+    "h": 130,
+    "title": "Tap switches",
+    "lines": "2× CSD17577Q3A, AO3400A ×2,\n2N7002E ×3; UCC2752x drivers,\n22 Ω gates, GND on I+\nEN1–EN6: PWL timeline",
+    "accent": false,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e11"
+  },
+  {
+   "type": "comp",
+   "sym": "block",
+   "x": 450,
+   "y": 220,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "w": 200,
+    "h": 110,
+    "title": "Isolation (group H)",
+    "lines": "Qi CSD17577Q3A, 330 Ω\nQb 2N7002E, U7 OPA2156\nRtih 330 Ω; ihi, gm",
+    "accent": false,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e12"
+  },
+  {
+   "type": "comp",
+   "sym": "block",
+   "x": 220,
+   "y": 220,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "w": 180,
+    "h": 110,
+    "title": "Enable network",
+    "lines": "BAT54 OR, RC nodes A, B\nUCC27525 model\n→ EN_ISO, EN_B",
+    "accent": false,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e13"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     400,
+     275
+    ],
+    [
+     450,
+     275
+    ]
+   ],
+   "style": "",
+   "id": "e14"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     550,
+     190
+    ],
+    [
+     550,
+     220
+    ]
+   ],
+   "style": "",
+   "id": "e15"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     650,
+     125
+    ],
+    [
+     730,
+     125
+    ]
+   ],
+   "style": "",
+   "id": "e16"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     650,
+     275
+    ],
+    [
+     730,
+     275
+    ]
+   ],
+   "style": "",
+   "id": "e17"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     730,
+     125
+    ],
+    [
+     730,
+     400
+    ]
+   ],
+   "style": "",
+   "id": "e18"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 730,
+   "y": 275,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e19"
+  },
+  {
+   "type": "text",
+   "x": 742,
+   "y": 140,
+   "text": "I− (im)",
+   "cls": "node",
+   "anchor": "start",
+   "id": "e20"
+  },
+  {
+   "type": "comp",
+   "sym": "isrc",
+   "x": 730,
+   "y": 450,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "length": 100,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e21"
+  },
+  {
+   "type": "text",
+   "x": 754,
+   "y": 448.0,
+   "text": "Idut",
+   "cls": "lbl",
+   "anchor": "start",
+   "id": "e22"
+  },
+  {
+   "type": "text",
+   "x": 754,
+   "y": 463.0,
+   "text": "PWL per suite",
+   "cls": "valsm",
+   "anchor": "start",
+   "id": "e23"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     730,
+     500
+    ],
+    [
+     730,
+     520
+    ]
+   ],
+   "style": "",
+   "id": "e24"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 730,
+   "y": 520,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e25"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 90,
+   "y": 400,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "t3",
+    "side": "left"
+   },
+   "style": "",
+   "id": "e26"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     90,
+     400
+    ],
+    [
+     130,
+     400
+    ]
+   ],
+   "style": "",
+   "id": "e27"
+  },
+  {
+   "type": "comp",
+   "sym": "block",
+   "x": 130,
+   "y": 378,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "w": 150,
+    "h": 44,
+    "title": "Stage 1 A",
+    "lines": "OPA210 ×4.98",
+    "accent": false,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e28"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     280,
+     400
+    ],
+    [
+     310,
+     400
+    ]
+   ],
+   "style": "",
+   "id": "e29"
+  },
+  {
+   "type": "comp",
+   "sym": "block",
+   "x": 310,
+   "y": 378,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "w": 190,
+    "h": 44,
+    "title": "DOWNSTREAM",
+    "lines": "stage 2, 3, AAF, ADC net",
+    "accent": false,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e30"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     500,
+     400
+    ],
+    [
+     540,
+     400
+    ]
+   ],
+   "style": "",
+   "id": "e31"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 540,
+   "y": 400,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e32"
+  },
+  {
+   "type": "text",
+   "x": 548,
+   "y": 404,
+   "text": "ainA",
+   "cls": "node",
+   "anchor": "start",
+   "id": "e33"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 90,
+   "y": 460,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "t5",
+    "side": "left"
+   },
+   "style": "",
+   "id": "e34"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     90,
+     460
+    ],
+    [
+     130,
+     460
+    ]
+   ],
+   "style": "",
+   "id": "e35"
+  },
+  {
+   "type": "comp",
+   "sym": "block",
+   "x": 130,
+   "y": 438,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "w": 150,
+    "h": 44,
+    "title": "Stage 1 B",
+    "lines": "OPA210 ×4.98",
+    "accent": false,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e36"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     280,
+     460
+    ],
+    [
+     310,
+     460
+    ]
+   ],
+   "style": "",
+   "id": "e37"
+  },
+  {
+   "type": "comp",
+   "sym": "block",
+   "x": 310,
+   "y": 438,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "w": 190,
+    "h": 44,
+    "title": "DOWNSTREAM",
+    "lines": "stage 2, 3, AAF, ADC net",
+    "accent": false,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e38"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     500,
+     460
+    ],
+    [
+     540,
+     460
+    ]
+   ],
+   "style": "",
+   "id": "e39"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 540,
+   "y": 460,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e40"
+  },
+  {
+   "type": "text",
+   "x": 548,
+   "y": 464,
+   "text": "ainB",
+   "cls": "node",
+   "anchor": "start",
+   "id": "e41"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 90,
+   "y": 520,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "t6",
+    "side": "left"
+   },
+   "style": "",
+   "id": "e42"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     90,
+     520
+    ],
+    [
+     130,
+     520
+    ]
+   ],
+   "style": "",
+   "id": "e43"
+  },
+  {
+   "type": "comp",
+   "sym": "block",
+   "x": 130,
+   "y": 498,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "w": 150,
+    "h": 44,
+    "title": "Stage 1 C",
+    "lines": "2× OPA387 ×4.09, avg",
+    "accent": false,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e44"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     280,
+     520
+    ],
+    [
+     310,
+     520
+    ]
+   ],
+   "style": "",
+   "id": "e45"
+  },
+  {
+   "type": "comp",
+   "sym": "block",
+   "x": 310,
+   "y": 498,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "w": 190,
+    "h": 44,
+    "title": "DOWNSTREAM",
+    "lines": "stage 2, 3, AAF, ADC net",
+    "accent": false,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e46"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     500,
+     520
+    ],
+    [
+     540,
+     520
+    ]
+   ],
+   "style": "",
+   "id": "e47"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 540,
+   "y": 520,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e48"
+  },
+  {
+   "type": "text",
+   "x": 548,
+   "y": 524,
+   "text": "ainC",
+   "cls": "node",
+   "anchor": "start",
+   "id": "e49"
+  },
+  {
+   "type": "text",
+   "x": 130,
+   "y": 366,
+   "text": "TI vendor models (noisy=0)",
+   "cls": "valsm",
+   "anchor": "start",
+   "id": "e50"
+  },
+  {
+   "type": "text",
+   "x": 310,
+   "y": 366,
+   "text": "behavioural (downstream_m080.inc)",
+   "cls": "valsm",
+   "anchor": "start",
+   "id": "e51"
+  },
+  {
+   "type": "text",
+   "x": 60,
+   "y": 40,
+   "text": "Probes: I(ladder) = V(hd) / 1 µΩ;  burden = −V(im);  reading = V(ainA … ainC)",
+   "cls": "note",
+   "anchor": "start",
+   "id": "e52"
+  },
+  {
+   "type": "text",
+   "x": 60,
+   "y": 58,
+   "text": "Rails ±5 V (stage 1 A/B), ±2.5 V (stage 1 C, U7), +5 V (drivers, from I+); every source ideal",
+   "cls": "note",
+   "anchor": "start",
+   "id": "e53"
+  }
+ ]
+}

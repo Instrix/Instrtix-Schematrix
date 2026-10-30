@@ -1,0 +1,17 @@
+services:
+  schematrix:
+    build: .
+    image: schematrix:latest
+    ports:
+      - "8000:8000"
+    volumes:
+      - schematrix-data:/data
+    environment:
+      # Python scripts run on the server. On a shared or public deployment, set a token
+      # (open the app once with /?token=...) or turn scripts off.
+      SCHEMATRIX_SCRIPTS: "1"
+      # SCHEMATRIX_TOKEN: "change-me"
+      SCHEMATRIX_SCRIPT_TIMEOUT: "30"
+    restart: unless-stopped
+volumes:
+  schematrix-data:

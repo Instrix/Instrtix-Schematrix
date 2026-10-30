@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Schematrix</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23292b31'/%3E%3Cpolyline points='4,16 9,16 11,10 14,22 17,10 20,22 22,16 28,16' fill='none' stroke='%2362a8e0' stroke-width='2.4' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/static/fonts.css">
+<link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+<header id="top">
+  <div class="brand"><svg viewBox="0 0 32 32" width="22" height="22"><rect width="32" height="32" rx="6" fill="currentColor"/><polyline points="4,16 9,16 11,10 14,22 17,10 20,22 22,16 28,16" fill="none" stroke="var(--accent-2)" stroke-width="2.4" stroke-linejoin="round"/></svg>Schematrix</div>
+  <nav class="menus">
+    <div class="menu"><button>File</button><div class="drop">
+      <button data-cmd="new">New schematic<kbd>Ctrl N</kbd></button>
+      <button data-cmd="open">Open from workspace…<kbd>Ctrl O</kbd></button>
+      <button data-cmd="upload">Open file from computer…</button>
+      <hr>
+      <button data-cmd="save">Save<kbd>Ctrl S</kbd></button>
+      <button data-cmd="saveas">Save as…</button>
+      <hr>
+      <button data-cmd="import-legacy">Import legacy figure script…</button>
+    </div></div>
+    <div class="menu"><button>Edit</button><div class="drop">
+      <button data-cmd="undo">Undo<kbd>Ctrl Z</kbd></button>
+      <button data-cmd="redo">Redo<kbd>Ctrl Y</kbd></button>
+      <hr>
+      <button data-cmd="cut">Cut<kbd>Ctrl X</kbd></button>
+      <button data-cmd="copy">Copy<kbd>Ctrl C</kbd></button>
+      <button data-cmd="paste">Paste<kbd>Ctrl V</kbd></button>
+      <button data-cmd="duplicate">Duplicate<kbd>Ctrl D</kbd></button>
+      <button data-cmd="delete">Delete<kbd>Del</kbd></button>
+      <hr>
+      <button data-cmd="selectall">Select all<kbd>Ctrl A</kbd></button>
+      <button data-cmd="rotate">Rotate<kbd>R</kbd></button>
+      <button data-cmd="mirror">Mirror<kbd>M</kbd></button>
+      <button data-cmd="accent">Toggle accent<kbd>E</kbd></button>
+      <button data-cmd="front">Bring to front<kbd>Ctrl ]</kbd></button>
+      <button data-cmd="back">Send to back<kbd>Ctrl [</kbd></button>
+    </div></div>
+    <div class="menu"><button>View</button><div class="drop">
+      <button data-cmd="fit">Fit to page<kbd>F</kbd></button>
+      <button data-cmd="zoomin">Zoom in<kbd>+</kbd></button>
+      <button data-cmd="zoomout">Zoom out<kbd>−</kbd></button>
+      <button data-cmd="zoom100">Actual size<kbd>1</kbd></button>
+      <hr>
+      <button data-cmd="grid">Toggle grid<kbd>G</kbd></button>
+      <button data-cmd="help">Keyboard shortcuts<kbd>?</kbd></button>
+    </div></div>
+    <div class="menu"><button>Export</button><div class="drop">
+      <button data-cmd="export-svg">SVG (fonts embedded)</button>
+      <button data-cmd="export-svg-plain">SVG (plain, like the originals)</button>
+      <button data-cmd="export-png">PNG</button>
+      <button data-cmd="export-pdf">PDF</button>
+      <button data-cmd="export-spice">SPICE netlist (.cir)</button>
+      <button data-cmd="export-json">Document (.json)</button>
+      <hr>
+      <button data-cmd="copy-svg">Copy SVG to clipboard</button>
+    </div></div>
+  </nav>
+  <div class="spacer"></div>
+  <div class="toolgroup" id="stylepick" title="Style for new wires and parts">
+    <button data-style="" class="on" title="Ink"><svg viewBox="0 0 24 12"><line x1="2" y1="6" x2="22" y2="6" stroke="var(--ink)" stroke-width="2"/></svg></button>
+    <button data-style="acc" title="Accent"><svg viewBox="0 0 24 12"><line x1="2" y1="6" x2="22" y2="6" stroke="var(--accent)" stroke-width="2.6"/></svg></button>
+    <button data-style="para" title="Parasitic / dashed"><svg viewBox="0 0 24 12"><line x1="2" y1="6" x2="22" y2="6" stroke="var(--ink)" stroke-width="2" stroke-dasharray="5 3"/></svg></button>
+  </div>
+  <button class="ghost" data-cmd="save" id="savebtn">Save</button>
+</header>
+
+<div id="tabs"></div>
+
+<main>
+  <aside id="left">
+    <div class="tools" id="tools">
+      <button data-tool="select" title="Select / move (V)"><svg viewBox="0 0 20 20"><path d="M5 3 L5 16 L8.5 12.5 L11 18 L13 17 L10.5 11.5 L15 11.5 Z"/></svg><span>Select</span><kbd>V</kbd></button>
+      <button data-tool="wire" title="Wire (W)"><svg viewBox="0 0 20 20"><polyline points="3,15 9,15 9,5 17,5" class="s"/><circle cx="3" cy="15" r="1.8"/><circle cx="17" cy="5" r="1.8"/></svg><span>Wire</span><kbd>W</kbd></button>
+      <button data-tool="flag" title="Net label (L)"><svg viewBox="0 0 20 20"><polygon points="17,10 13,6 3,6 3,14 13,14" class="s"/></svg><span>Label</span><kbd>L</kbd></button>
+      <button data-tool="text" title="Text (T)"><svg viewBox="0 0 20 20"><path d="M4 4h12v3h-1.5V5.5h-3.7V15h1.7v1.5H7.5V15h1.7V5.5H5.5V7H4z"/></svg><span>Text</span><kbd>T</kbd></button>
+      <button data-tool="rect" title="Group / box (B)"><svg viewBox="0 0 20 20"><rect x="3" y="4" width="14" height="12" rx="2" class="s"/></svg><span>Box</span><kbd>B</kbd></button>
+      <button data-tool="arrow" title="Arrow (A)"><svg viewBox="0 0 20 20"><polyline points="3,16 15,6" class="s"/><polygon points="17,4 10.5,6.2 14.3,9.8"/></svg><span>Arrow</span><kbd>A</kbd></button>
+    </div>
+    <div class="search"><input id="symsearch" type="search" placeholder="Find a symbol…  ( / )" autocomplete="off"></div>
+    <div id="palette"></div>
+  </aside>
+
+  <section id="stage">
+    <svg id="canvas" tabindex="0">
+      <defs>
+        <pattern id="gridpat" patternUnits="userSpaceOnUse" width="10" height="10"><circle cx="0" cy="0" r="0.9" class="griddot"/></pattern>
+        <filter id="pageshadow" x="-5%" y="-5%" width="110%" height="110%"><feDropShadow dx="0" dy="1" stdDeviation="2.5" flood-color="#1b2030" flood-opacity=".12"/></filter>
+      </defs>
+      <g id="viewport">
+        <rect id="page" filter="url(#pageshadow)"/>
+        <rect id="gridrect" fill="url(#gridpat)"/>
+        <g id="content" class="sch"></g>
+        <g id="overlay"></g>
+      </g>
+    </svg>
+    <div id="hint"></div>
+    <div id="empty" hidden>
+      <p><b>Empty sheet.</b> Pick a symbol on the left, press <kbd>W</kbd> to draw wires,<br>or write a Python script in the <b>Script</b> tab.</p>
+    </div>
+  </section>
+
+  <aside id="right">
+    <div class="ptabs">
+      <button data-pane="props" class="on">Properties</button>
+      <button data-pane="netlist">Netlist</button>
+      <button data-pane="script">Script</button>
+    </div>
+    <div class="pane" id="pane-props"></div>
+    <div class="pane" id="pane-netlist" hidden>
+      <div class="row"><button id="netrefresh" class="primary">Extract netlist</button><button id="netdl" class="ghost">Download .cir</button></div>
+      <div id="netwarn"></div>
+      <div id="netlist"></div>
+      <label class="lbl">SPICE</label>
+      <pre id="spice" class="code"></pre>
+    </div>
+    <div class="pane" id="pane-script" hidden>
+      <div class="row">
+        <button id="runscript" class="primary" title="Ctrl+Enter">▶ Run</button>
+        <select id="scriptfile" title="Scripts in the workspace"></select>
+        <button id="savescript" class="ghost" title="Save script to workspace">Save</button>
+      </div>
+      <textarea id="code" spellcheck="false" wrap="off"></textarea>
+      <div id="runout"></div>
+    </div>
+  </aside>
+</main>
+
+<footer id="status">
+  <span id="st-tool"></span><span id="st-sel"></span><span class="spacer"></span><span id="st-msg"></span><span id="st-xy"></span><span id="st-zoom"></span>
+</footer>
+
+<div id="modal" hidden><div class="dlg"><div class="dlg-h"><b id="modal-title"></b><button class="x" data-close>×</button></div><div id="modal-body"></div></div></div>
+<input type="file" id="fileinput" accept=".json,.py" hidden>
+<textarea id="inlineedit" hidden></textarea>
+<div id="toast" hidden></div>
+<script type="module" src="/static/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,2242 @@
+{
+ "version": 1,
+ "meta": {
+  "title": "fig-chain",
+  "description": "One measurement chain: stage 1 at the sense tap, stage 2 non-inverting gain, stage 3 inverting gain of minus 4.51, four multiple-feedback biquads, and the ADC input network."
+ },
+ "page": {
+  "width": 1234,
+  "height": 600,
+  "auto": false,
+  "margin": 0,
+  "grid": 5,
+  "junctions": false
+ },
+ "theme": "instrix",
+ "elements": [
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 70,
+   "y": 105,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "SENSE_x",
+    "side": "left"
+   },
+   "style": "",
+   "id": "e1"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     70,
+     105
+    ],
+    [
+     164,
+     105
+    ]
+   ],
+   "style": "",
+   "id": "e2"
+  },
+  {
+   "type": "comp",
+   "sym": "opamp",
+   "x": 200,
+   "y": 120,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "top": "+",
+    "ref": ""
+   },
+   "style": "",
+   "id": "e3"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     164,
+     135
+    ],
+    [
+     155,
+     135
+    ]
+   ],
+   "style": "",
+   "id": "e4"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 155,
+   "y": 135,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e5"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     155,
+     135
+    ],
+    [
+     155,
+     175
+    ]
+   ],
+   "style": "",
+   "id": "e6"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 155,
+   "y": 175,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e7"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 200,
+   "y": 175,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "length": 90,
+    "body": 34,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e8"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     245,
+     175
+    ],
+    [
+     245,
+     120
+    ]
+   ],
+   "style": "",
+   "id": "e9"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     236,
+     120
+    ],
+    [
+     245,
+     120
+    ]
+   ],
+   "style": "",
+   "id": "e10"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 245,
+   "y": 120,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e11"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 155,
+   "y": 200,
+   "rot": 270,
+   "mirror": true,
+   "props": {
+    "length": 50,
+    "body": 30,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e12"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 155,
+   "y": 225,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e13"
+  },
+  {
+   "type": "text",
+   "x": 200,
+   "y": 195,
+   "text": "Rf",
+   "cls": "val",
+   "anchor": "middle",
+   "id": "e14"
+  },
+  {
+   "type": "text",
+   "x": 146,
+   "y": 204,
+   "text": "Rg",
+   "cls": "val",
+   "anchor": "end",
+   "id": "e15"
+  },
+  {
+   "type": "text",
+   "x": 200,
+   "y": 74,
+   "text": "Stage 1 (AFE1)",
+   "cls": "ref",
+   "anchor": "middle",
+   "id": "e16"
+  },
+  {
+   "type": "text",
+   "x": 200,
+   "y": 88,
+   "text": "OPA210 / OPA387 · see table",
+   "cls": "valsm",
+   "anchor": "middle",
+   "id": "e17"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     245,
+     120
+    ],
+    [
+     290,
+     120
+    ],
+    [
+     290,
+     105
+    ],
+    [
+     384,
+     105
+    ]
+   ],
+   "style": "",
+   "id": "e18"
+  },
+  {
+   "type": "comp",
+   "sym": "opamp",
+   "x": 420,
+   "y": 120,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "top": "+",
+    "ref": ""
+   },
+   "style": "",
+   "id": "e19"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     384,
+     135
+    ],
+    [
+     375,
+     135
+    ]
+   ],
+   "style": "",
+   "id": "e20"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 375,
+   "y": 135,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e21"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     375,
+     135
+    ],
+    [
+     375,
+     175
+    ]
+   ],
+   "style": "",
+   "id": "e22"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 375,
+   "y": 175,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e23"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 420,
+   "y": 175,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "length": 90,
+    "body": 34,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e24"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     465,
+     175
+    ],
+    [
+     465,
+     120
+    ]
+   ],
+   "style": "",
+   "id": "e25"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     456,
+     120
+    ],
+    [
+     465,
+     120
+    ]
+   ],
+   "style": "",
+   "id": "e26"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 465,
+   "y": 120,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e27"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 375,
+   "y": 200,
+   "rot": 270,
+   "mirror": true,
+   "props": {
+    "length": 50,
+    "body": 30,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e28"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 375,
+   "y": 225,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e29"
+  },
+  {
+   "type": "text",
+   "x": 420,
+   "y": 195,
+   "text": "Rf_s2",
+   "cls": "val",
+   "anchor": "middle",
+   "id": "e30"
+  },
+  {
+   "type": "text",
+   "x": 366,
+   "y": 204,
+   "text": "Rg_s2",
+   "cls": "val",
+   "anchor": "end",
+   "id": "e31"
+  },
+  {
+   "type": "text",
+   "x": 420,
+   "y": 74,
+   "text": "Stage 2",
+   "cls": "ref",
+   "anchor": "middle",
+   "id": "e32"
+  },
+  {
+   "type": "text",
+   "x": 420,
+   "y": 88,
+   "text": "OPA2189 · ×5.00 / ×6.12",
+   "cls": "valsm",
+   "anchor": "middle",
+   "id": "e33"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     465,
+     120
+    ],
+    [
+     520,
+     120
+    ],
+    [
+     520,
+     105
+    ],
+    [
+     545,
+     105
+    ]
+   ],
+   "style": "",
+   "id": "e34"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 590,
+   "y": 105,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "length": 90,
+    "body": 34,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e35"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 635,
+   "y": 105,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e36"
+  },
+  {
+   "type": "text",
+   "x": 590.0,
+   "y": 119,
+   "text": "255 Ω",
+   "cls": "val",
+   "anchor": "middle",
+   "id": "e37"
+  },
+  {
+   "type": "comp",
+   "sym": "opamp",
+   "x": 680,
+   "y": 120,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "top": "-",
+    "ref": ""
+   },
+   "style": "",
+   "id": "e38"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     635,
+     105
+    ],
+    [
+     644,
+     105
+    ]
+   ],
+   "style": "",
+   "id": "e39"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     635,
+     105
+    ],
+    [
+     635,
+     60
+    ]
+   ],
+   "style": "",
+   "id": "e40"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 680,
+   "y": 60,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "length": 90,
+    "body": 34,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e41"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     725,
+     60
+    ],
+    [
+     725,
+     120
+    ]
+   ],
+   "style": "",
+   "id": "e42"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     716,
+     120
+    ],
+    [
+     725,
+     120
+    ]
+   ],
+   "style": "",
+   "id": "e43"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 725,
+   "y": 120,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e44"
+  },
+  {
+   "type": "text",
+   "x": 680,
+   "y": 48,
+   "text": "1.15 kΩ",
+   "cls": "val",
+   "anchor": "middle",
+   "id": "e45"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     644,
+     135
+    ],
+    [
+     640,
+     135
+    ],
+    [
+     640,
+     150
+    ]
+   ],
+   "style": "",
+   "id": "e46"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 640,
+   "y": 150,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e47"
+  },
+  {
+   "type": "text",
+   "x": 710,
+   "y": 186,
+   "text": "Stage 3 · OPA2189 · −4.51",
+   "cls": "ref",
+   "anchor": "middle",
+   "id": "e48"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     725,
+     120
+    ],
+    [
+     820,
+     120
+    ]
+   ],
+   "style": "",
+   "id": "e49"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 820,
+   "y": 120,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "AAF_IN",
+    "side": "right"
+   },
+   "style": "",
+   "id": "e50"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 70,
+   "y": 455,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "AAF_IN",
+    "side": "left"
+   },
+   "style": "",
+   "id": "e51"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     70,
+     455
+    ],
+    [
+     100,
+     455
+    ]
+   ],
+   "style": "",
+   "id": "e52"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 130,
+   "y": 455,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "length": 60,
+    "body": 30,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e53"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 160,
+   "y": 455,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e54"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 187.5,
+   "y": 455,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "length": 55,
+    "body": 28,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e55"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 215,
+   "y": 455,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e56"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     215,
+     455
+    ],
+    [
+     224,
+     455
+    ]
+   ],
+   "style": "",
+   "id": "e57"
+  },
+  {
+   "type": "comp",
+   "sym": "capacitor",
+   "x": 160,
+   "y": 480,
+   "rot": 270,
+   "mirror": true,
+   "props": {
+    "length": 50,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e58"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 160,
+   "y": 505,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e59"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     215,
+     455
+    ],
+    [
+     215,
+     415
+    ]
+   ],
+   "style": "",
+   "id": "e60"
+  },
+  {
+   "type": "comp",
+   "sym": "capacitor",
+   "x": 260,
+   "y": 415,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "length": 90,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e61"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     305,
+     415
+    ],
+    [
+     318,
+     415
+    ]
+   ],
+   "style": "",
+   "id": "e62"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 318,
+   "y": 415,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e63"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     160,
+     455
+    ],
+    [
+     160,
+     375
+    ]
+   ],
+   "style": "",
+   "id": "e64"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 239,
+   "y": 375,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "length": 158,
+    "body": 36,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e65"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     318,
+     375
+    ],
+    [
+     318,
+     470
+    ]
+   ],
+   "style": "",
+   "id": "e66"
+  },
+  {
+   "type": "comp",
+   "sym": "opamp",
+   "x": 260,
+   "y": 470,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "top": "-",
+    "ref": ""
+   },
+   "style": "",
+   "id": "e67"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     296,
+     470
+    ],
+    [
+     318,
+     470
+    ]
+   ],
+   "style": "",
+   "id": "e68"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 318,
+   "y": 470,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e69"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     224,
+     485
+    ],
+    [
+     220,
+     485
+    ],
+    [
+     220,
+     500
+    ]
+   ],
+   "style": "",
+   "id": "e70"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 220,
+   "y": 500,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e71"
+  },
+  {
+   "type": "text",
+   "x": 130.0,
+   "y": 445,
+   "text": "30.1k",
+   "cls": "val",
+   "anchor": "middle",
+   "id": "e72"
+  },
+  {
+   "type": "text",
+   "x": 187.5,
+   "y": 445,
+   "text": "6.81k",
+   "cls": "val",
+   "anchor": "middle",
+   "id": "e73"
+  },
+  {
+   "type": "text",
+   "x": 176,
+   "y": 488,
+   "text": "24p",
+   "cls": "val",
+   "anchor": "start",
+   "id": "e74"
+  },
+  {
+   "type": "text",
+   "x": 260,
+   "y": 400,
+   "text": "10p",
+   "cls": "val",
+   "anchor": "middle",
+   "id": "e75"
+  },
+  {
+   "type": "text",
+   "x": 239.0,
+   "y": 365,
+   "text": "30.1k",
+   "cls": "val",
+   "anchor": "middle",
+   "id": "e76"
+  },
+  {
+   "type": "text",
+   "x": 264,
+   "y": 534,
+   "text": "Biquad 1",
+   "cls": "ref",
+   "anchor": "middle",
+   "id": "e77"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     318,
+     470
+    ],
+    [
+     328,
+     470
+    ],
+    [
+     328,
+     455
+    ]
+   ],
+   "style": "",
+   "id": "e78"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 358,
+   "y": 455,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "length": 60,
+    "body": 30,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e79"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 388,
+   "y": 455,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e80"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 415.5,
+   "y": 455,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "length": 55,
+    "body": 28,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e81"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 443,
+   "y": 455,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e82"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     443,
+     455
+    ],
+    [
+     452,
+     455
+    ]
+   ],
+   "style": "",
+   "id": "e83"
+  },
+  {
+   "type": "comp",
+   "sym": "capacitor",
+   "x": 388,
+   "y": 480,
+   "rot": 270,
+   "mirror": true,
+   "props": {
+    "length": 50,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e84"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 388,
+   "y": 505,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e85"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     443,
+     455
+    ],
+    [
+     443,
+     415
+    ]
+   ],
+   "style": "",
+   "id": "e86"
+  },
+  {
+   "type": "comp",
+   "sym": "capacitor",
+   "x": 488,
+   "y": 415,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "length": 90,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e87"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     533,
+     415
+    ],
+    [
+     546,
+     415
+    ]
+   ],
+   "style": "",
+   "id": "e88"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 546,
+   "y": 415,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e89"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     388,
+     455
+    ],
+    [
+     388,
+     375
+    ]
+   ],
+   "style": "",
+   "id": "e90"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 467,
+   "y": 375,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "length": 158,
+    "body": 36,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e91"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     546,
+     375
+    ],
+    [
+     546,
+     470
+    ]
+   ],
+   "style": "",
+   "id": "e92"
+  },
+  {
+   "type": "comp",
+   "sym": "opamp",
+   "x": 488,
+   "y": 470,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "top": "-",
+    "ref": ""
+   },
+   "style": "",
+   "id": "e93"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     524,
+     470
+    ],
+    [
+     546,
+     470
+    ]
+   ],
+   "style": "",
+   "id": "e94"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 546,
+   "y": 470,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e95"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     452,
+     485
+    ],
+    [
+     448,
+     485
+    ],
+    [
+     448,
+     500
+    ]
+   ],
+   "style": "",
+   "id": "e96"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 448,
+   "y": 500,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e97"
+  },
+  {
+   "type": "text",
+   "x": 358.0,
+   "y": 445,
+   "text": "26.1k",
+   "cls": "val",
+   "anchor": "middle",
+   "id": "e98"
+  },
+  {
+   "type": "text",
+   "x": 415.5,
+   "y": 445,
+   "text": "5.76k",
+   "cls": "val",
+   "anchor": "middle",
+   "id": "e99"
+  },
+  {
+   "type": "text",
+   "x": 404,
+   "y": 488,
+   "text": "33p",
+   "cls": "val",
+   "anchor": "start",
+   "id": "e100"
+  },
+  {
+   "type": "text",
+   "x": 488,
+   "y": 400,
+   "text": "10p",
+   "cls": "val",
+   "anchor": "middle",
+   "id": "e101"
+  },
+  {
+   "type": "text",
+   "x": 467.0,
+   "y": 365,
+   "text": "26.1k",
+   "cls": "val",
+   "anchor": "middle",
+   "id": "e102"
+  },
+  {
+   "type": "text",
+   "x": 492,
+   "y": 534,
+   "text": "Biquad 2",
+   "cls": "ref",
+   "anchor": "middle",
+   "id": "e103"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     546,
+     470
+    ],
+    [
+     556,
+     470
+    ],
+    [
+     556,
+     455
+    ]
+   ],
+   "style": "",
+   "id": "e104"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 586,
+   "y": 455,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "length": 60,
+    "body": 30,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e105"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 616,
+   "y": 455,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e106"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 643.5,
+   "y": 455,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "length": 55,
+    "body": 28,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e107"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 671,
+   "y": 455,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e108"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     671,
+     455
+    ],
+    [
+     680,
+     455
+    ]
+   ],
+   "style": "",
+   "id": "e109"
+  },
+  {
+   "type": "comp",
+   "sym": "capacitor",
+   "x": 616,
+   "y": 480,
+   "rot": 270,
+   "mirror": true,
+   "props": {
+    "length": 50,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e110"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 616,
+   "y": 505,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e111"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     671,
+     455
+    ],
+    [
+     671,
+     415
+    ]
+   ],
+   "style": "",
+   "id": "e112"
+  },
+  {
+   "type": "comp",
+   "sym": "capacitor",
+   "x": 716,
+   "y": 415,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "length": 90,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e113"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     761,
+     415
+    ],
+    [
+     774,
+     415
+    ]
+   ],
+   "style": "",
+   "id": "e114"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 774,
+   "y": 415,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e115"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     616,
+     455
+    ],
+    [
+     616,
+     375
+    ]
+   ],
+   "style": "",
+   "id": "e116"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 695,
+   "y": 375,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "length": 158,
+    "body": 36,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e117"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     774,
+     375
+    ],
+    [
+     774,
+     470
+    ]
+   ],
+   "style": "",
+   "id": "e118"
+  },
+  {
+   "type": "comp",
+   "sym": "opamp",
+   "x": 716,
+   "y": 470,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "top": "-",
+    "ref": ""
+   },
+   "style": "",
+   "id": "e119"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     752,
+     470
+    ],
+    [
+     774,
+     470
+    ]
+   ],
+   "style": "",
+   "id": "e120"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 774,
+   "y": 470,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e121"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     680,
+     485
+    ],
+    [
+     676,
+     485
+    ],
+    [
+     676,
+     500
+    ]
+   ],
+   "style": "",
+   "id": "e122"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 676,
+   "y": 500,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e123"
+  },
+  {
+   "type": "text",
+   "x": 586.0,
+   "y": 445,
+   "text": "17.8k",
+   "cls": "val",
+   "anchor": "middle",
+   "id": "e124"
+  },
+  {
+   "type": "text",
+   "x": 643.5,
+   "y": 445,
+   "text": "3.92k",
+   "cls": "val",
+   "anchor": "middle",
+   "id": "e125"
+  },
+  {
+   "type": "text",
+   "x": 632,
+   "y": 488,
+   "text": "68p",
+   "cls": "val",
+   "anchor": "start",
+   "id": "e126"
+  },
+  {
+   "type": "text",
+   "x": 716,
+   "y": 400,
+   "text": "10p",
+   "cls": "val",
+   "anchor": "middle",
+   "id": "e127"
+  },
+  {
+   "type": "text",
+   "x": 695.0,
+   "y": 365,
+   "text": "17.8k",
+   "cls": "val",
+   "anchor": "middle",
+   "id": "e128"
+  },
+  {
+   "type": "text",
+   "x": 720,
+   "y": 534,
+   "text": "Biquad 3",
+   "cls": "ref",
+   "anchor": "middle",
+   "id": "e129"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     774,
+     470
+    ],
+    [
+     784,
+     470
+    ],
+    [
+     784,
+     455
+    ]
+   ],
+   "style": "",
+   "id": "e130"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 814,
+   "y": 455,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "length": 60,
+    "body": 30,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e131"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 844,
+   "y": 455,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e132"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 871.5,
+   "y": 455,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "length": 55,
+    "body": 28,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e133"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 899,
+   "y": 455,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e134"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     899,
+     455
+    ],
+    [
+     908,
+     455
+    ]
+   ],
+   "style": "",
+   "id": "e135"
+  },
+  {
+   "type": "comp",
+   "sym": "capacitor",
+   "x": 844,
+   "y": 480,
+   "rot": 270,
+   "mirror": true,
+   "props": {
+    "length": 50,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e136"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 844,
+   "y": 505,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e137"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     899,
+     455
+    ],
+    [
+     899,
+     415
+    ]
+   ],
+   "style": "",
+   "id": "e138"
+  },
+  {
+   "type": "comp",
+   "sym": "capacitor",
+   "x": 944,
+   "y": 415,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "length": 90,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e139"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     989,
+     415
+    ],
+    [
+     1002,
+     415
+    ]
+   ],
+   "style": "",
+   "id": "e140"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 1002,
+   "y": 415,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e141"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     844,
+     455
+    ],
+    [
+     844,
+     375
+    ]
+   ],
+   "style": "",
+   "id": "e142"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 923,
+   "y": 375,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "length": 158,
+    "body": 36,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e143"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     1002,
+     375
+    ],
+    [
+     1002,
+     470
+    ]
+   ],
+   "style": "",
+   "id": "e144"
+  },
+  {
+   "type": "comp",
+   "sym": "opamp",
+   "x": 944,
+   "y": 470,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "top": "-",
+    "ref": ""
+   },
+   "style": "",
+   "id": "e145"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     980,
+     470
+    ],
+    [
+     1002,
+     470
+    ]
+   ],
+   "style": "",
+   "id": "e146"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 1002,
+   "y": 470,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e147"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     908,
+     485
+    ],
+    [
+     904,
+     485
+    ],
+    [
+     904,
+     500
+    ]
+   ],
+   "style": "",
+   "id": "e148"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 904,
+   "y": 500,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e149"
+  },
+  {
+   "type": "text",
+   "x": 814.0,
+   "y": 445,
+   "text": "6.65k",
+   "cls": "val",
+   "anchor": "middle",
+   "id": "e150"
+  },
+  {
+   "type": "text",
+   "x": 871.5,
+   "y": 445,
+   "text": "1.74k",
+   "cls": "val",
+   "anchor": "middle",
+   "id": "e151"
+  },
+  {
+   "type": "text",
+   "x": 860,
+   "y": 488,
+   "text": "390p",
+   "cls": "val",
+   "anchor": "start",
+   "id": "e152"
+  },
+  {
+   "type": "text",
+   "x": 944,
+   "y": 400,
+   "text": "10p",
+   "cls": "val",
+   "anchor": "middle",
+   "id": "e153"
+  },
+  {
+   "type": "text",
+   "x": 923.0,
+   "y": 365,
+   "text": "6.65k",
+   "cls": "val",
+   "anchor": "middle",
+   "id": "e154"
+  },
+  {
+   "type": "text",
+   "x": 948,
+   "y": 534,
+   "text": "Biquad 4",
+   "cls": "ref",
+   "anchor": "middle",
+   "id": "e155"
+  },
+  {
+   "type": "text",
+   "x": 480,
+   "y": 330,
+   "text": "Anti-alias filter: 8th-order transitional (m = 0.8, 650 kHz), 4× MFB biquad, OPA4189",
+   "cls": "ref",
+   "anchor": "middle",
+   "id": "e156"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     1002,
+     470
+    ],
+    [
+     1014,
+     470
+    ]
+   ],
+   "style": "",
+   "id": "e157"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 1043,
+   "y": 470,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "length": 58,
+    "body": 30,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e158"
+  },
+  {
+   "type": "text",
+   "x": 1043,
+   "y": 458,
+   "text": "5 Ω",
+   "cls": "val",
+   "anchor": "middle",
+   "id": "e159"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     1072,
+     470
+    ],
+    [
+     1124,
+     470
+    ]
+   ],
+   "style": "",
+   "id": "e160"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 1084,
+   "y": 470,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e161"
+  },
+  {
+   "type": "comp",
+   "sym": "capacitor",
+   "x": 1084,
+   "y": 500,
+   "rot": 270,
+   "mirror": true,
+   "props": {
+    "length": 60,
+    "ref": ""
+   },
+   "style": "acc",
+   "id": "e162"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 1084,
+   "y": 530,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e163"
+  },
+  {
+   "type": "text",
+   "x": 1068,
+   "y": 504,
+   "text": "47 pF",
+   "cls": "accl",
+   "anchor": "end",
+   "id": "e164"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     1084,
+     530
+    ],
+    [
+     1124,
+     530
+    ]
+   ],
+   "style": "",
+   "id": "e165"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 1084,
+   "y": 557.5,
+   "rot": 270,
+   "mirror": true,
+   "props": {
+    "length": 55,
+    "body": 30,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e166"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 1084,
+   "y": 585,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e167"
+  },
+  {
+   "type": "text",
+   "x": 1072,
+   "y": 562,
+   "text": "5 Ω",
+   "cls": "val",
+   "anchor": "end",
+   "id": "e168"
+  },
+  {
+   "type": "raw",
+   "svg": "<rect class=\"box\" x=\"1124\" y=\"430\" width=\"96\" height=\"130\" rx=\"3\"/>",
+   "x": 0,
+   "y": 0,
+   "id": "e169"
+  },
+  {
+   "type": "text",
+   "x": 1130,
+   "y": 474,
+   "text": "AIN0",
+   "cls": "valsm",
+   "anchor": "start",
+   "id": "e170"
+  },
+  {
+   "type": "text",
+   "x": 1130,
+   "y": 534,
+   "text": "AIN0GND",
+   "cls": "valsm",
+   "anchor": "start",
+   "id": "e171"
+  },
+  {
+   "type": "text",
+   "x": 1172,
+   "y": 450,
+   "text": "RS1473",
+   "cls": "ref",
+   "anchor": "middle",
+   "id": "e172"
+  },
+  {
+   "type": "text",
+   "x": 1172,
+   "y": 500,
+   "text": "14-bit",
+   "cls": "valsm",
+   "anchor": "middle",
+   "id": "e173"
+  },
+  {
+   "type": "text",
+   "x": 1172,
+   "y": 514,
+   "text": "2 MSPS",
+   "cls": "valsm",
+   "anchor": "middle",
+   "id": "e174"
+  },
+  {
+   "type": "text",
+   "x": 1068,
+   "y": 518,
+   "text": "board: 470 pF",
+   "cls": "valsm",
+   "anchor": "end",
+   "id": "e175"
+  }
+ ]
+}

@@ -1,0 +1,274 @@
+{
+ "version": 1,
+ "meta": {
+  "title": "fig-aaf-bench",
+  "description": "Standalone chain for the anti-alias filter sweep: a source, an optional RC for tap 6 node pole, a single-pole stage 1 and the downstream block with the filter under test"
+ },
+ "page": {
+  "width": 900,
+  "height": 230,
+  "auto": false,
+  "margin": 0,
+  "grid": 5,
+  "junctions": false
+ },
+ "theme": "instrix",
+ "elements": [
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 60,
+   "y": 200,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e1"
+  },
+  {
+   "type": "comp",
+   "sym": "vsrc",
+   "x": 60,
+   "y": 150,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "length": 100,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e2"
+  },
+  {
+   "type": "text",
+   "x": 84,
+   "y": 148.0,
+   "text": "Vin",
+   "cls": "lbl",
+   "anchor": "start",
+   "id": "e3"
+  },
+  {
+   "type": "text",
+   "x": 84,
+   "y": 163.0,
+   "text": "AC 1, or a PWL step",
+   "cls": "valsm",
+   "anchor": "start",
+   "id": "e4"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     60,
+     100
+    ],
+    [
+     60,
+     80
+    ],
+    [
+     130,
+     80
+    ]
+   ],
+   "style": "",
+   "id": "e5"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 170,
+   "y": 80,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "length": 80,
+    "body": 30,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e6"
+  },
+  {
+   "type": "text",
+   "x": 170,
+   "y": 64,
+   "text": "1 kΩ",
+   "cls": "val",
+   "anchor": "middle",
+   "id": "e7"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     210,
+     80
+    ],
+    [
+     250,
+     80
+    ]
+   ],
+   "style": "",
+   "id": "e8"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 230,
+   "y": 80,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e9"
+  },
+  {
+   "type": "comp",
+   "sym": "capacitor",
+   "x": 230,
+   "y": 110,
+   "rot": 270,
+   "mirror": true,
+   "props": {
+    "length": 60,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e10"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 230,
+   "y": 140,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e11"
+  },
+  {
+   "type": "text",
+   "x": 246,
+   "y": 118,
+   "text": "tap 6 only: 510 kHz node pole",
+   "cls": "valsm",
+   "anchor": "start",
+   "id": "e12"
+  },
+  {
+   "type": "comp",
+   "sym": "block",
+   "x": 360,
+   "y": 55,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "w": 220,
+    "h": 50,
+    "title": "STAGE1",
+    "lines": "single pole, GBW 18 / 5.7 MHz",
+    "accent": false,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e13"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     250,
+     80
+    ],
+    [
+     360,
+     80
+    ]
+   ],
+   "style": "",
+   "id": "e14"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     580,
+     80
+    ],
+    [
+     610,
+     80
+    ]
+   ],
+   "style": "",
+   "id": "e15"
+  },
+  {
+   "type": "comp",
+   "sym": "block",
+   "x": 610,
+   "y": 55,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "w": 200,
+    "h": 50,
+    "title": "DOWNSTREAM",
+    "lines": "AAF R, C under test",
+    "accent": false,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e16"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     810,
+     80
+    ],
+    [
+     840,
+     80
+    ]
+   ],
+   "style": "",
+   "id": "e17"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 840,
+   "y": 80,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e18"
+  },
+  {
+   "type": "text",
+   "x": 848,
+   "y": 84,
+   "text": "out",
+   "cls": "node",
+   "anchor": "start",
+   "id": "e19"
+  },
+  {
+   "type": "text",
+   "x": 60,
+   "y": 30,
+   "text": ".ac 1 kHz–20 MHz and .tran (10 % → 100 % FS) on chains A/B and C; no ladder, no switches",
+   "cls": "note",
+   "anchor": "start",
+   "id": "e20"
+  }
+ ]
+}

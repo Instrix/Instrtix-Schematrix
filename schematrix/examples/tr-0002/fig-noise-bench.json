@@ -1,0 +1,390 @@
+{
+ "version": 1,
+ "meta": {
+  "title": "fig-noise-bench",
+  "description": "Where the transient noise sources sit: a current source across every ladder resistor, a voltage source in series with the owner chain stage-1 input and with the follower input, and with NOISE_DS the downstream op-amps and resistors"
+ },
+ "page": {
+  "width": 900,
+  "height": 320,
+  "auto": false,
+  "margin": 0,
+  "grid": 5,
+  "junctions": false
+ },
+ "theme": "instrix",
+ "elements": [
+  {
+   "type": "wire",
+   "points": [
+    [
+     40,
+     120
+    ],
+    [
+     90,
+     120
+    ]
+   ],
+   "style": "",
+   "id": "e1"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 130,
+   "y": 120,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "length": 80,
+    "body": 30,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e2"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     170,
+     120
+    ],
+    [
+     210,
+     120
+    ]
+   ],
+   "style": "",
+   "id": "e3"
+  },
+  {
+   "type": "text",
+   "x": 130,
+   "y": 104,
+   "text": "R_k",
+   "cls": "val",
+   "anchor": "middle",
+   "id": "e4"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     100,
+     120
+    ],
+    [
+     100,
+     160
+    ]
+   ],
+   "style": "",
+   "id": "e5"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     160,
+     120
+    ],
+    [
+     160,
+     160
+    ]
+   ],
+   "style": "",
+   "id": "e6"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     100,
+     160
+    ],
+    [
+     114,
+     160
+    ]
+   ],
+   "style": "",
+   "id": "e7"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     146,
+     160
+    ],
+    [
+     160,
+     160
+    ]
+   ],
+   "style": "",
+   "id": "e8"
+  },
+  {
+   "type": "raw",
+   "svg": "<circle class=\"amp\" cx=\"130\" cy=\"160\" r=\"16\"/>",
+   "x": 0,
+   "y": 0,
+   "id": "e9"
+  },
+  {
+   "type": "raw",
+   "svg": "<polygon class=\"arrow\" points=\"124,156 124,164 135,160\"/>",
+   "x": 0,
+   "y": 0,
+   "id": "e10"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     120,
+     160
+    ],
+    [
+     130,
+     160
+    ]
+   ],
+   "style": "",
+   "id": "e11"
+  },
+  {
+   "type": "text",
+   "x": 130,
+   "y": 200,
+   "text": "√(4kT/R_k) per √Hz",
+   "cls": "valsm",
+   "anchor": "middle",
+   "id": "e12"
+  },
+  {
+   "type": "text",
+   "x": 130,
+   "y": 60,
+   "text": "Every ladder segment",
+   "cls": "ref",
+   "anchor": "middle",
+   "id": "e13"
+  },
+  {
+   "type": "comp",
+   "sym": "opamp",
+   "x": 420,
+   "y": 140,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "top": "+",
+    "ref": ""
+   },
+   "style": "",
+   "id": "e14"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     384,
+     125
+    ],
+    [
+     360,
+     125
+    ]
+   ],
+   "style": "",
+   "id": "e15"
+  },
+  {
+   "type": "raw",
+   "svg": "<circle class=\"amp\" cx=\"344\" cy=\"125\" r=\"16\"/>",
+   "x": 0,
+   "y": 0,
+   "id": "e16"
+  },
+  {
+   "type": "text",
+   "x": 344,
+   "y": 129,
+   "text": "eₙ",
+   "cls": "lbl",
+   "anchor": "middle",
+   "id": "e17"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     328,
+     125
+    ],
+    [
+     290,
+     125
+    ]
+   ],
+   "style": "",
+   "id": "e18"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 290,
+   "y": 125,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "tap node",
+    "side": "left"
+   },
+   "style": "",
+   "id": "e19"
+  },
+  {
+   "type": "text",
+   "x": 410,
+   "y": 60,
+   "text": "Stage 1 of the owner chain",
+   "cls": "ref",
+   "anchor": "middle",
+   "id": "e20"
+  },
+  {
+   "type": "text",
+   "x": 410,
+   "y": 210,
+   "text": "√(eₙ² + 4kT·Rg‖Rf): OPA210 2.26, OPA387 8.5 nV/√Hz (chain C: one per half)",
+   "cls": "valsm",
+   "anchor": "middle",
+   "id": "e21"
+  },
+  {
+   "type": "comp",
+   "sym": "opamp",
+   "x": 720,
+   "y": 140,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "top": "+",
+    "ref": ""
+   },
+   "style": "",
+   "id": "e22"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     684,
+     125
+    ],
+    [
+     660,
+     125
+    ]
+   ],
+   "style": "",
+   "id": "e23"
+  },
+  {
+   "type": "raw",
+   "svg": "<circle class=\"amp\" cx=\"644\" cy=\"125\" r=\"16\"/>",
+   "x": 0,
+   "y": 0,
+   "id": "e24"
+  },
+  {
+   "type": "text",
+   "x": 644,
+   "y": 129,
+   "text": "eₙ",
+   "cls": "lbl",
+   "anchor": "middle",
+   "id": "e25"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     628,
+     125
+    ],
+    [
+     600,
+     125
+    ]
+   ],
+   "style": "",
+   "id": "e26"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 600,
+   "y": 125,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "I−",
+    "side": "left"
+   },
+   "style": "",
+   "id": "e27"
+  },
+  {
+   "type": "text",
+   "x": 720,
+   "y": 60,
+   "text": "Follower U7",
+   "cls": "ref",
+   "anchor": "middle",
+   "id": "e28"
+  },
+  {
+   "type": "text",
+   "x": 720,
+   "y": 210,
+   "text": "OPA2156 2.8 nV/√Hz",
+   "cls": "valsm",
+   "anchor": "middle",
+   "id": "e29"
+  },
+  {
+   "type": "text",
+   "x": 40,
+   "y": 262,
+   "text": "NOISE_DS=1 adds, in the owner chain's DOWNSTREAM block: 5.2 nV/√Hz on each OPA2189 / OPA4189 + input, and",
+   "cls": "note",
+   "anchor": "start",
+   "id": "e30"
+  },
+  {
+   "type": "text",
+   "x": 40,
+   "y": 280,
+   "text": "√(4kT/R) across every resistor of stages 2–3, the filter and the ADC network. ADC noise is added in the analysis.",
+   "cls": "note",
+   "anchor": "start",
+   "id": "e31"
+  },
+  {
+   "type": "text",
+   "x": 40,
+   "y": 304,
+   "text": "Each source: Vnz (TRNOISE, unit density, Ts = 9.7 ns) → B-source × V(ngate); ngate steps 0 → 1 at 30–31 µs.",
+   "cls": "note",
+   "anchor": "start",
+   "id": "e32"
+  }
+ ]
+}

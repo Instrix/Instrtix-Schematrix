@@ -1,0 +1,1217 @@
+{
+ "version": 1,
+ "meta": {
+  "title": "fig-boot-why",
+  "description": "Tap 6 with the isolation FET Qi off. Left: its gate-drain and drain-source capacitance, about 0.8 nF, go from I minus to nodes held at I+, which slows tap 6 to 236 kHz at the ADC. Right: Qb and Rtih tie the gate and ihi to a follower that copies the voltage of I minus, so no current flows through them."
+ },
+ "page": {
+  "width": 1120,
+  "height": 480,
+  "auto": false,
+  "margin": 0,
+  "grid": 5,
+  "junctions": false
+ },
+ "theme": "instrix",
+ "elements": [
+  {
+   "type": "text",
+   "x": 20,
+   "y": 30,
+   "text": "Without the follower",
+   "cls": "ref",
+   "anchor": "start",
+   "id": "e1"
+  },
+  {
+   "type": "comp",
+   "sym": "terminal",
+   "x": 70,
+   "y": 45,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "I+"
+   },
+   "style": "",
+   "id": "e2"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     70,
+     50
+    ],
+    [
+     70,
+     65
+    ]
+   ],
+   "style": "",
+   "id": "e3"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 70,
+   "y": 102.5,
+   "rot": 270,
+   "mirror": true,
+   "props": {
+    "length": 75,
+    "body": 40,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e4"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     70,
+     140
+    ],
+    [
+     70,
+     180
+    ]
+   ],
+   "style": "",
+   "id": "e5"
+  },
+  {
+   "type": "text",
+   "x": 56,
+   "y": 98,
+   "text": "R_tap",
+   "cls": "ref",
+   "anchor": "end",
+   "id": "e6"
+  },
+  {
+   "type": "text",
+   "x": 56,
+   "y": 112,
+   "text": "1 kΩ",
+   "cls": "val",
+   "anchor": "end",
+   "id": "e7"
+  },
+  {
+   "type": "text",
+   "x": 56,
+   "y": 126,
+   "text": "(tap 6)",
+   "cls": "valsm",
+   "anchor": "end",
+   "id": "e8"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 70,
+   "y": 180,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e9"
+  },
+  {
+   "type": "text",
+   "x": 60,
+   "y": 184,
+   "text": "I−",
+   "cls": "node",
+   "anchor": "end",
+   "id": "e10"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     70,
+     180
+    ],
+    [
+     70,
+     375
+    ]
+   ],
+   "style": "",
+   "id": "e11"
+  },
+  {
+   "type": "comp",
+   "sym": "terminal",
+   "x": 70,
+   "y": 380,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "to DUT"
+   },
+   "style": "",
+   "id": "e12"
+  },
+  {
+   "type": "comp",
+   "sym": "nmos",
+   "x": 250,
+   "y": 180,
+   "rot": 270,
+   "mirror": true,
+   "props": {
+    "ref": ""
+   },
+   "style": "",
+   "id": "e13"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     70,
+     180
+    ],
+    [
+     220,
+     180
+    ]
+   ],
+   "style": "",
+   "id": "e14"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 195,
+   "y": 180,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e15"
+  },
+  {
+   "type": "text",
+   "x": 258,
+   "y": 138,
+   "text": "Qi (off)",
+   "cls": "ref",
+   "anchor": "start",
+   "id": "e16"
+  },
+  {
+   "type": "text",
+   "x": 258,
+   "y": 151,
+   "text": "CSD17577Q3A",
+   "cls": "valsm",
+   "anchor": "start",
+   "id": "e17"
+  },
+  {
+   "type": "text",
+   "x": 220,
+   "y": 195,
+   "text": "D",
+   "cls": "valsm",
+   "anchor": "middle",
+   "id": "e18"
+  },
+  {
+   "type": "text",
+   "x": 280,
+   "y": 195,
+   "text": "S",
+   "cls": "valsm",
+   "anchor": "middle",
+   "id": "e19"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     250,
+     150
+    ],
+    [
+     250,
+     100
+    ]
+   ],
+   "style": "",
+   "id": "e20"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 250,
+   "y": 100,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e21"
+  },
+  {
+   "type": "comp",
+   "sym": "capacitor",
+   "x": 195,
+   "y": 140,
+   "rot": 270,
+   "mirror": true,
+   "props": {
+    "length": 80,
+    "ref": ""
+   },
+   "style": "para",
+   "id": "e22"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     195,
+     100
+    ],
+    [
+     250,
+     100
+    ]
+   ],
+   "style": "para",
+   "id": "e23"
+  },
+  {
+   "type": "text",
+   "x": 179,
+   "y": 144.0,
+   "text": "C_GD",
+   "cls": "ref",
+   "anchor": "end",
+   "id": "e24"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     195,
+     180
+    ],
+    [
+     195,
+     240
+    ]
+   ],
+   "style": "para",
+   "id": "e25"
+  },
+  {
+   "type": "comp",
+   "sym": "capacitor",
+   "x": 250,
+   "y": 240,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "length": 110,
+    "ref": ""
+   },
+   "style": "para",
+   "id": "e26"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     305,
+     240
+    ],
+    [
+     305,
+     180
+    ]
+   ],
+   "style": "para",
+   "id": "e27"
+  },
+  {
+   "type": "text",
+   "x": 250,
+   "y": 268,
+   "text": "C_DS",
+   "cls": "ref",
+   "anchor": "middle",
+   "id": "e28"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     280,
+     180
+    ],
+    [
+     340,
+     180
+    ]
+   ],
+   "style": "",
+   "id": "e29"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 305,
+   "y": 180,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e30"
+  },
+  {
+   "type": "text",
+   "x": 326,
+   "y": 172,
+   "text": "ihi",
+   "cls": "node",
+   "anchor": "middle",
+   "id": "e31"
+  },
+  {
+   "type": "text",
+   "x": 242,
+   "y": 92,
+   "text": "Qi gate",
+   "cls": "node",
+   "anchor": "end",
+   "id": "e32"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     250,
+     100
+    ],
+    [
+     370,
+     100
+    ]
+   ],
+   "style": "",
+   "id": "e33"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     370,
+     100
+    ],
+    [
+     370,
+     118
+    ]
+   ],
+   "style": "",
+   "id": "e34"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 370,
+   "y": 118,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e35"
+  },
+  {
+   "type": "text",
+   "x": 382,
+   "y": 104,
+   "text": "driver low: I+",
+   "cls": "valsm",
+   "anchor": "start",
+   "id": "e36"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     340,
+     180
+    ],
+    [
+     370,
+     180
+    ]
+   ],
+   "style": "",
+   "id": "e37"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 370,
+   "y": 215,
+   "rot": 270,
+   "mirror": true,
+   "props": {
+    "length": 70,
+    "body": 30,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e38"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 370,
+   "y": 250,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e39"
+  },
+  {
+   "type": "text",
+   "x": 382,
+   "y": 214,
+   "text": "Rtih 1 kΩ",
+   "cls": "ref",
+   "anchor": "start",
+   "id": "e40"
+  },
+  {
+   "type": "text",
+   "x": 382,
+   "y": 228,
+   "text": "to I+",
+   "cls": "valsm",
+   "anchor": "start",
+   "id": "e41"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     85,
+     168
+    ],
+    [
+     177,
+     168
+    ]
+   ],
+   "style": "acc",
+   "id": "e42"
+  },
+  {
+   "type": "raw",
+   "svg": "<polygon class=\"accf\" points=\"183,168 175,164 175,172\"/>",
+   "x": 0,
+   "y": 0,
+   "id": "e43"
+  },
+  {
+   "type": "text",
+   "x": 132.5,
+   "y": 160,
+   "text": "i = C·dV/dt",
+   "cls": "accl",
+   "anchor": "middle",
+   "id": "e44"
+  },
+  {
+   "type": "text",
+   "x": 20,
+   "y": 420,
+   "text": "Off, Qi still has ~0.8 nF from I− to nodes held at I+.",
+   "cls": "note",
+   "anchor": "start",
+   "id": "e45"
+  },
+  {
+   "type": "text",
+   "x": 20,
+   "y": 436,
+   "text": "The DUT current charges it: a pole at the node,",
+   "cls": "note",
+   "anchor": "start",
+   "id": "e46"
+  },
+  {
+   "type": "text",
+   "x": 20,
+   "y": 452,
+   "text": "204 kHz simulated; 236 kHz at the ADC, below 310 kHz.",
+   "cls": "note",
+   "anchor": "start",
+   "id": "e47"
+  },
+  {
+   "type": "raw",
+   "svg": "<line class=\"w\" x1=\"550\" y1=\"20\" x2=\"550\" y2=\"460\" stroke-dasharray=\"2 4\"/>",
+   "x": 0,
+   "y": 0,
+   "id": "e48"
+  },
+  {
+   "type": "text",
+   "x": 580,
+   "y": 30,
+   "text": "With the follower",
+   "cls": "ref",
+   "anchor": "start",
+   "id": "e49"
+  },
+  {
+   "type": "comp",
+   "sym": "terminal",
+   "x": 630,
+   "y": 45,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "I+"
+   },
+   "style": "",
+   "id": "e50"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     630,
+     50
+    ],
+    [
+     630,
+     65
+    ]
+   ],
+   "style": "",
+   "id": "e51"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 630,
+   "y": 102.5,
+   "rot": 270,
+   "mirror": true,
+   "props": {
+    "length": 75,
+    "body": 40,
+    "ref": ""
+   },
+   "style": "",
+   "id": "e52"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     630,
+     140
+    ],
+    [
+     630,
+     180
+    ]
+   ],
+   "style": "",
+   "id": "e53"
+  },
+  {
+   "type": "text",
+   "x": 616,
+   "y": 98,
+   "text": "R_tap",
+   "cls": "ref",
+   "anchor": "end",
+   "id": "e54"
+  },
+  {
+   "type": "text",
+   "x": 616,
+   "y": 112,
+   "text": "1 kΩ",
+   "cls": "val",
+   "anchor": "end",
+   "id": "e55"
+  },
+  {
+   "type": "text",
+   "x": 616,
+   "y": 126,
+   "text": "(tap 6)",
+   "cls": "valsm",
+   "anchor": "end",
+   "id": "e56"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 630,
+   "y": 180,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e57"
+  },
+  {
+   "type": "text",
+   "x": 620,
+   "y": 184,
+   "text": "I−",
+   "cls": "node",
+   "anchor": "end",
+   "id": "e58"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     630,
+     180
+    ],
+    [
+     630,
+     375
+    ]
+   ],
+   "style": "",
+   "id": "e59"
+  },
+  {
+   "type": "comp",
+   "sym": "terminal",
+   "x": 630,
+   "y": 380,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "to DUT"
+   },
+   "style": "",
+   "id": "e60"
+  },
+  {
+   "type": "comp",
+   "sym": "nmos",
+   "x": 810,
+   "y": 180,
+   "rot": 270,
+   "mirror": true,
+   "props": {
+    "ref": ""
+   },
+   "style": "",
+   "id": "e61"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     630,
+     180
+    ],
+    [
+     780,
+     180
+    ]
+   ],
+   "style": "",
+   "id": "e62"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 755,
+   "y": 180,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e63"
+  },
+  {
+   "type": "text",
+   "x": 818,
+   "y": 138,
+   "text": "Qi (off)",
+   "cls": "ref",
+   "anchor": "start",
+   "id": "e64"
+  },
+  {
+   "type": "text",
+   "x": 818,
+   "y": 151,
+   "text": "CSD17577Q3A",
+   "cls": "valsm",
+   "anchor": "start",
+   "id": "e65"
+  },
+  {
+   "type": "text",
+   "x": 780,
+   "y": 195,
+   "text": "D",
+   "cls": "valsm",
+   "anchor": "middle",
+   "id": "e66"
+  },
+  {
+   "type": "text",
+   "x": 840,
+   "y": 195,
+   "text": "S",
+   "cls": "valsm",
+   "anchor": "middle",
+   "id": "e67"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     810,
+     150
+    ],
+    [
+     810,
+     100
+    ]
+   ],
+   "style": "",
+   "id": "e68"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 810,
+   "y": 100,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e69"
+  },
+  {
+   "type": "comp",
+   "sym": "capacitor",
+   "x": 755,
+   "y": 140,
+   "rot": 270,
+   "mirror": true,
+   "props": {
+    "length": 80,
+    "ref": ""
+   },
+   "style": "para",
+   "id": "e70"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     755,
+     100
+    ],
+    [
+     810,
+     100
+    ]
+   ],
+   "style": "para",
+   "id": "e71"
+  },
+  {
+   "type": "text",
+   "x": 739,
+   "y": 144.0,
+   "text": "C_GD",
+   "cls": "ref",
+   "anchor": "end",
+   "id": "e72"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     755,
+     180
+    ],
+    [
+     755,
+     240
+    ]
+   ],
+   "style": "para",
+   "id": "e73"
+  },
+  {
+   "type": "comp",
+   "sym": "capacitor",
+   "x": 810,
+   "y": 240,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "length": 110,
+    "ref": ""
+   },
+   "style": "para",
+   "id": "e74"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     865,
+     240
+    ],
+    [
+     865,
+     180
+    ]
+   ],
+   "style": "para",
+   "id": "e75"
+  },
+  {
+   "type": "text",
+   "x": 810,
+   "y": 268,
+   "text": "C_DS",
+   "cls": "ref",
+   "anchor": "middle",
+   "id": "e76"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     840,
+     180
+    ],
+    [
+     900,
+     180
+    ]
+   ],
+   "style": "",
+   "id": "e77"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 865,
+   "y": 180,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e78"
+  },
+  {
+   "type": "text",
+   "x": 886,
+   "y": 172,
+   "text": "ihi",
+   "cls": "node",
+   "anchor": "middle",
+   "id": "e79"
+  },
+  {
+   "type": "text",
+   "x": 802,
+   "y": 92,
+   "text": "Qi gate",
+   "cls": "node",
+   "anchor": "end",
+   "id": "e80"
+  },
+  {
+   "type": "comp",
+   "sym": "nmos",
+   "x": 920,
+   "y": 100,
+   "rot": 270,
+   "mirror": false,
+   "props": {
+    "ref": ""
+   },
+   "style": "",
+   "id": "e81"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     810,
+     100
+    ],
+    [
+     890,
+     100
+    ]
+   ],
+   "style": "",
+   "id": "e82"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     950,
+     100
+    ],
+    [
+     1010,
+     100
+    ]
+   ],
+   "style": "acc",
+   "id": "e83"
+  },
+  {
+   "type": "text",
+   "x": 920,
+   "y": 78,
+   "text": "Qb (on)",
+   "cls": "accl",
+   "anchor": "middle",
+   "id": "e84"
+  },
+  {
+   "type": "text",
+   "x": 920,
+   "y": 144,
+   "text": "EN_B",
+   "cls": "valsm",
+   "anchor": "middle",
+   "id": "e85"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 955,
+   "y": 180,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "length": 110,
+    "body": 30,
+    "ref": ""
+   },
+   "style": "acc",
+   "id": "e86"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 1010,
+   "y": 180,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e87"
+  },
+  {
+   "type": "text",
+   "x": 955.0,
+   "y": 202,
+   "text": "Rtih 1 kΩ",
+   "cls": "accl",
+   "anchor": "middle",
+   "id": "e88"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     1010,
+     100
+    ],
+    [
+     1010,
+     335
+    ]
+   ],
+   "style": "",
+   "id": "e89"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 1010,
+   "y": 335,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e90"
+  },
+  {
+   "type": "comp",
+   "sym": "opamp",
+   "x": 810,
+   "y": 335,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "top": "-",
+    "ref": ""
+   },
+   "style": "",
+   "id": "e91"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     630,
+     350
+    ],
+    [
+     774,
+     350
+    ]
+   ],
+   "style": "",
+   "id": "e92"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 630,
+   "y": 350,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e93"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     846,
+     335
+    ],
+    [
+     1010,
+     335
+    ]
+   ],
+   "style": "",
+   "id": "e94"
+  },
+  {
+   "type": "comp",
+   "sym": "dot",
+   "x": 862,
+   "y": 335,
+   "rot": 0,
+   "mirror": false,
+   "props": {},
+   "style": "",
+   "id": "e95"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     862,
+     335
+    ],
+    [
+     862,
+     291
+    ],
+    [
+     764,
+     291
+    ],
+    [
+     764,
+     320
+    ],
+    [
+     774,
+     320
+    ]
+   ],
+   "style": "",
+   "id": "e96"
+  },
+  {
+   "type": "text",
+   "x": 1018,
+   "y": 339,
+   "text": "gm",
+   "cls": "node",
+   "anchor": "start",
+   "id": "e97"
+  },
+  {
+   "type": "text",
+   "x": 814,
+   "y": 387,
+   "text": "follower U7 (OPA2156)",
+   "cls": "ref",
+   "anchor": "middle",
+   "id": "e98"
+  },
+  {
+   "type": "text",
+   "x": 692.5,
+   "y": 160,
+   "text": "V across C ≈ 0",
+   "cls": "accl",
+   "anchor": "middle",
+   "id": "e99"
+  },
+  {
+   "type": "text",
+   "x": 580,
+   "y": 420,
+   "text": "The follower copies V(I−) onto Qi's gate (through Qb)",
+   "cls": "note",
+   "anchor": "start",
+   "id": "e100"
+  },
+  {
+   "type": "text",
+   "x": 580,
+   "y": 436,
+   "text": "and onto ihi (through Rtih): no voltage across C_GD or",
+   "cls": "note",
+   "anchor": "start",
+   "id": "e101"
+  },
+  {
+   "type": "text",
+   "x": 580,
+   "y": 452,
+   "text": "C_DS. Simulated: 553 kHz at the ADC, +0.6 dB.",
+   "cls": "note",
+   "anchor": "start",
+   "id": "e102"
+  }
+ ]
+}

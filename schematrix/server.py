@@ -1,0 +1,213 @@
+"""HTTP API + the web editor.
+
+Environment:
+    SCHEMATRIX_WORKSPACE   folder for saved documents and scripts (default ~/Schematrix, /data in Docker)
+    SCHEMATRIX_SCRIPTS     1 (default) lets the editor run Python scripts on the server; set 0 on a shared deployment
+    SCHEMATRIX_TOKEN       if set, every API call needs it (header "Authorization: Bearer <token>" or the cookie
+                         set by visiting /?token=<token>)
+    SCHEMATRIX_SCRIPT_TIMEOUT  seconds per script run (default 30)
+"""
+from __future__ import annotations
+
+import datetime as dt
+import hmac
+import os
+import re
+import shutil
+from pathlib import Path
+
+from fastapi import Body, FastAPI, HTTPException, Request
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, PlainTextResponse, Response
+from fastapi.staticfiles import StaticFiles
+
+from . import __version__
+from . import document as D
+from . import netlist as NET
+from . import render as R
+from . import runner
+from . import symbols as SYM
+from . import theme as TH
+
+WEB = Path(__file__).parent / 'web'
+ALLOWED_EXT = {'.json', '.py', '.svg'}
+
+
+def _truthy(v, default=True):
+    if v is None:
+        return default
+    return str(v).strip().lower() not in ('0', 'false', 'no', 'off', '')
+
+
+EXAMPLES = Path(__file__).parent / 'examples'
+
+
+def workspace() -> Path:
+    p = Path(os.environ.get('SCHEMATRIX_WORKSPACE') or (Path.home() / 'Schematrix')).expanduser()
+    if not p.exists() or not any(p.iterdir()):
+        p.mkdir(parents=True, exist_ok=True)
+        shutil.copytree(EXAMPLES, p / 'examples', dirs_exist_ok=True,
+                        ignore=shutil.ignore_patterns('__pycache__'))   # first run: seed with examples
+    return p
+
+
+def safe_path(rel: str) -> Path:
+    rel = rel.replace('\\', '/').strip('/')
+    if not rel or any(part in ('', '.', '..') for part in rel.split('/')) or not re.fullmatch(r'[\w\-. /]+', rel):
+        raise HTTPException(400, 'bad file name')
+    p = (workspace() / rel).resolve()
+    if workspace().resolve() not in p.parents:
+        raise HTTPException(400, 'outside the workspace')
+    if p.suffix.lower() not in ALLOWED_EXT:
+        raise HTTPException(400, f'only {", ".join(sorted(ALLOWED_EXT))} files')
+    return p
+
+
+def pdf_available():
+    try:
+        import cairosvg  # noqa: F401
+        return True
+    except Exception:  # noqa: BLE001
+        return False
+
+
+def create_app() -> FastAPI:
+    app = FastAPI(title='Schematrix', version=__version__, docs_url='/api/docs', redoc_url=None)
+    token = os.environ.get('SCHEMATRIX_TOKEN') or None
+
+    @app.middleware('http')
+    async def auth(request: Request, call_next):
+        if token:
+            path = request.url.path
+            q = request.query_params.get('token')
+            if q and hmac.compare_digest(q, token):
+                resp = await call_next(request)
+                resp.set_cookie('schematrix_token', token, httponly=True, samesite='strict')
+                return resp
+            given = request.cookies.get('schematrix_token') or request.headers.get('authorization', '').removeprefix('Bearer ').strip()
+            if not (given and hmac.compare_digest(given, token)) and path != '/api/health':
+                if path.startswith('/api/'):
+                    return JSONResponse({'detail': 'token required'}, 401)
+                return HTMLResponse('<p style="font-family:sans-serif">Schematrix: open this page with <code>?token=…</code></p>', 401)
+        return await call_next(request)
+
+    @app.get('/api/health')
+    def health():
+        return {'ok': True}
+
+    @app.get('/api/info')
+    def info():
+        return {'version': __version__, 'pdf': pdf_available(), 'scripts': _truthy(os.environ.get('SCHEMATRIX_SCRIPTS')),
+                'workspace': str(workspace()), 'themes': {k: v for k, v in TH.THEMES.items()},
+                'text_classes': TH.TEXT_CLASSES, 'css': {k: TH.css(k) for k in TH.THEMES}}
+
+    @app.get('/api/symbols')
+    def symbols():
+        return SYM.catalog()
+
+    @app.post('/api/geometry')
+    def geometry(body: dict = Body(...)):
+        out = []
+        for it in body.get('items', []):
+            try:
+                out.append(SYM.get(it['sym']).geometry(it.get('props') or {}))
+            except Exception as e:  # noqa: BLE001
+                out.append({'error': str(e)})
+        return out
+
+    def _doc(body):
+        try:
+            return D.normalize(body['doc'] if 'doc' in body else body)
+        except Exception as e:  # noqa: BLE001
+            raise HTTPException(400, f'bad document: {e}')
+
+    @app.post('/api/render')
+    def render(body: dict = Body(...), format: str = 'svg', fonts: bool = True, scale: float = 2.0):
+        doc = _doc(body)
+        name = re.sub(r'[^\w\-]+', '-', doc.get('meta', {}).get('title') or 'schematic').strip('-') or 'schematic'
+        if format == 'svg':
+            return Response(R.render_svg(doc, embed_fonts=fonts), media_type='image/svg+xml',
+                            headers={'Content-Disposition': f'inline; filename="{name}.svg"'})
+        if format == 'spice':
+            return PlainTextResponse(NET.to_spice(doc), headers={'Content-Disposition': f'attachment; filename="{name}.cir"'})
+        if format in ('png', 'pdf'):
+            if not pdf_available():
+                raise HTTPException(501, 'PNG/PDF export needs cairosvg on the server (pip install cairosvg)')
+            svg = R.render_svg(doc)
+            data = R.to_png(svg, scale) if format == 'png' else R.to_pdf(svg)
+            return Response(data, media_type='image/png' if format == 'png' else 'application/pdf',
+                            headers={'Content-Disposition': f'attachment; filename="{name}.{format}"'})
+        raise HTTPException(400, 'format must be svg, png, pdf or spice')
+
+    @app.post('/api/netlist')
+    def netlist(body: dict = Body(...)):
+        doc = _doc(body)
+        nx = NET.extract(doc)
+        return {'nets': nx['nets'], 'warnings': nx['warnings'], 'spice': NET.to_spice(doc),
+                'pins': [[k[0], k[1], v] for k, v in nx['pins'].items()]}
+
+    def _run(code, mode, filename):
+        if not _truthy(os.environ.get('SCHEMATRIX_SCRIPTS')):
+            raise HTTPException(403, 'script execution is disabled on this server (SCHEMATRIX_SCRIPTS=0)')
+        return runner.run(code, mode, filename, float(os.environ.get('SCHEMATRIX_SCRIPT_TIMEOUT', 30)), cwd=str(workspace()))
+
+    @app.post('/api/run')
+    def run(body: dict = Body(...)):
+        return _run(body.get('code', ''), 'script', body.get('filename') or 'script.py')
+
+    @app.post('/api/import-legacy')
+    def import_legacy(body: dict = Body(...)):
+        return _run(body.get('code', ''), 'legacy', body.get('filename') or 'legacy.py')
+
+    @app.get('/api/files')
+    def files():
+        ws = workspace()
+        out = []
+        for p in sorted(ws.rglob('*')):
+            if p.is_file() and p.suffix.lower() in ALLOWED_EXT and not any(s.startswith('.') for s in p.relative_to(ws).parts):
+                st = p.stat()
+                out.append({'path': p.relative_to(ws).as_posix(), 'size': st.st_size,
+                            'modified': dt.datetime.fromtimestamp(st.st_mtime).isoformat(timespec='seconds')})
+        return out
+
+    @app.get('/api/files/{path:path}')
+    def read_file(path: str):
+        p = safe_path(path)
+        if not p.exists():
+            raise HTTPException(404, 'no such file')
+        return FileResponse(p)
+
+    @app.put('/api/files/{path:path}')
+    async def write_file(path: str, request: Request):
+        p = safe_path(path)
+        data = await request.body()
+        if len(data) > 20 << 20:
+            raise HTTPException(413, 'too large')
+        if p.suffix == '.json':
+            import json
+            try:
+                D.normalize(json.loads(data))
+            except Exception as e:  # noqa: BLE001
+                raise HTTPException(400, f'not a Schematrix document: {e}')
+        p.parent.mkdir(parents=True, exist_ok=True)
+        tmp = p.with_suffix(p.suffix + '.tmp')
+        tmp.write_bytes(data)
+        os.replace(tmp, p)
+        return {'ok': True, 'path': p.relative_to(workspace()).as_posix()}
+
+    @app.delete('/api/files/{path:path}')
+    def delete_file(path: str):
+        p = safe_path(path)
+        if p.exists():
+            p.unlink()
+        return {'ok': True}
+
+    app.mount('/static', StaticFiles(directory=WEB), name='static')
+
+    @app.get('/')
+    def index():
+        return FileResponse(WEB / 'index.html', headers={'Cache-Control': 'no-cache'})
+
+    return app
+
+
+app = create_app()
