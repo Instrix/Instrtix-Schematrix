@@ -20,6 +20,7 @@
       <button data-cmd="save">Save<kbd>Ctrl S</kbd></button>
       <button data-cmd="saveas">Save as…</button>
       <hr>
+      <button data-cmd="import-netlist">Import netlist (SPICE / KiCad / JSON)…</button>
       <button data-cmd="import-legacy">Import legacy figure script…</button>
     </div></div>
     <div class="menu"><button>Edit</button><div class="drop">
@@ -55,7 +56,9 @@
       <button data-cmd="export-svg-plain">SVG (plain, like the originals)</button>
       <button data-cmd="export-png">PNG</button>
       <button data-cmd="export-pdf">PDF</button>
-      <button data-cmd="export-spice">SPICE netlist (.cir)</button>
+      <button data-cmd="export-spice">Netlist: SPICE (.cir)</button>
+      <button data-cmd="export-kicad">Netlist: KiCad (.net)</button>
+      <button data-cmd="export-netjson">Netlist: JSON</button>
       <button data-cmd="export-json">Document (.json)</button>
       <hr>
       <button data-cmd="copy-svg">Copy SVG to clipboard</button>
@@ -113,7 +116,7 @@
     </div>
     <div class="pane" id="pane-props"></div>
     <div class="pane" id="pane-netlist" hidden>
-      <div class="row"><button id="netrefresh" class="primary">Extract netlist</button><button id="netdl" class="ghost">Download .cir</button></div>
+      <div class="row"><button id="netrefresh" class="primary">Extract netlist</button><select id="netfmt" title="Netlist format"><option value="spice">SPICE</option><option value="kicad">KiCad</option><option value="json">JSON</option></select><button id="netdl" class="ghost">Download</button></div>
       <div id="netwarn"></div>
       <div id="netlist"></div>
       <label class="lbl">SPICE</label>
@@ -136,7 +139,7 @@
 </footer>
 
 <div id="modal" hidden><div class="dlg"><div class="dlg-h"><b id="modal-title"></b><button class="x" data-close>×</button></div><div id="modal-body"></div></div></div>
-<input type="file" id="fileinput" accept=".json,.py" hidden>
+<input type="file" id="fileinput" accept=".json,.py,.cir,.sp,.spi,.spice,.ckt,.net" hidden>
 <textarea id="inlineedit" hidden></textarea>
 <div id="toast" hidden></div>
 <script type="module" src="/static/js/app.js"></script>

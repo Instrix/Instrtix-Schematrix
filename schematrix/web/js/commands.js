@@ -1,5 +1,5 @@
 // Commands, menus, keyboard shortcuts and resizable panels.
-import { exportAs, filesDialog, importFile, save } from './files.js';
+import { exportAs, exportNetlist, filesDialog, importFile, save } from './files.js';
 import { renderInspector } from './inspector.js';
 import { buildPalette } from './palette.js';
 import { refreshNetlist, refreshScripts, runScript } from './panes.js';
@@ -31,7 +31,8 @@ export const COMMANDS = {
   junctions: () => edit((d) => { d.page.junctions = d.page.junctions === false; }),
   hops: () => edit((d) => { d.page.hops = !d.page.hops; }),
   'export-svg': () => exportAs('svg'), 'export-svg-plain': () => exportAs('svg-plain'), 'export-png': () => exportAs('png'),
-  'export-pdf': () => exportAs('pdf'), 'export-spice': () => exportAs('spice'), 'export-json': () => exportAs('json'),
+  'export-pdf': () => exportAs('pdf'), 'export-spice': () => exportNetlist('spice'), 'export-kicad': () => exportNetlist('kicad'), 'export-netjson': () => exportNetlist('json'),
+  'import-netlist': () => { $('#fileinput').dataset.legacy = ''; $('#fileinput').click(); }, 'export-json': () => exportAs('json'),
   'copy-svg': async () => { try { const b = await api.blob('/api/render?format=svg&fonts=false', { doc: D() }); await navigator.clipboard.writeText(await b.text()); toast('SVG copied'); } catch (err) { toast(err.message, true); } },
 };
 export function cmd(name) { closeMenus(); COMMANDS[name]?.(); }
@@ -55,7 +56,7 @@ $('#symsearch').addEventListener('keydown', (ev) => {
 });
 $('#fileinput').addEventListener('change', (ev) => { const f = ev.target.files[0]; if (f) importFile(f, ev.target.dataset.legacy === '1'); ev.target.value = ''; });
 $('#netrefresh').onclick = refreshNetlist;
-$('#netdl').onclick = () => exportAs('spice');
+$('#netdl').onclick = () => exportNetlist($('#netfmt').value);
 $('#runscript').onclick = runScript;
 $('#savescript').onclick = async () => {
   const cur = $('#scriptfile').value;

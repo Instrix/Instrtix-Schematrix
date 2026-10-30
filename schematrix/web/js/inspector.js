@@ -10,8 +10,51 @@ export function field(label, input) {
   const d = document.createElement('div');
   d.className = 'f';
   const l = document.createElement('label'); l.textContent = label;
+  if (!input.dataset.k) input.dataset.k = label;
   d.append(l, input);
   return d;
+}
+
+// the inspector is rebuilt after every edit: put the caret back in the input that was being typed in
+function keepFocus(build) {
+  const a = document.activeElement, k = a?.closest?.('#pane-props') ? a.dataset.k : null;
+  const range = k && 'selectionStart' in a ? [a.selectionStart, a.selectionEnd] : null;
+  build();
+  if (!k) return;
+  const b = $(`#pane-props [data-k="${CSS.escape(k)}"]`);
+  if (!b) return;
+  b.focus();
+  if (range) try { b.setSelectionRange(...range); } catch { /* not a text input */ }
+}
+
+// user fields (tolerance, voltage rating, ...): name, value, and whether the value prints on the sheet
+function fieldsEditor(e, c) {
+  const wrap = document.createElement('div');
+  wrap.append(sect('Fields'));
+  const fs = e.fields || [];
+  fs.forEach((f, i) => {
+    const row = document.createElement('div'); row.className = 'fieldrow';
+    const name = inp(f.name, (v) => edit(() => { e.fields[i].name = v.trim() || f.name; }));
+    name.placeholder = 'Name'; name.dataset.k = `field:${i}:name`;
+    const val = inp(f.value, (v, co) => edit(() => { e.fields[i].value = v; }, co ? `${e.id}.f.${i}` : undefined), { mono: true, coalesce: true });
+    val.placeholder = 'Value'; val.dataset.k = `field:${i}:value`;
+    const show = chk(f.show, (v) => edit(() => { e.fields[i].show = v; })); show.title = 'Show the value on the sheet';
+    const rm = document.createElement('button'); rm.textContent = '×'; rm.title = 'Remove field';
+    rm.onclick = () => edit(() => { e.fields.splice(i, 1); if (!e.fields.length) delete e.fields; });
+    row.append(name, val, show, rm);
+    wrap.append(row);
+  });
+  const add = (name) => edit(() => { (e.fields ||= []).push({ name, value: '', show: false }); });
+  const have = new Set(fs.map((f) => f.name));
+  const chips = document.createElement('div'); chips.className = 'chips';
+  for (const n of (c?.fields || []).filter((n) => !have.has(n))) {
+    const b = document.createElement('button'); b.textContent = '+ ' + n; b.onclick = () => add(n); chips.append(b);
+  }
+  const b = document.createElement('button'); b.textContent = '+ Field…';
+  b.onclick = () => { let n = 'Field', k = 1; while (have.has(n)) n = `Field ${++k}`; add(n); };
+  chips.append(b);
+  wrap.append(chips);
+  return wrap;
 }
 export function inp(value, onChange, { type = 'text', mono = false, step, coalesce } = {}) {
   const i = document.createElement('input');
@@ -48,7 +91,9 @@ export function seg(value, options, onChange) {
 export const STYLES = [['', 'Ink'], ['acc', 'Accent'], ['para', 'Dash'], ['acc para', 'Acc·dash']];
 export const sect = (t) => { const d = document.createElement('div'); d.className = 'sect'; d.textContent = t; return d; };
 
-export function renderInspector() {
+export function renderInspector() { keepFocus(buildInspector); }
+
+function buildInspector() {
   const p = $('#pane-props');
   if (!S.cur) return;
   p.innerHTML = '';
@@ -104,6 +149,7 @@ export function renderInspector() {
       if (spec.help) f.title = spec.help;
       p.append(f);
     }
+    if (c?.is_part !== false) p.append(fieldsEditor(e, c));
     p.append(sect('Placement'));
     p.append(field('Position', pair(inp(e.x, set(e, 'x'), { type: 'number', mono: true }), inp(e.y, set(e, 'y'), { type: 'number', mono: true }))));
     p.append(field('Rotation', seg(e.rot || 0, [[0, '0°'], [90, '90°'], [180, '180°'], [270, '270°']], set(e, 'rot'))));

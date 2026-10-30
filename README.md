@@ -6,8 +6,18 @@ one built by a script are the same kind of document.
 
 ![Editor](docs/editor.png)
 
-- **GUI**: browser-based editor — symbol palette, wires that snap to pins and follow parts when moved, net labels,
+- **GUI**: browser-based editor — symbol palette, wires that snap to pins and follow parts when moved, KiCad-style
+  wire dragging (grab an end to stretch it, a segment to slide it), junction dots and optional wire hops, net labels,
   group boxes, notes, undo/redo, tabs, themes, netlist view, and a Python script pane.
+- **Symbols**: ~90 parts with variants — resistors (variable, thermistor, varistor, LDR, Kelvin shunt), capacitors,
+  inductors, transformers, every common diode kind, bridges, SCR / triac / diac, BJTs, MOSFETs (enhancement /
+  depletion, 4-terminal), JFETs, IGBTs, optocouplers, op-amps, comparators, in-amps, regulators, logic gates,
+  flip-flops, muxes, independent and dependent sources, batteries, current sinks, loads, motors, lamps, meters,
+  switches, relays, connectors, antennas, vacuum tubes, signal-flow blocks, Thévenin / Norton equivalents, two-ports.
+- **Fields**: any part can carry extra fields (tolerance, voltage rating, footprint, …); each can be shown on the
+  sheet, and they travel with the netlist.
+- **Netlists**: export and import SPICE, KiCad `.net` and a JSON netlist — from the editor, the API, the CLI or Python.
+  An imported netlist becomes a new sheet with every net labelled.
 - **Scripting**: `from schematrix import Schematic` — place parts, reach pins as `part['pin']`, route wires,
   save JSON / SVG / PNG / PDF / SPICE. Scripts run from the editor, the CLI, or plain Python / Jupyter.
 - **Legacy import**: figure scripts written against the old hand-rolled `S` class (like `schematics.py`) run
@@ -151,6 +161,9 @@ s.save('rc.json'); s.save_svg('rc.svg'); s.save_pdf('rc.pdf')
 print(s.spice())
 ```
 
+- Fields: `s.resistor(..., fields={'Tolerance': ('1%', True), 'Power': '0.25 W'})` (`True` = show on the sheet),
+  then `r.field('Power')`, `r.field('Power', '0.5 W', show=True)`, `r.remove_field('Power')`.
+- Netlists: `s.export_netlist('kicad')`, `s.save_netlist('board.net')`, `Schematic.from_netlist('deck.cir')`.
 - Every symbol is a method: `s.resistor`, `s.nmos`, `s.opamp`, `s.vsrc`, `s.gate(kind='nand', inputs=3)`,
   `s.block(w=, h=, title=, pins='IN:l, OUT:r')`, … — `schematrix symbols` lists them with their pins and properties.
 - Placement: `at`, `rot` (0/90/180/270), `mirror`, `anchor=<pin>`; `style` = `''`, `'acc'`, `'para'` (dashed).
@@ -164,7 +177,8 @@ print(s.spice())
 ```
 schematrix render fig.json -o fig.svg            # or .png / .pdf / .cir; --fonts embeds fonts in the SVG
 schematrix render build_figs.py -o out/ -f svg,pdf
-schematrix netlist fig.json
+schematrix netlist fig.json -f kicad -o fig.net  # spice (default) | kicad | json
+schematrix import-netlist board.net -f json,svg   # draw a schematic from a SPICE / KiCad / JSON netlist
 schematrix import-legacy schematics.py -o figs/  # old S-class scripts -> .json + .svg
 schematrix symbols
 ```
@@ -173,30 +187,53 @@ schematrix symbols
 
 ```
 schematrix/
-  symbols.py    symbol library: geometry, pins, label blocks (single source of truth, served to the editor)
+  symbols/      symbol library (single source of truth, served to the editor)
+    core.py       Prop, Symbol, @symbol registry, primitives and drawing helpers
+    passive.py semiconductor.py analog.py logic.py sources.py loads.py electromech.py tubes.py signal.py
+    generic.py nets.py      one module per palette category
   geometry.py   placement maths, junctions, bounding boxes   (web/js/geom.js is its JS twin)
   render.py     document -> SVG (and PNG/PDF via cairosvg)
   document.py   the scripting API (Schematic, Comp, Pin)
-  netlist.py    connectivity and SPICE
+  netlist.py    connectivity (which pins share a net, net names)
+  netio/        netlist files: model.py (neutral Netlist), spice.py, kicad.py, jsonfmt.py, layout.py (netlist -> sheet)
+  units.py      engineering values ('1 kΩ' -> SPICE '1k')
   compat.py     legacy S-class importer
   runner.py     sandboxed script execution
-  server.py     FastAPI: /api/symbols, /geometry, /render, /netlist, /run, /files …  (docs at /api/docs)
+  server.py     FastAPI: /api/symbols, /geometry, /render, /netlist, /netlist/export, /netlist/import, /run, /files …
+                (docs at /api/docs)
   cli.py        command line + native launcher
-  web/          the editor (vanilla JS modules, no build step) and the bundled JetBrains Mono / Inter fonts
+  web/          the editor (vanilla ES modules, no build step) and the bundled JetBrains Mono / Inter fonts
+    js/app.js     entry point; state, view, tools, selection, inspector, palette, panes, files, ui, commands,
+                  util modules; geom.js is the JS twin of geometry.py
 ```
 
-Adding a symbol is one decorated function in `symbols.py` returning primitives and pins; the editor picks it up
-from `/api/symbols` with no front-end change.
+Adding a symbol is one decorated function in the fitting `symbols/` module returning primitives and pins; the editor
+picks it up from `/api/symbols` with no front-end change. Give it a SPICE line template (`'R {1} {2} {value}'`),
+KiCad pin numbers and library aliases, and suggested fields, and netlist export / import handle it too.
+
+## Netlists
+
+| Format | Export | Import |
+|---|---|---|
+| SPICE (`.cir`) | one line per part from its template; net names made SPICE-safe | elements by letter, `.model` types, subcircuits skipped |
+| KiCad (`.net`) | version E, KiCad library names and pin numbers (`Device:R`, `Device:Q_NPN_BCE`, …) | by library part, then reference prefix; `Q_NPN_CBE`-style pin orders honoured; unknown parts become blocks |
+| JSON | `{"format": "schematrix-netlist", "components": [...], "nets": [...]}` | the same |
+
+Exports embed the Schematrix symbol, properties and fields (as `*@` comments in SPICE, component properties in
+KiCad), so a netlist written here imports back without loss. API: `POST /api/netlist/export?format=kicad` with
+`{"doc": …}` returns the file; `POST /api/netlist/import` with `{"text": …, "filename"?: …, "format"?: …}` returns
+`{"doc", "format", "warnings"}`.
 
 ## Document format
 
 ```json
 {"version": 1, "meta": {"title": "", "description": ""},
- "page": {"width": 800, "height": 500, "auto": false, "margin": 20, "grid": 5, "junctions": true},
+ "page": {"width": 800, "height": 500, "auto": false, "margin": 20, "grid": 5, "junctions": true, "hops": false},
  "theme": "instrix",
  "elements": [
    {"id": "e1", "type": "comp", "sym": "resistor", "x": 100, "y": 100, "rot": 0, "mirror": false,
-    "props": {"ref": "R1", "value": "1 kΩ"}, "style": ""},
+    "props": {"ref": "R1", "value": "1 kΩ"}, "style": "",
+    "fields": [{"name": "Tolerance", "value": "1%", "show": true}]},
    {"id": "e2", "type": "wire", "points": [[130, 100], [200, 100]], "style": "acc"},
    {"id": "e3", "type": "text", "x": 60, "y": 230, "text": "note", "cls": "note", "anchor": "start"}]}
 ```

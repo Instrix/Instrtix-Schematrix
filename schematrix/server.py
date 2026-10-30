@@ -22,6 +22,7 @@ from fastapi.staticfiles import StaticFiles
 
 from . import __version__
 from . import document as D
+from . import netio
 from . import netlist as NET
 from . import render as R
 from . import runner
@@ -98,7 +99,8 @@ def create_app() -> FastAPI:
     def info():
         return {'version': __version__, 'pdf': pdf_available(), 'scripts': _truthy(os.environ.get('SCHEMATRIX_SCRIPTS')),
                 'workspace': str(workspace()), 'themes': {k: v for k, v in TH.THEMES.items()},
-                'text_classes': TH.TEXT_CLASSES, 'css': {k: TH.css(k) for k in TH.THEMES}}
+                'text_classes': TH.TEXT_CLASSES, 'css': {k: TH.css(k) for k in TH.THEMES},
+                'netlist_formats': netio.info()}
 
     @app.get('/api/symbols')
     def symbols():
@@ -144,6 +146,29 @@ def create_app() -> FastAPI:
         nx = NET.extract(doc)
         return {'nets': nx['nets'], 'warnings': nx['warnings'], 'spice': NET.to_spice(doc),
                 'pins': [[k[0], k[1], v] for k, v in nx['pins'].items()]}
+
+    @app.post('/api/netlist/export')
+    def netlist_export(body: dict = Body(...), format: str = 'spice'):
+        """the document's netlist as a file: format = spice | kicad | json"""
+        if format not in netio.FORMATS:
+            raise HTTPException(400, f'format must be one of {", ".join(netio.FORMATS)}')
+        doc = _doc(body)
+        name = re.sub(r'[^\w\-]+', '-', doc.get('meta', {}).get('title') or 'schematic').strip('-') or 'schematic'
+        return Response(netio.export(doc, format), media_type=netio.FORMATS[format]['mime'],
+                        headers={'Content-Disposition': f'attachment; filename="{name}{netio.EXT[format]}"'})
+
+    @app.post('/api/netlist/import')
+    def netlist_import(body: dict = Body(...)):
+        """netlist text -> a new document. body: {text, format?: spice|kicad|json, filename?, title?}"""
+        text = body.get('text') or ''
+        if not text.strip():
+            raise HTTPException(400, 'empty netlist')
+        fmt = body.get('format') or netio.detect(text, body.get('filename') or '')
+        try:
+            sch = netio.import_netlist(text, fmt, body.get('filename') or '', body.get('title'))
+        except Exception as e:  # noqa: BLE001
+            raise HTTPException(400, f'could not read the {fmt} netlist: {e}')
+        return {'format': fmt, 'doc': sch.doc, 'warnings': sch.warnings}
 
     def _run(code, mode, filename):
         if not _truthy(os.environ.get('SCHEMATRIX_SCRIPTS')):

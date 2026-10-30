@@ -62,6 +62,7 @@ export function labelLines(c, sym, g) {
     const s = String(props[key] ?? '');
     if (s) out.push([s, acc && cls === 'ref' ? 'accl' : cls, key]);
   }
+  for (const f of c.fields || []) if (f.show && String(f.value ?? '')) out.push([String(f.value), 'valsm', 'f:' + f.name]);
   return out;
 }
 

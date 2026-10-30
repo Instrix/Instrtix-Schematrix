@@ -1,5 +1,4 @@
 // Small shared helpers: DOM lookup, cloning, snapping and the HTTP client.
-import { del } from './selection.js';
 
 export const $ = (s, el = document) => el.querySelector(s);
 export const $$ = (s, el = document) => [...el.querySelectorAll(s)];

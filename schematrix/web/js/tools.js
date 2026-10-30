@@ -389,7 +389,8 @@ export function inlineEdit(e, key) {
   let value, anchor, cls;
   if (e.type === 'text') { value = e.text; anchor = [e.x, e.y]; cls = e.cls; } else if (e.type === 'rect') { value = e.label || ''; anchor = [e.x + 4, e.y + 12]; } else {
     const c = S.cat[e.sym];
-    value = String(e.props?.[key] ?? c?.props[key]?.default ?? '');
+    value = key.startsWith('f:') ? String(e.fields?.find((f) => 'f:' + f.name === key)?.value ?? '')
+      : String(e.props?.[key] ?? c?.props[key]?.default ?? '');
     const lb = G.labelBlock(e, c, geoOf(e)).find((l) => l[5] === key);
     anchor = lb ? [lb[0], lb[1]] : [e.x, e.y];
   }
@@ -405,6 +406,7 @@ export function inlineEdit(e, key) {
     ta.onkeydown = ta.onblur = null; ta.hidden = true;
     if (ok && ta.value !== value) edit(() => {
       if (e.type === 'text') e.text = ta.value; else if (e.type === 'rect') e.label = ta.value;
+      else if (key.startsWith('f:')) { const f = e.fields?.find((x) => 'f:' + x.name === key); if (f) f.value = ta.value; }
       else { e.props = { ...e.props, [key]: ta.value }; if (key === 'label' && e.sym === 'flag') S.lastFlag = ta.value; }
     });
     svg.focus();

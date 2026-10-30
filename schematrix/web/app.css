@@ -73,7 +73,16 @@ aside { position: relative; min-height: 0; display: flex; flex-direction: column
 .search input { width: 100%; padding: 6px 9px; border: 1px solid var(--rule); border-radius: var(--r); background: var(--paper); outline: none; }
 .search input:focus { border-color: var(--accent); }
 #palette { overflow-y: auto; padding: 4px 10px 16px; }
-.cat { font: 600 10px var(--sans); letter-spacing: .09em; text-transform: uppercase; color: var(--faint); margin: 12px 2px 6px; }
+.cat { font: 600 10px var(--sans); letter-spacing: .09em; text-transform: uppercase; color: var(--faint); margin: 12px 2px 6px; cursor: pointer; user-select: none; }
+.syms[hidden] { display: none; }
+.cat::before { content: '▾ '; }
+.cat.folded::before { content: '▸ '; }
+.fieldrow { display: grid; grid-template-columns: 1fr 1.3fr auto auto; gap: 4px; align-items: center; margin: 4px 0; }
+.fieldrow input[type=text], .fieldrow input:not([type]) { min-width: 0; }
+.fieldrow button, .chips button { background: var(--paper); border: 1px solid var(--rule); border-radius: 5px; padding: 2px 7px; font-size: 12px; }
+.chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+.chips button { color: var(--faint); }
+.chips button:hover, .fieldrow button:hover { border-color: var(--faint); color: inherit; }
 .syms { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
 .sym { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 2px 5px; background: var(--paper);
   border: 1px solid var(--rule-2); border-radius: var(--r); cursor: grab; font-size: 10.5px; color: var(--muted); text-align: center; line-height: 1.15; }

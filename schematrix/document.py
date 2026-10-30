@@ -80,6 +80,30 @@ class Comp:
         self.props.update(props)
         return self
 
+    @property
+    def fields(self) -> dict:
+        """user fields as {name: value}"""
+        return {f['name']: f.get('value', '') for f in self.el.get('fields', [])}
+
+    def field(self, name, value=None, show=None):
+        """read a user field, or add / change it (show=True prints its value in the label block)"""
+        fs = self.el.setdefault('fields', [])
+        f = next((f for f in fs if f['name'] == name), None)
+        if value is None and show is None:
+            return f.get('value') if f else None
+        if f is None:
+            f = {'name': name, 'value': '', 'show': False}
+            fs.append(f)
+        if value is not None:
+            f['value'] = str(value)
+        if show is not None:
+            f['show'] = bool(show)
+        return self
+
+    def remove_field(self, name):
+        self.el['fields'] = [f for f in self.el.get('fields', []) if f['name'] != name]
+        return self
+
     def move(self, dx=0, dy=0):
         self.el['x'] += dx; self.el['y'] += dy
         return self
@@ -167,6 +191,31 @@ class Schematic:
     def spice(self) -> str:
         return NET.to_spice(self.doc)
 
+    def export_netlist(self, fmt='spice') -> str:
+        """netlist text: 'spice', 'kicad' or 'json'"""
+        from . import netio
+        return netio.export(self.doc, fmt)
+
+    def save_netlist(self, path, fmt=None):
+        """write a netlist; the format follows the extension (.cir/.sp spice, .net kicad, .json json) unless given"""
+        from . import netio
+        p = str(path).lower()
+        fmt = fmt or ('json' if p.endswith('.json') else 'kicad' if p.endswith('.net') else 'spice')
+        with open(path, 'w', encoding='utf-8') as f:
+            f.write(netio.export(self.doc, fmt))
+        return path
+
+    @classmethod
+    def from_netlist(cls, source, fmt=None, title=None) -> 'Schematic':
+        """a new schematic from netlist text or a netlist file path (SPICE, KiCad .net or Schematrix JSON)"""
+        from . import netio
+        name = ''
+        if isinstance(source, os.PathLike) or (isinstance(source, str) and '\n' not in source and os.path.isfile(source)):
+            name = str(source)
+            with open(source, encoding='utf-8') as f:
+                source = f.read()
+        return netio.import_netlist(source, fmt, name, title)
+
     def show(self):
         """mark this schematic as the script's result (the editor opens the shown schematics)"""
         if self not in _shown:
@@ -221,7 +270,8 @@ class Schematic:
         return f'{prefix}{i}'
 
     def add(self, sym, at=(0, 0), rot=0, mirror=False, *, anchor=None, ref=None, value=None, part=None, style='',
-            label_offset=None, hide_labels=False, id=None, **props) -> Comp:
+            label_offset=None, hide_labels=False, id=None, fields=None, **props) -> Comp:
+        """place a symbol. fields: {name: value} (hidden), {name: (value, show)} or [{'name', 'value', 'show'}]"""
         s = SYM.get(sym)
         if s.lines and s.lines[0][0] == 'ref' and ref is None and s.prefix:
             ref = self.next_ref(s.prefix)
@@ -239,6 +289,8 @@ class Schematic:
             el['label_offset'] = list(label_offset)
         if hide_labels:
             el['hide_labels'] = True
+        if fields:
+            el['fields'] = norm_fields(fields)
         if anchor is not None:
             local = GEO.geometry(el)['pins'][anchor]
             dx, dy = GEO.xf(*local, el['rot'], el['mirror'])
@@ -351,6 +403,17 @@ class Schematic:
     def __repr__(self):
         n = len(self.doc['elements'])
         return f'<Schematic {self.title!r}: {n} elements>'
+
+
+def norm_fields(fields) -> list:
+    """{name: value} | {name: (value, show)} | [{'name', 'value', 'show'}] -> the document's field list"""
+    if isinstance(fields, dict):
+        out = []
+        for k, v in fields.items():
+            val, show = (v if isinstance(v, (tuple, list)) else (v, False))
+            out.append({'name': str(k), 'value': str(val), 'show': bool(show)})
+        return out
+    return [{'name': str(f['name']), 'value': str(f.get('value', '')), 'show': bool(f.get('show'))} for f in fields]
 
 
 def _n(v):

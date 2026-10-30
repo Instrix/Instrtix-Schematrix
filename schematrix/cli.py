@@ -91,8 +91,11 @@ def _write(doc, out: Path, fmt, fonts):
         out.write_bytes(R.to_png(R.render_svg(doc)))
     elif fmt == 'pdf':
         out.write_bytes(R.to_pdf(R.render_svg(doc)))
-    elif fmt in ('cir', 'spice', 'net'):
+    elif fmt in ('cir', 'spice'):
         out.write_text(NET.to_spice(doc), encoding='utf-8')
+    elif fmt == 'net':
+        from . import netio
+        out.write_text(netio.export(doc, 'kicad'), encoding='utf-8')
     else:
         sys.exit(f'unknown format {fmt}')
     print('wrote', out)
@@ -116,9 +119,24 @@ def cmd_render(a):
 
 
 def cmd_netlist(a):
-    from . import netlist as NET
+    from . import netio
     for name, doc in _load_any(a.input):
-        print(NET.to_spice(doc), end='')
+        text = netio.export(doc, a.format)
+        if a.output:
+            Path(a.output).write_text(text, encoding='utf-8'); print('wrote', a.output)
+        else:
+            print(text, end='')
+
+
+def cmd_import_netlist(a):
+    from . import netio
+    text = Path(a.input).read_text(encoding='utf-8')
+    sch = netio.import_netlist(text, a.netformat, a.input)
+    for w in sch.warnings:
+        print('warning:', w, file=sys.stderr)
+    out = Path(a.output or Path(a.input).with_suffix('.json').name)
+    for f in a.format.split(','):
+        _write(sch.doc, out.with_suffix('.' + f), f, a.fonts)
 
 
 def cmd_import(a):
@@ -154,10 +172,17 @@ def main(argv=None):
     s.set_defaults(fn=cmd_serve)
     s = sub.add_parser('render', help='render a .json document or a .py script to svg/png/pdf/json/cir')
     s.add_argument('input'); s.add_argument('-o', '--output', help='file (single result) or folder')
-    s.add_argument('-f', '--format', default='svg', help='comma list: svg,png,pdf,json,cir')
+    s.add_argument('-f', '--format', default='svg', help='comma list: svg,png,pdf,json,cir (SPICE),net (KiCad netlist)')
     s.add_argument('--fonts', action='store_true', help='embed the fonts in SVGs (portable, ~200 kB)')
     s.set_defaults(fn=cmd_render)
-    s = sub.add_parser('netlist', help='print a SPICE netlist'); s.add_argument('input'); s.set_defaults(fn=cmd_netlist)
+    s = sub.add_parser('netlist', help='write the netlist of a document or script (SPICE, KiCad .net or JSON)')
+    s.add_argument('input'); s.add_argument('-f', '--format', default='spice', choices=['spice', 'kicad', 'json'])
+    s.add_argument('-o', '--output', help='file (default: print)'); s.set_defaults(fn=cmd_netlist)
+    s = sub.add_parser('import-netlist', help='draw a schematic from a netlist (SPICE, KiCad .net or Schematrix JSON)')
+    s.add_argument('input'); s.add_argument('-o', '--output', help='output file stem (default: input name)')
+    s.add_argument('--netformat', choices=['spice', 'kicad', 'json'], help='input format (default: detect)')
+    s.add_argument('-f', '--format', default='json,svg', help='comma list: json,svg,png,pdf')
+    s.add_argument('--fonts', action='store_true'); s.set_defaults(fn=cmd_import_netlist)
     s = sub.add_parser('import-legacy', help='convert a legacy S-class figure script into documents')
     s.add_argument('input'); s.add_argument('-o', '--output', default='.'); s.add_argument('-f', '--format', default='json,svg')
     s.add_argument('--fonts', action='store_true'); s.set_defaults(fn=cmd_import)

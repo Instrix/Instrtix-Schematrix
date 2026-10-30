@@ -75,6 +75,9 @@ def label_lines(comp, sym=None, g=None):
         s = str(props.get(key, '') or '')
         if s:
             out.append((s, 'accl' if acc and cls == 'ref' else cls))
+    for f in comp.get('fields') or []:          # user fields marked 'show' print their value under the rest
+        if f.get('show') and str(f.get('value', '')):
+            out.append((str(f['value']), 'valsm'))
     return out
 
 

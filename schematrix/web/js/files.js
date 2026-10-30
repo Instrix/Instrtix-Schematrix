@@ -88,10 +88,36 @@ export async function exportPngClient() {
   img.src = url;
 }
 
+export async function exportNetlist(fmt) {
+  try {
+    const b = await api.blob('/api/netlist/export?format=' + fmt, { doc: D() });
+    const ext = (S.info.netlist_formats || []).find((f) => f.name === fmt)?.default_ext || '.net';
+    download(b, fileBase() + ext);
+  } catch (err) { toast(err.message, true); }
+}
+
+const NETLIST_EXT = /\.(cir|sp|spi|spice|ckt|net|netlist)$/i;
+
+// a netlist file (SPICE, KiCad .net, Schematrix netlist JSON) opens as a new sheet with every net labelled
+export async function importNetlist(text, filename) {
+  try {
+    const r = await api.post('/api/netlist/import', { text, filename });
+    openTab(r.doc);
+    toast(`Imported ${r.format} netlist: ${r.doc.elements.filter((e) => e.type === 'comp' && S.cat[e.sym]?.is_part).length} parts`
+      + (r.warnings.length ? ` · ${r.warnings.length} warning(s): ${r.warnings[0]}` : ''), r.warnings.length > 0);
+  } catch (err) { toast(err.message, true); }
+}
+
 export async function importFile(file, forceLegacy) {
   const text = await file.text();
+  if (NETLIST_EXT.test(file.name)) return importNetlist(text, file.name);
   if (file.name.endsWith('.json')) {
-    try { const doc = JSON.parse(text); if (!doc.elements) throw new Error('not a Schematrix document'); openTab(doc); } catch (err) { toast(err.message, true); }
+    try {
+      const doc = JSON.parse(text);
+      if (doc.format === 'schematrix-netlist') return importNetlist(text, file.name);
+      if (!doc.elements) throw new Error('not a Schematrix document');
+      openTab(doc);
+    } catch (err) { toast(err.message, true); }
     return;
   }
   if (file.name.endsWith('.py')) {

@@ -58,3 +58,14 @@ def test_token(tmp_path, monkeypatch):
     assert c.get('/api/symbols', headers={'Authorization': 'Bearer sekrit'}).status_code == 200
     assert c.get('/?token=sekrit').status_code == 200
     assert c.get('/api/symbols').status_code == 200          # cookie set
+
+
+@pytest.mark.parametrize('fmt', ['spice', 'kicad', 'json'])
+def test_netlist_export_import(client, fmt):
+    r = client.post(f'/api/netlist/export?format={fmt}', json={'doc': doc()})
+    assert r.status_code == 200 and 'attachment' in r.headers['content-disposition']
+    back = client.post('/api/netlist/import', json={'text': r.text, 'filename': 'x' + {'spice': '.cir', 'kicad': '.net', 'json': '.json'}[fmt]}).json()
+    assert back['format'] == fmt
+    assert any(e.get('sym') == 'resistor' and e['props']['ref'] == 'R1' for e in back['doc']['elements'])
+    assert client.post('/api/netlist/import', json={'text': ''}).status_code == 400
+    assert {f['name'] for f in client.get('/api/info').json()['netlist_formats']} == {'spice', 'kicad', 'json'}
