@@ -101,3 +101,24 @@ def test_runner_script():
     assert not bad['ok'] and 'boom' in bad['error']
     slow = run('while True: pass', timeout=2)
     assert not slow['ok'] and 'timed out' in slow['error']
+
+
+def hop_doc(hops=True):
+    s = Schematic('x', hops=hops)
+    s.wire((0, 50), (100, 50))           # horizontal, crosses the vertical below
+    s.wire((50, 0), (50, 100))
+    s.wire((0, 80), (50, 80))            # ends on the vertical: a T junction, never a hop
+    return s
+
+
+def test_hops_only_at_plain_crossings():
+    s = hop_doc()
+    h = GEO.hops(s.doc)
+    assert h == {s.doc['elements'][0]['id']: {0: [(50, 50)]}}
+    assert any(GEO._key(p) == (50, 80) for p in GEO.junctions(s.doc))
+
+
+def test_hop_svg():
+    assert GEO.wire_path([(0, 50), (100, 50)], {0: [(50, 50)]}) == 'M0 50L46 50A4 4 0 0 1 54 50L100 50'
+    assert GEO.wire_path([(100, 50), (0, 50)], {0: [(50, 50)]}) == 'M100 50L54 50A4 4 0 0 0 46 50L0 50'
+    assert 'A4 4' in hop_doc().to_svg() and 'A4 4' not in hop_doc(False).to_svg()

@@ -127,7 +127,7 @@ export function arrowHead(a, b, cls = 'arrow', L = 9, W = 4) {
 
 const ptsAttr = (P) => P.map((p) => p.map(num).join(',')).join(' ');
 
-export function elementSvg(e, cat, geoOf) {
+export function elementSvg(e, cat, geoOf, hop) {
   switch (e.type) {
     case 'comp': {
       const g = geoOf(e);
@@ -138,6 +138,7 @@ export function elementSvg(e, cat, geoOf) {
     }
     case 'wire':
       if ((e.points || []).length < 2) return '';
+      if (hop) return `<path class="${styleCls('w', e.style)}" d="${wirePath(e.points, hop)}"/>`;
       return `<polyline class="${styleCls('w', e.style)}" points="${ptsAttr(e.points)}"/>`;
     case 'arrow': {
       const P = e.points || [];
@@ -214,6 +215,45 @@ export function junctions(doc, geoOf) {
     }
   }
   return [...deg].filter(([, d]) => d >= 3).map(([k]) => where.get(k));
+}
+
+export const HOP_R = 4;
+
+// wire id -> {segment index: [crossing points]} where a horizontal wire jumps over a vertical one
+export function hops(doc, geoOf, r = HOP_R) {
+  const { wires, pts } = connectionPoints(doc, geoOf);
+  const conn = new Set(pts.map(([p]) => key(p)));
+  const H = [], V = [];
+  for (const w of wires) {
+    const P = w.points;
+    for (let i = 0; i + 1 < P.length; i++) {
+      const [a, b] = [P[i], P[i + 1]];
+      if (a[1] === b[1] && a[0] !== b[0]) H.push([w.id, i, a, b]);
+      else if (a[0] === b[0] && a[1] !== b[1]) V.push([a, b]);
+    }
+  }
+  const out = {};
+  for (const [wid, i, a, b] of H) {
+    const x0 = Math.min(a[0], b[0]), x1 = Math.max(a[0], b[0]), y = a[1];
+    for (const [c, d] of V) {
+      const x = c[0], y0 = Math.min(c[1], d[1]), y1 = Math.max(c[1], d[1]);
+      if (x0 + r <= x && x <= x1 - r && y0 < y && y < y1 && !conn.has(key([x, y]))) ((out[wid] ??= {})[i] ??= []).push([x, y]);
+    }
+  }
+  return out;
+}
+
+// SVG path data for a wire, with a semicircle (bulging up) at each hop on its horizontal segments
+export function wirePath(P, hop, r = HOP_R) {
+  const d = [`M${num(P[0][0])} ${num(P[0][1])}`];
+  for (let i = 0; i + 1 < P.length; i++) {
+    const [a, b] = [P[i], P[i + 1]], s = b[0] > a[0] ? 1 : -1;
+    for (const [x, y] of [...(hop?.[i] || [])].sort((p, q) => (p[0] - q[0]) * s)) {
+      d.push(`L${num(x - s * r)} ${num(y)}A${num(r)} ${num(r)} 0 0 ${s > 0 ? 1 : 0} ${num(x + s * r)} ${num(y)}`);
+    }
+    d.push(`L${num(b[0])} ${num(b[1])}`);
+  }
+  return d.join('');
 }
 
 // ---------------------------------------------------------------- bounding boxes

@@ -106,10 +106,10 @@ class Wire(list):
 
 class Schematic:
     def __init__(self, title='', width=None, height=None, *, theme='instrix', grid=5, description='',
-                 junctions=True, margin=20):
+                 junctions=True, hops=False, margin=20):
         self.doc = {'version': VERSION, 'meta': {'title': title, 'description': description},
                     'page': {'width': width, 'height': height, 'auto': width is None, 'margin': margin, 'grid': grid,
-                             'junctions': junctions},
+                             'junctions': junctions, 'hops': hops},
                     'theme': theme, 'elements': []}
         self._n = 0
         _created.append(self)
@@ -176,9 +176,10 @@ class Schematic:
     # ------------------------------------------------------------ page
     title = property(lambda s: s.doc['meta'].get('title', ''), lambda s, v: s.doc['meta'].__setitem__('title', v))
 
-    def page(self, width=None, height=None, auto=None, margin=None, grid=None, junctions=None, theme=None, description=None):
+    def page(self, width=None, height=None, auto=None, margin=None, grid=None, junctions=None, hops=None, theme=None, description=None):
         pg = self.doc['page']
-        for k, v in (('width', width), ('height', height), ('margin', margin), ('grid', grid), ('junctions', junctions)):
+        for k, v in (('width', width), ('height', height), ('margin', margin), ('grid', grid), ('junctions', junctions),
+                     ('hops', hops)):
             if v is not None:
                 pg[k] = v
         if width is not None and auto is None:
@@ -364,7 +365,7 @@ def normalize(d: dict) -> dict:
     d.setdefault('version', VERSION)
     d.setdefault('meta', {}).setdefault('title', '')
     pg = d.setdefault('page', {})
-    pg.setdefault('grid', 5); pg.setdefault('margin', 20); pg.setdefault('junctions', True)
+    pg.setdefault('grid', 5); pg.setdefault('margin', 20); pg.setdefault('junctions', True); pg.setdefault('hops', False)
     pg.setdefault('auto', not pg.get('width'))
     d.setdefault('theme', 'instrix')
     seen = set()

@@ -283,7 +283,8 @@ function render() {
   setThemeCss();
   const d = D();
   let html = '';
-  for (const e of d.elements) html += `<g class="el" data-id="${e.id}">${hitShape(e)}${G.elementSvg(e, S.cat, geoOf)}</g>`;
+  const hops = d.page.hops ? G.hops(d, geoOf) : {};
+  for (const e of d.elements) html += `<g class="el" data-id="${e.id}">${hitShape(e)}${G.elementSvg(e, S.cat, geoOf, hops[e.id])}</g>`;
   if (d.page.junctions !== false) {
     const manual = new Set(d.elements.filter((e) => e.type === 'comp' && e.sym === 'dot').map((e) => G.key([e.x, e.y])));
     for (const p of G.junctions(d, geoOf)) if (!manual.has(G.key(p))) html += `<circle class="dot" cx="${p[0]}" cy="${p[1]}" r="3"/>`;
@@ -348,7 +349,7 @@ function renderStatus() {
   const n = T().sel.size;
   $('#st-sel').textContent = n ? `${n} selected` : `${D().elements.length} elements`;
   const hints = {
-    select: '<kbd>Drag</kbd> move · <kbd>R</kbd> rotate · <kbd>M</kbd> mirror · <kbd>E</kbd> accent · <kbd>Shift</kbd>-click add · drag empty space to box-select',
+    select: '<kbd>Drag</kbd> move · wires stretch (<kbd>Alt</kbd>: whole) · <kbd>R</kbd> rotate · <kbd>M</kbd> mirror · <kbd>E</kbd> accent · <kbd>Shift</kbd>-click add · drag empty to box-select',
     wire: S.draft ? '<kbd>Click</kbd> corner · ends on a pin or wire · <kbd>/</kbd> elbow direction · <kbd>Enter</kbd>/<kbd>Esc</kbd> finish · <kbd>Backspace</kbd> undo corner'
       : '<kbd>Click</kbd> to start a wire · pins and wires snap', arrow: '<kbd>Click</kbd> points · <kbd>Enter</kbd>/<kbd>Esc</kbd> finish',
     place: '<kbd>Click</kbd> to place · <kbd>R</kbd> rotate · <kbd>M</kbd> mirror · <kbd>Esc</kbd> done',
@@ -508,34 +509,98 @@ function applyMove(dx, dy) {
     if ('x' in o) { e.x = o.x + dx; e.y = o.y + dy; }
     if (o.points) e.points = o.points.map(([x, y]) => [x + dx, y + dy]);
   }
-  for (const a of dr.attached) {
-    const e = byId(a.id);
-    let P = clone(a.orig);
-    if (a.a0 && a.a1) { e.points = P.map(([x, y]) => [x + dx, y + dy]); continue; }
-    if (a.a1) P.reverse();
-    // P[0] is the moving end
-    if (P.length === 2 && (P[0][0] === P[1][0] || P[0][1] === P[1][1]) && (dx || dy)) {
-      const horiz = P[0][1] === P[1][1];
-      const m = horiz ? snapTo((P[0][0] + P[1][0]) / 2, D().page.grid || 5) : snapTo((P[0][1] + P[1][1]) / 2, D().page.grid || 5);
-      P = horiz ? [P[0], [m, P[0][1]], [m, P[1][1]], P[1]] : [P[0], [P[0][0], m], [P[1][0], m], P[1]];
-    }
-    const horiz = P[0][1] === P[1][1], vert = P[0][0] === P[1][0];
-    P[0] = [P[0][0] + dx, P[0][1] + dy];
-    if (P.length > 2) {
-      if (horiz && !vert) P[1] = [P[1][0], P[1][1] + dy];
-      else if (vert && !horiz) P[1] = [P[1][0] + dx, P[1][1]];
-    }
-    if (a.a1) P.reverse();
-    e.points = P;
+  for (const a of dr.attached) { const e = byId(a.id); if (e) e.points = rubber(a, dx, dy); }
+}
+// a wire with one or both ends on something moving by (dx, dy): drag those ends and keep the wire orthogonal
+function rubber(a, dx, dy) {
+  let P = clone(a.orig);
+  if (a.a0 && a.a1) return P.map(([x, y]) => [x + dx, y + dy]);
+  if (a.a1) P.reverse();
+  // P[0] is the moving end
+  if (P.length === 2 && (P[0][0] === P[1][0] || P[0][1] === P[1][1]) && (dx || dy)) {
+    const horiz = P[0][1] === P[1][1];
+    const m = horiz ? snapTo((P[0][0] + P[1][0]) / 2, D().page.grid || 5) : snapTo((P[0][1] + P[1][1]) / 2, D().page.grid || 5);
+    P = horiz ? [P[0], [m, P[0][1]], [m, P[1][1]], P[1]] : [P[0], [P[0][0], m], [P[1][0], m], P[1]];
   }
+  const horiz = P[0][1] === P[1][1], vert = P[0][0] === P[1][0];
+  P[0] = [P[0][0] + dx, P[0][1] + dy];
+  if (P.length > 2) {
+    if (horiz && !vert) P[1] = [P[1][0], P[1][1] + dy];
+    else if (vert && !horiz) P[1] = [P[1][0] + dx, P[1][1]];
+  }
+  if (a.a1) P.reverse();
+  return P;
+}
+
+// ---------------------------------------------------------------- KiCad-style wire dragging
+// grabbing a wire end stretches it (along its last segment, then an elbow); grabbing a segment slides it
+// square to itself while its neighbours stretch, a connected end stays put behind a new stub, and wires
+// that end on the moving part (T branches) follow
+function connectedAt(p, wid) {
+  const k = G.key(p);
+  for (const e of D().elements) {
+    if (e.type === 'comp' && (e.sym === 'dot' ? G.key([e.x, e.y]) === k : Object.values(pinsOf(e)).some((q) => G.key(q) === k))) return true;
+    if (e.type !== 'wire' || e.id === wid) continue;
+    if (e.points.some((q) => G.key(q) === k)) return true;
+    for (let i = 0; i + 1 < e.points.length; i++) if (G.onSegment(p, e.points[i], e.points[i + 1])) return true;
+  }
+  return false;
+}
+function segDist(p, a, b) {
+  const [vx, vy] = [b[0] - a[0], b[1] - a[1]], L = vx * vx + vy * vy;
+  const t = L ? Math.max(0, Math.min(1, ((p[0] - a[0]) * vx + (p[1] - a[1]) * vy) / L)) : 0;
+  return Math.hypot(p[0] - a[0] - t * vx, p[1] - a[1] - t * vy);
+}
+function startWireDrag(e, w, end) {
+  const P = e.points, n = P.length, R = 8 / T().view.k;
+  if (end === undefined) for (const i of [0, n - 1]) if (Math.hypot(P[i][0] - w[0], P[i][1] - w[1]) < R) { end = i; break; }
+  const base = { id: e.id, start: w, orig: clone(P), snap: snapshot(), attached: [] };
+  if (end !== undefined) { S.drag = { ...base, kind: 'wend', end }; return; }
+  let seg = 0, bd = Infinity;
+  for (let i = 0; i + 1 < n; i++) { const d = segDist(w, P[i], P[i + 1]); if (d < bd) { bd = d; seg = i; } }
+  const [a, b] = [P[seg], P[seg + 1]];
+  const stub0 = seg === 0 && connectedAt(P[0], e.id), stub1 = seg + 1 === n - 1 && connectedAt(P[n - 1], e.id);
+  // other wires with an end on the moving segment (or on one of its moving corners) come along
+  for (const o of D().elements) {
+    if (o.type !== 'wire' || o.id === e.id || o.points.length < 2) continue;
+    const on = (q) => (G.onSegment(q, a, b) || (G.key(q) === G.key(a) && !stub0) || (G.key(q) === G.key(b) && !stub1));
+    const m = o.points.length, a0 = on(o.points[0]), a1 = on(o.points[m - 1]);
+    if (a0 || a1) base.attached.push({ id: o.id, orig: clone(o.points), a0, a1 });
+  }
+  S.drag = { ...base, kind: 'wseg', seg, stub0, stub1, horiz: a[1] === b[1], vert: a[0] === b[0] };
+}
+function applyWireDrag(w) {
+  const dr = S.drag, e = byId(dr.id), g = D().page.grid || 5, O = dr.orig, n = O.length;
+  if (!e) return;
+  if (dr.kind === 'wend') {
+    const c = snapPoint(w, e.id).p;
+    const P = dr.end === 0 ? clone(O) : clone(O).reverse();      // P[0] is the grabbed end
+    const a = P[1], dir = P[0][1] === a[1] ? 'h' : P[0][0] === a[0] ? 'v' : null;
+    const corner = a[0] === c[0] || a[1] === c[1] ? [] : dir === 'v' ? [[a[0], c[1]]] : [[c[0], a[1]]];
+    const Q = [c, ...corner, ...P.slice(1)];
+    e.points = dr.end === 0 ? Q : Q.reverse();
+    return;
+  }
+  let dx = snapTo(w[0] - dr.start[0], g), dy = snapTo(w[1] - dr.start[1], g);
+  if (dr.horiz) dx = 0; else if (dr.vert) dy = 0;
+  const i = dr.seg, Q = clone(O), mv = (p) => [p[0] + dx, p[1] + dy];
+  Q[i] = mv(Q[i]); Q[i + 1] = mv(Q[i + 1]);
+  if (dr.stub1) Q.push(clone(O[n - 1]));
+  if (dr.stub0) Q.unshift(clone(O[0]));
+  e.points = Q;
+  for (const a of dr.attached) { const o = byId(a.id); if (o) o.points = rubber(a, dx, dy); }
 }
 function endDrag() {
   const dr = S.drag;
   S.drag = null;
   if (!dr) return;
-  if (dr.kind === 'move' || dr.kind === 'vertex' || dr.kind === 'label' || dr.kind === 'resize') {
-    if (dr.kind === 'move' || dr.kind === 'vertex') for (const a of dr.attached || []) { const e = byId(a.id); if (e) e.points = simplify(e.points); }
-    if (dr.kind === 'vertex') { const e = byId(dr.id); if (e) e.points = simplify(e.points); }
+  if (['move', 'vertex', 'label', 'resize', 'wend', 'wseg'].includes(dr.kind)) {
+    for (const a of dr.attached || []) { const e = byId(a.id); if (e) e.points = simplify(e.points); }
+    if (['vertex', 'wend', 'wseg'].includes(dr.kind)) {
+      const e = byId(dr.id);
+      if (e) e.points = simplify(e.points);
+      if (e?.type === 'wire' && e.points.length < 2) { D().elements = D().elements.filter((x) => x !== e); T().sel.delete(e.id); }
+    }
     if (snapshot() !== dr.snap) { pushUndo(dr.snap); changed(); } else render();
   } else if (dr.kind === 'marquee') {
     const [a, b] = [dr.start, dr.cur];
@@ -587,7 +652,9 @@ svg.addEventListener('pointerdown', (ev) => {
   // select tool
   const h = ev.target.closest('.h');
   if (h?.dataset.vertex !== undefined) {
-    S.drag = { kind: 'vertex', id: h.dataset.wid, idx: +h.dataset.vertex, snap: snapshot() }; return;
+    const e = byId(h.dataset.wid), i = +h.dataset.vertex;
+    if (e.type === 'wire' && (i === 0 || i === e.points.length - 1)) { startWireDrag(e, w, i); return; }
+    S.drag = { kind: 'vertex', id: h.dataset.wid, idx: i, snap: snapshot() }; return;
   }
   if (h?.dataset.resize) { S.drag = { kind: 'resize', id: h.dataset.resize, snap: snapshot() }; return; }
   const elg = ev.target.closest('#content [data-id]');
@@ -600,6 +667,12 @@ svg.addEventListener('pointerdown', (ev) => {
       S.drag = { kind: 'label', id, start: w, orig: e.label_offset ? [...e.label_offset] : [0, 0], snap: snapshot() }; return;
     }
     if (ev.shiftKey || ev.ctrlKey || ev.metaKey) { if (t.sel.has(id)) t.sel.delete(id); else t.sel.add(id); render(); renderInspector(); return; }
+    const e = byId(id);
+    // a lone wire drags KiCad-style; Alt-drag, or a wire inside a bigger selection, moves whole
+    if (e.type === 'wire' && !ev.altKey && !(t.sel.has(id) && t.sel.size > 1)) {
+      if (!t.sel.has(id) || t.sel.size !== 1) { t.sel = new Set([id]); render(); renderInspector(); }
+      startWireDrag(e, w); return;
+    }
     if (!t.sel.has(id)) { t.sel = new Set([id]); render(); renderInspector(); }
     startMove(w);
     return;
@@ -628,6 +701,8 @@ svg.addEventListener('pointermove', (ev) => {
   if (dr.kind === 'move') {
     const dx = snapTo(w[0] - dr.start[0], g), dy = snapTo(w[1] - dr.start[1], g);
     if (dx !== dr.dx || dy !== dr.dy) { dr.dx = dx; dr.dy = dy; applyMove(dx, dy); render(); }
+  } else if (dr.kind === 'wend' || dr.kind === 'wseg') {
+    applyWireDrag(w); render();
   } else if (dr.kind === 'vertex') {
     const e = byId(dr.id), sn = e.type === 'wire' ? snapPoint(w, e.id) : { p: [snapTo(w[0], g), snapTo(w[1], g)] };
     e.points[dr.idx] = sn.p; render();
@@ -880,6 +955,7 @@ function renderInspector() {
     p.append(field('Margin', inp(pg.margin ?? 20, set(pg, 'margin'), { type: 'number', mono: true })));
     p.append(field('Grid', sel_(pg.grid || 5, [1, 2, 5, 10, 20], (v) => edit(() => { pg.grid = Number(v); }))));
     p.append(field('Junctions', chk(pg.junctions !== false, (v) => edit(() => { pg.junctions = v; }))));
+    p.append(field('Wire hops', chk(!!pg.hops, (v) => edit(() => { pg.hops = v; }))));
     p.append(field('Theme', sel_(typeof d.theme === 'string' ? d.theme : 'custom', [...Object.keys(S.info.themes || {}), ...(typeof d.theme === 'object' ? ['custom'] : [])], (v) => edit(() => { d.theme = v; }))));
     p.append(btns([['Fit page to drawing', () => edit(() => {
       const bb = docBBox(), m = pg.margin ?? 20;
@@ -1190,7 +1266,7 @@ function helpDialog() {
   const k = [['V', 'Select'], ['W', 'Wire'], ['L', 'Net label'], ['T', 'Text'], ['B', 'Group box'], ['A', 'Arrow'], ['/', 'Find symbol'],
     ['R', 'Rotate 90°'], ['M', 'Mirror'], ['E', 'Accent style'], ['Del', 'Delete'], ['Arrows', 'Nudge (Shift: ×4)'],
     ['Ctrl Z / Y', 'Undo / redo'], ['Ctrl C / V / D', 'Copy / paste / duplicate'], ['Ctrl S', 'Save'], ['Ctrl Enter', 'Run script'],
-    ['F', 'Fit'], ['G', 'Grid'], ['Space + drag', 'Pan'], ['Wheel', 'Zoom'], ['Esc', 'Cancel / finish'], ['Dbl-click', 'Edit text / add wire corner']];
+    ['F', 'Fit'], ['G', 'Grid'], ['Space + drag', 'Pan'], ['Alt + drag', 'Move a whole wire'], ['Wheel', 'Zoom'], ['Esc', 'Cancel / finish'], ['Dbl-click', 'Edit text / add wire corner']];
   const d = document.createElement('div'); d.className = 'keys';
   d.innerHTML = k.map(([a, b]) => `<kbd>${a}</kbd><span>${b}</span>`).join('');
   modal('Keyboard shortcuts', d);
@@ -1214,6 +1290,8 @@ const COMMANDS = {
   rotate: () => transformSel('rot'), mirror: () => transformSel('mir'), accent: toggleAccent, front: () => reorder(true), back: () => reorder(false),
   fit, zoomin: () => zoomAt(1.25), zoomout: () => zoomAt(0.8), zoom100: () => zoomAt(1 / T().view.k),
   grid: () => { S.grid = !S.grid; render(); }, help: helpDialog,
+  junctions: () => edit((d) => { d.page.junctions = d.page.junctions === false; }),
+  hops: () => edit((d) => { d.page.hops = !d.page.hops; }),
   'export-svg': () => exportAs('svg'), 'export-svg-plain': () => exportAs('svg-plain'), 'export-png': () => exportAs('png'),
   'export-pdf': () => exportAs('pdf'), 'export-spice': () => exportAs('spice'), 'export-json': () => exportAs('json'),
   'copy-svg': async () => { try { const b = await api.blob('/api/render?format=svg&fonts=false', { doc: D() }); await navigator.clipboard.writeText(await b.text()); toast('SVG copied'); } catch (err) { toast(err.message, true); } },

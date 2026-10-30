@@ -68,7 +68,7 @@ def arrow_head(a, b, cls='arrow', L=9, W=4):
     return f'<polygon class="{cls}" points="{" ".join(f"{num(x)},{num(y)}" for x, y in pts)}"/>'
 
 
-def element_svg(e):
+def element_svg(e, hop=None):
     t = e['type']
     if t == 'comp':
         g = GEO.geometry(e)
@@ -80,6 +80,8 @@ def element_svg(e):
         if len(e.get('points', [])) < 2:
             return ''
         cls = style_cls('w', e.get('style', ''))
+        if hop:
+            return f'<path class="{cls}" d="{GEO.wire_path(e["points"], hop)}"/>'
         return f'<polyline class="{cls}" points="{" ".join(f"{num(x)},{num(y)}" for x, y in e["points"])}"/>'
     if t == 'arrow':
         P = e.get('points', [])
@@ -130,7 +132,8 @@ def render_svg(doc, embed_fonts=False, font_urls=False, background=True) -> str:
         style = TH.font_faces(True) + style
     elif font_urls:
         style = TH.font_faces(False) + style
-    body = [element_svg(e) for e in doc['elements']]
+    hp = GEO.hops(doc) if doc.get('page', {}).get('hops') else {}
+    body = [element_svg(e, hp.get(e.get('id'))) for e in doc['elements']]
     if doc.get('page', {}).get('junctions', True):
         manual = {GEO._key((e['x'], e['y'])) for e in doc['elements'] if e['type'] == 'comp' and e['sym'] == 'dot'}
         body += [f'<circle class="dot" cx="{num(px)}" cy="{num(py)}" r="3"/>'

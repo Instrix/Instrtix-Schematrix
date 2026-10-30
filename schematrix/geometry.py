@@ -156,6 +156,48 @@ def junctions(doc):
     return [where[k] for k, d in deg.items() if d >= 3]
 
 
+HOP_R = 4
+
+
+def hops(doc, r=HOP_R):
+    """wire id -> {segment index: [crossing points]} where a horizontal wire jumps over a vertical one.
+    Only plain crossings hop: a point that is a pin, a wire vertex or a junction is a connection."""
+    wires, pts = connection_points(doc)
+    conn = {_key(p) for p, _ in pts}
+    H, V = [], []
+    for w in wires:
+        P = w['points']
+        for i, (a, b) in enumerate(zip(P, P[1:])):
+            if a[1] == b[1] and a[0] != b[0]:
+                H.append((w['id'], i, a, b))
+            elif a[0] == b[0] and a[1] != b[1]:
+                V.append((a, b))
+    out: dict = {}
+    for wid, i, a, b in H:
+        x0, x1, y = min(a[0], b[0]), max(a[0], b[0]), a[1]
+        for c, d in V:
+            x, y0, y1 = c[0], min(c[1], d[1]), max(c[1], d[1])
+            if x0 + r <= x <= x1 - r and y0 < y < y1 and _key((x, y)) not in conn:
+                out.setdefault(wid, {}).setdefault(i, []).append((x, y))
+    return out
+
+
+def _n(v):
+    v = round(float(v), 2)
+    return str(int(v)) if v == int(v) else str(v)
+
+
+def wire_path(P, hop=None, r=HOP_R):
+    """SVG path data for a wire, with a semicircle (bulging up) at each hop on its horizontal segments"""
+    d = [f'M{_n(P[0][0])} {_n(P[0][1])}']
+    for i, (a, b) in enumerate(zip(P, P[1:])):
+        s = 1 if b[0] > a[0] else -1
+        for x, y in sorted((hop or {}).get(i, []), key=lambda q: q[0] * s):
+            d.append(f'L{_n(x - s * r)} {_n(y)}A{_n(r)} {_n(r)} 0 0 {1 if s > 0 else 0} {_n(x + s * r)} {_n(y)}')
+        d.append(f'L{_n(b[0])} {_n(b[1])}')
+    return ''.join(d)
+
+
 def comp_bbox(comp):
     g = geometry(comp)
     x0, y0, x1, y1 = g['bbox']
