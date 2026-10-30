@@ -14,12 +14,91 @@ one built by a script are the same kind of document.
   unchanged and come out as editable documents, pixel-identical to the originals.
 - **Runs** as a Docker web app, or natively on Windows and Linux (own window via pywebview).
 
+## Install
+
+Needs Python 3.10 or newer. Schematrix is not on PyPI; it installs straight from this repository. The repository
+is private, so pip needs your GitHub access: an SSH key (`git+ssh://`, shown below) or HTTPS with a personal access
+token (`git+https://<token>@github.com/...`).
+
+### Extras
+
+| Extra | Adds | When you need it |
+|---|---|---|
+| *(none)* | editor, server, scripting, SVG and SPICE export | always enough to work |
+| `export` | `cairosvg` | PNG and PDF export from the server and the CLI |
+| `desktop` | `pywebview`, `cairosvg` | the native window (`schematrix` with no arguments) |
+| `dev` | `pytest`, `httpx`, `pillow`, `numpy` | running the tests |
+
+Without `desktop`, `schematrix` opens the editor in your default browser instead. In the editor, PNG export
+still works without `export` (it is drawn in the browser); PDF needs it.
+
+### pipx (recommended for using the app)
+
+[pipx](https://pipx.pypa.io) installs the `schematrix` command in its own isolated environment and puts it on your
+PATH:
+
+```bash
+pipx install "schematrix[desktop] @ git+ssh://git@github.com/Instrix/instrtix-schematrix.git"
+schematrix                                   # opens the editor
+pipx upgrade schematrix                      # later: update to the latest main
+```
+
+Pin a release with `...instrtix-schematrix.git@v0.1.0`.
+
+### pip in a virtual environment (recommended for scripting)
+
+Use a venv when you want to `import schematrix` from your own scripts or notebooks.
+
+Linux / macOS:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install "schematrix[export] @ git+ssh://git@github.com/Instrix/instrtix-schematrix.git"
+```
+
+Windows (PowerShell):
+
+```powershell
+py -m venv .venv
+.venv\Scripts\Activate.ps1
+pip install "schematrix[export] @ git+ssh://git@github.com/Instrix/instrtix-schematrix.git"
+```
+
+To add it to a project's `requirements.txt`:
+
+```
+schematrix[export] @ git+ssh://git@github.com/Instrix/instrtix-schematrix.git@v0.1.0
+```
+
+### From a clone (for development)
+
+```bash
+git clone git@github.com:Instrix/instrtix-schematrix.git
+cd instrtix-schematrix
+python3 -m venv .venv && source .venv/bin/activate      # Windows: py -m venv .venv; .venv\Scripts\Activate.ps1
+pip install -e ".[dev,desktop]"                          # editable: code changes apply without reinstalling
+pytest -q
+```
+
+### Platform notes
+
+- **Windows**: the native window uses WebView2, preinstalled on Windows 10 and 11. `cairosvg` needs the Cairo DLL;
+  if PNG/PDF export reports a missing `libcairo-2.dll`, install GTK3 for Windows (or use MSYS2's `mingw-w64-x86_64-cairo`)
+  and put its `bin` folder on PATH. If you skip it, you can still export SVG, and PNG from the editor.
+- **Linux**: for the native window, install your distribution's WebKitGTK bindings, e.g. on Debian/Ubuntu
+  `sudo apt install python3-gi gir1.2-webkit2-4.1` (then create the venv with `--system-site-packages` so it can
+  see them). Cairo is usually already installed (`libcairo2`). For PNG/PDF that match the editor, install the fonts
+  too: `sudo apt install fonts-jetbrains-mono fonts-inter`.
+- **macOS**: works too (`brew install cairo` for PNG/PDF); the native window uses the system WebKit.
+
 ## Quick start
 
 ```bash
-pip install -e ".[export,desktop]"     # export = PNG/PDF, desktop = native window
-schematrix                               # native window (falls back to the browser)
-schematrix serve --open                  # web server on http://127.0.0.1:8000
+schematrix                                   # native window (falls back to the browser)
+schematrix serve --open                      # web server on http://127.0.0.1:8000
+schematrix serve --host 0.0.0.0 --port 8080 --workspace ~/drawings
+python -m schematrix --help                  # same as the schematrix command
 ```
 
 The workspace (default `~/Schematrix`, `/data` in Docker) holds saved `.json` schematics and `.py` scripts. On first
