@@ -1,3 +1,5 @@
+import { svgInner, widthChars } from './markup.js';
+
 // Placement maths: the JS twin of schematrix/geometry.py and render.py (keep the two in step).
 
 export const LINE_H = 14;
@@ -32,7 +34,7 @@ export const ctrOffset = (cls) => CTR[cls] ?? Math.round((FONT_SIZES[cls] ?? 12)
 
 export function textWidth(s, cls = 'lbl') {
   const fs = FONT_SIZES[cls] ?? 12;
-  return String(s).length * fs * (cls === 'note' || cls === 'title' ? 0.55 : 0.6);
+  return widthChars(s) * fs * (cls === 'note' || cls === 'title' ? 0.55 : 0.6);
 }
 
 export function esc(s) {
@@ -109,15 +111,17 @@ export function primSvg(p, c, style) {
     }
     case 'tx': {
       let [x, y] = P(p.x, p.y);
-      if (p.ctr) y += ctrOffset(p.c);
-      return `<text class="${p.c}" x="${num(x)}" y="${num(y)}" text-anchor="${textAnchor(p.a || 'middle', rot, mir)}">${esc(p.s)}</text>`;
+      const z = p.z || 1;
+      if (p.ctr) y += ctrOffset(p.c) * z;
+      const fs = z !== 1 ? ` style="font-size:${num((FONT_SIZES[p.c] || 12) * z)}px"` : '';
+      return `<text class="${p.c}" x="${num(x)}" y="${num(y)}" text-anchor="${textAnchor(p.a || 'middle', rot, mir)}"${fs}>${svgInner(p.s, (FONT_SIZES[p.c] || 12) * z, esc)}</text>`;
     }
   }
   return '';
 }
 
 export const textSvg = (x, y, s, cls = 'lbl', a = 'middle') =>
-  `<text class="${cls}" x="${num(x)}" y="${num(y)}" text-anchor="${a}">${esc(s)}</text>`;
+  `<text class="${cls}" x="${num(x)}" y="${num(y)}" text-anchor="${a}">${svgInner(s, FONT_SIZES[cls] ?? 12, esc)}</text>`;
 
 export function arrowHead(a, b, cls = 'arrow', L = 9, W = 4) {
   const dx = b[0] - a[0], dy = b[1] - a[1], n = Math.hypot(dx, dy) || 1, ux = dx / n, uy = dy / n;
@@ -139,8 +143,8 @@ export function elementSvg(e, cat, geoOf, hop) {
     }
     case 'wire':
       if ((e.points || []).length < 2) return '';
-      if (hop) return `<path class="${styleCls('w', e.style)}" d="${wirePath(e.points, hop)}"/>`;
-      return `<polyline class="${styleCls('w', e.style)}" points="${ptsAttr(e.points)}"/>`;
+      if (hop) return `<path class="${styleCls('w wire', e.style)}" d="${wirePath(e.points, hop)}"/>`;
+      return `<polyline class="${styleCls('w wire', e.style)}" points="${ptsAttr(e.points)}"/>`;
     case 'arrow': {
       const P = e.points || [];
       if (P.length < 2) return '';

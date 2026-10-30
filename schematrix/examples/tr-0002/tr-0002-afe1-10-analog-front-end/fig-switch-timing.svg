@@ -1,0 +1,25 @@
+<svg viewBox="0 0 880 380" width="880" height="380" role="img" aria-label="ADC-synchronous range switch: MAKE just after sample n, BREAK 50 nanoseconds later, Qi on 3 to 4 about half a microsecond later; the reading comes from a bridge chain or a corrected chain until the new tap settles" xmlns="http://www.w3.org/2000/svg"><style>
+.w { fill: none; stroke: #292b31; stroke-width: 1.5; stroke-linejoin: round; stroke-linecap: round; }
+.plate { stroke-width: 2.2; }
+.acc { stroke: #23699f; stroke-width: 2.2; }
+.para { stroke-dasharray: 5 3; }
+.accf { fill: #23699f; }
+.dot, .arrow { fill: #292b31; }
+.amp { fill: #ffffff; stroke: #292b31; stroke-width: 1.6; }
+.pad { fill: #ffffff; stroke: #292b31; stroke-width: 1.4; }
+.term { fill: #ffffff; stroke: #292b31; stroke-width: 1.8; }
+.flag { fill: #eef0f4; stroke: #292b31; stroke-width: 1.2; }
+.box { fill: #eef0f4; stroke: #292b31; stroke-width: 1.6; }
+.grp { fill: #eef0f4; stroke: none; }
+text { font-family: "JetBrains Mono", monospace; fill: #292b31; }
+.lbl, .ref { font-size: 12px; font-weight: 500; }
+.val { font-size: 11.5px; fill: #545866; }
+.valsm { font-size: 10.5px; fill: #545866; }
+.node { font-size: 12px; font-weight: 500; font-style: italic; }
+.net { font-size: 11px; font-weight: 500; }
+.pin { font-size: 13px; font-weight: 600; }
+.termlbl { font-size: 12.5px; font-weight: 600; }
+.accl { font-size: 12px; font-weight: 600; fill: #23699f; }
+.grplbl { font-size: 10px; font-weight: 600; letter-spacing: .08em; fill: #545866; }
+.note { font-family: "Inter", sans-serif; font-size: 12px; fill: #545866; }
+</style><rect width="880" height="380" fill="#ffffff"/><text class="lbl" x="20" y="64" text-anchor="start">ADC samples</text><text class="lbl" x="20" y="124" text-anchor="start">EN_b (MAKE)</text><text class="lbl" x="20" y="174" text-anchor="start">EN_a (BREAK)</text><text class="lbl" x="20" y="224" text-anchor="start">Qi (3↔4 only)</text><text class="lbl" x="20" y="294" text-anchor="start">Reading</text><polyline class="w" points="190.0,48 190.0,72"/><polygon class="arrow" points="186.0,48 194.0,48 190.0,56"/><text class="valsm" x="190.0" y="40" text-anchor="middle">n-1</text><polyline class="w para" points="190.0,80 190.0,320"/><polyline class="w" points="320.0,48 320.0,72"/><polygon class="arrow" points="316.0,48 324.0,48 320.0,56"/><text class="valsm" x="320.0" y="40" text-anchor="middle">n</text><polyline class="w para" points="320.0,80 320.0,320"/><polyline class="w" points="450.0,48 450.0,72"/><polygon class="arrow" points="446.0,48 454.0,48 450.0,56"/><text class="valsm" x="450.0" y="40" text-anchor="middle">n+1</text><polyline class="w para" points="450.0,80 450.0,320"/><polyline class="w" points="580.0,48 580.0,72"/><polygon class="arrow" points="576.0,48 584.0,48 580.0,56"/><text class="valsm" x="580.0" y="40" text-anchor="middle">n+2</text><polyline class="w para" points="580.0,80 580.0,320"/><polyline class="w" points="710.0,48 710.0,72"/><polygon class="arrow" points="706.0,48 714.0,48 710.0,56"/><text class="valsm" x="710.0" y="40" text-anchor="middle">n+3</text><polyline class="w para" points="710.0,80 710.0,320"/><polyline class="w" points="840.0,48 840.0,72"/><polygon class="arrow" points="836.0,48 844.0,48 840.0,56"/><text class="valsm" x="840.0" y="40" text-anchor="middle">n+4</text><polyline class="w para" points="840.0,80 840.0,320"/><polyline class="w" points="164.0,72 866.0,72"/><polyline class="w" points="164.0,132 327.8,132 327.8,108 866.0,108"/><polyline class="w" points="164.0,158 340.8,158 340.8,182 866.0,182"/><text class="valsm" x="331.8" y="102" text-anchor="start">MAKE</text><text class="valsm" x="344.8" y="196" text-anchor="start">BREAK +50 ns</text><polyline class="w" points="164.0,208 483.8,208 483.8,232 866.0,232"/><text class="valsm" x="487.8" y="246" text-anchor="start">Qi off ~0.55 µs later</text><rect class="box" x="164.0" y="276" width="156.0" height="28" rx="2"/><text class="valsm" x="242.0" y="294" text-anchor="middle">old tap</text><rect class="box" x="320.0" y="276" width="390.0" height="28" rx="2" style="fill:#dbe8f3"/><text class="valsm" x="515.0" y="294" text-anchor="middle">bridge chain, or gain-corrected chain − correction vector</text><rect class="box" x="710.0" y="276" width="156.0" height="28" rx="2"/><text class="valsm" x="788.0" y="294" text-anchor="middle">new tap</text><text class="note" x="20" y="350" text-anchor="start">The switch edges fall just after a sample and are done well before the next; each switch type always lands at</text><text class="note" x="20" y="368" text-anchor="start">the same phase of the sample clock, so its correction is one fixed vector of samples, indexed from sample n.</text></svg>

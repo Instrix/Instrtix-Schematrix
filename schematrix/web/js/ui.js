@@ -4,6 +4,19 @@ import { paste } from './selection.js';
 import { D, redo, S, T } from './state.js';
 import { $, $$, svg } from './util.js';
 
+// ---------------------------------------------------------------- context menu
+// items: [label, command, shortcut] or null for a divider; commands run through the global [data-cmd] handler
+export function contextMenu(x, y, items) {
+  $$('.ctx').forEach((m) => m.remove());
+  const m = document.createElement('div');
+  m.className = 'drop ctx';
+  m.innerHTML = items.map((it) => (it ? `<button data-cmd="${it[1]}">${it[0]}${it[2] ? `<kbd>${it[2]}</kbd>` : ''}</button>` : '<hr>')).join('');
+  document.body.append(m);
+  const r = m.getBoundingClientRect();
+  m.style.left = Math.min(x, innerWidth - r.width - 4) + 'px';
+  m.style.top = Math.min(y, innerHeight - r.height - 4) + 'px';
+}
+
 // ---------------------------------------------------------------- modal helpers
 export function modal(title, body) {
   $('#modal-title').innerHTML = title;
@@ -47,7 +60,7 @@ export function helpDialog() {
   const k = [['V', 'Select'], ['W', 'Wire'], ['L', 'Net label'], ['T', 'Text'], ['B', 'Group box'], ['A', 'Arrow'], ['/', 'Find symbol'],
     ['R', 'Rotate 90°'], ['M', 'Mirror'], ['E', 'Accent style'], ['Del', 'Delete'], ['Arrows', 'Nudge (Shift: ×4)'],
     ['Ctrl Z / Y', 'Undo / redo'], ['Ctrl C / V / D', 'Copy / paste / duplicate'], ['Ctrl S', 'Save'], ['Ctrl Enter', 'Run script'],
-    ['F', 'Fit'], ['G', 'Grid'], ['Space + drag', 'Pan'], ['Alt + drag', 'Move a whole wire'], ['Wheel', 'Zoom'], ['Esc', 'Cancel / finish'], ['Dbl-click', 'Edit text / add wire corner']];
+    ['F', 'Fit'], ['G', 'Grid'], ['Space + drag', 'Pan'], ['Right / middle drag', 'Pan'], ['Alt + drag', 'Move a whole wire'], ['Wheel', 'Zoom'], ['Esc', 'Cancel / finish'], ['Dbl-click', 'Edit text / add wire corner']];
   const d = document.createElement('div'); d.className = 'keys';
   d.innerHTML = k.map(([a, b]) => `<kbd>${a}</kbd><span>${b}</span>`).join('');
   modal('Keyboard shortcuts', d);

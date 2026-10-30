@@ -31,7 +31,7 @@ def parse_pins(spec: str, w, h):
         lines=(('ref', 'ref'),), model=lambda p: p.get('title') or 'BLOCK')
 def block(p):
     w, h = float(p['w']), float(p['h'])
-    prims = [rc(0, 0, w, h, 'accbox' if p['accent'] else 'box', 3), tx(w / 2, 18, str(p['title']), 'ref')]
+    prims = [rc(0, 0, w, h, 'accbox' if p['accent'] else 'box', 3), tx(w / 2, 18, str(p['title']), 'ref', fit=w - 10)]
     for i, line in enumerate([x for x in str(p['lines'] or '').split('\n') if x != ''] if p['lines'] else []):
         prims.append(tx(w / 2, 36 + 14 * i, line, 'valsm'))
     pins = parse_pins(p['pins'], w, h)
@@ -52,7 +52,7 @@ def block(p):
         {'length': LEN(60), 'label': Prop('Z', 'str', True, label='Text inside')})
 def impedance(p):
     h = half(p)
-    return G([*leads(h, 16), rc(-16, -8, 32, 16, 'box', 1), tx(0, 0, str(p['label']), 'valsm', ctr=True)], two_pins(h), above(-14))
+    return G([*leads(h, 16), rc(-16, -8, 32, 16, 'box', 1), tx(0, 0, str(p['label']), 'valsm', ctr=True, fit=28)], two_pins(h), above(-14))
 
 
 def _oneport(prims, label):
@@ -66,7 +66,7 @@ def _oneport(prims, label):
         help='value: the open-circuit voltage')
 def thevenin(p):
     prims = [pl([(-20, 20), (-20, 12)]), ci(-20, 0, 12, 'amp'), tx(-20, -4, '+', 'valsm', ctr=True), tx(-20, 5, '−', 'valsm', ctr=True),
-             pl([(-20, -12), (-20, -20), (-6, -20)]), rc(-6, -26, 26, 12, 'box', 1), tx(7, -20, str(p['zth']), 'valsm', ctr=True),
+             pl([(-20, -12), (-20, -20), (-6, -20)]), rc(-6, -26, 26, 12, 'box', 1), tx(7, -20, str(p['zth']), 'valsm', ctr=True, fit=23),
              pl([(20, -20), (37, -20)]), pl([(-20, 20), (37, 20)])]
     return _oneport(prims, below(30))
 
@@ -87,7 +87,7 @@ def norton(p):
         model=lambda p: p.get('title') or 'TWOPORT', lines=(('ref', 'ref'), ('value', 'val')))
 def twoport(p):
     w = max(30.0, float(p['w'])); a = w / 2
-    prims = [rc(-a, -25, w, 50, 'box', 2), tx(0, 0, str(p['title']), 'ref', ctr=True),
+    prims = [rc(-a, -25, w, 50, 'box', 2), tx(0, 0, str(p['title']), 'ref', ctr=True, fit=w - 8),
              pl([(-a - 10, -15), (-a, -15)]), pl([(-a - 10, 15), (-a, 15)]), pl([(a, -15), (a + 10, -15)]), pl([(a, 15), (a + 10, 15)])]
     return G(prims, {'1': (-a - 10, -15), '1n': (-a - 10, 15), '2': (a + 10, -15), '2n': (a + 10, 15)}, above(-31))
 
@@ -103,7 +103,7 @@ def ic(p):
     side = n // 2
     H = 10 * side + 10
     names = [s.strip() for s in str(p['names'] or '').split(',')]
-    prims = [rc(-30, 0, 60, H, 'box', 2), pg([(-4, 0), (4, 0), (0, 4)], 'w thin'), tx(0, H / 2, str(p['title']), 'valsm', ctr=True)]
+    prims = [rc(-30, 0, 60, H, 'box', 2), pg([(-4, 0), (4, 0), (0, 4)], 'w thin'), tx(0, H / 2, str(p['title']), 'valsm', ctr=True, fit=52)]
     pins = {}
     for i in range(n):
         left = i < side

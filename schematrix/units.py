@@ -9,7 +9,8 @@ _NUM = re.compile(r'^([-+]?\d+(?:\.\d+)?(?:[eE][-+]?\d+)?)\s*([fpnuµμmkKMGT]?)
 
 def spice_value(v: str) -> str:
     """'1 kΩ' -> '1k', '10 mΩ' -> '10m', '4.7 µF' -> '4.7u', '2.2 MΩ' -> '2.2Meg', '30.1k' -> '30.1k'"""
-    s = str(v or '').strip()
+    from .markup import plain
+    s = plain(str(v or '')).strip()
     m = _NUM.match(s)
     if not m:
         return s.replace(' ', '') or '?'

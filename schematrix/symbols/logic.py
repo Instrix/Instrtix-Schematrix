@@ -9,9 +9,11 @@ from .logic_block import _bus_mark
 
 
 def _schmitt(cx, cy, s=4):
-    """the hysteresis mark"""
-    return pl([(cx - s * 1.5, cy + s / 2), (cx + s / 2, cy + s / 2), (cx + s / 2, cy - s / 2),
-               (cx - s / 2, cy - s / 2), (cx - s / 2, cy + s / 2)], 'w thin')
+    """the hysteresis mark: a low line entering from the left that rises on the right, and a high line leaving to
+    the right that falls on the left — two overlapping steps"""
+    a, h = s / 2, s * 0.6
+    return [pl([(cx - 3 * a, cy + h), (cx + a, cy + h), (cx + a, cy - h)], 'w thin'),
+            pl([(cx + 3 * a, cy - h), (cx - a, cy - h), (cx - a, cy + h)], 'w thin')]
 
 
 def _inverted(spec, n) -> set:
@@ -37,14 +39,14 @@ SHAPE = ENUM('ansi', ['ansi', 'iec'], 'Shape', help='ansi: distinctive shapes; i
                  ('tristate_buffer', 'Tri-state buffer', {'tristate': True}, ('74HC125', '74LVC1G125', '74HC126'))))
 def buffer(p):
     if p.get('shape') == 'iec':
-        prims = [rc(-10, -10, 20, 20, 'box', 1), tx(0, -3 if p.get('schmitt') else 0, '1', 'valsm', ctr=True),
+        prims = [rc(-10, -10, 20, 20, 'box', 1), tx(0, -5 if p.get('schmitt') else 0, '1', 'valsm', ctr=True),
                  pl([(-20, 0), (-10, 0)])]
         if p['invert']:
             prims += [ci(13, 0, 3, 'pad'), pl([(16, 0), (20, 0)])]
         else:
             prims.append(pl([(10, 0), (20, 0)]))
         if p.get('schmitt'):
-            prims.append(_schmitt(1, 5, 3))
+            prims += _schmitt(0, 5, 3.5)
         pins = {'in': (-20, 0), 'out': (20, 0)}
         if p.get('tristate'):
             prims += [pl([(0, -10), (0, -20)]), tx(-3, -16, 'EN', 'valsm', 'end', ctr=True)]
@@ -59,7 +61,7 @@ def buffer(p):
         prims.append(pl([(h, 0), (h + 4, 0)]))
         out = (h + 4, 0)
     if p.get('schmitt'):
-        prims.append(_schmitt(-h / 3, 0, 3.5))
+        prims += _schmitt(-h / 3, 0, 4.5)
     pins = {'in': (-h - 10, 0), 'out': out}
     if p.get('tristate'):
         prims.append(pl([(0, -h / 2), (0, -h - 9)])); pins['oe'] = (0, -h - 9)
@@ -102,7 +104,7 @@ def gate(p):
         prims += [ci(18, 0, 3, 'pad'), pl([(21, 0), (25, 0)])] if neg_out else [pl([(15, 0), (25, 0)])]
         pins['out'] = (25, 0)
         if p.get('schmitt'):
-            prims.append(_schmitt(1, -H / 2 + 22, 3))
+            prims += _schmitt(0, -H / 2 + 24, 5)
         return G(prims, pins, above(-H / 2 - 6))
     H = max(15, 5 * n)
     if k in ('and', 'nand'):
@@ -134,7 +136,7 @@ def gate(p):
     else:
         prims.append(pl([(tip, 0), (tip + 13, 0)])); pins['out'] = (tip + 13, 0)
     if p.get('schmitt'):
-        prims.append(_schmitt(0, 0, 4))
+        prims += _schmitt(-2, 0, 6)
     return G(prims, pins, above(-H - 6))
 
 

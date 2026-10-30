@@ -82,6 +82,6 @@ def vref(p):
         {'quantity': Prop('T', 'str', True, label='Quantity', help='letter or short text inside, e.g. T, P, B, RH')},
         fields=('Range', 'Accuracy', 'Interface'))
 def sensor(p):
-    prims = [rc(-15, -15, 30, 30, 'box', 3), tx(0, 0, str(p['quantity']), 'ref', ctr=True),
+    prims = [rc(-15, -15, 30, 30, 'box', 3), tx(0, 0, str(p['quantity']), 'ref', ctr=True, fit=26),
              pl([(-15, 0), (-25, 0)]), pl([(15, 0), (25, 0)]), pl([(-11, 15), (11, -15)], 'w thin')]
     return G(prims, {'1': (-25, 0), '2': (25, 0)}, above(-21))

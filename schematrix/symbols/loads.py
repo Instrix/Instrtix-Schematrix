@@ -67,7 +67,7 @@ def microphone(p):
         fields=('Mode', 'Setpoint', 'Power'), help='a generic load or DUT drawn as a box')
 def load(p):
     h = half(p)
-    return G([*leads(h, 20), rc(-20, -10, 40, 20, 'box', 2), tx(0, 0, str(p['label']), 'valsm', ctr=True)],
+    return G([*leads(h, 20), rc(-20, -10, 40, 20, 'box', 2), tx(0, 0, str(p['label']), 'valsm', ctr=True, fit=36)],
              two_pins(h), above(-16))
 
 
@@ -84,7 +84,7 @@ def meter(p):
     if s == 'Osc':
         prims += [rc(-9, -7, 18, 14, 'w thin', 1), pl([(-7, 2), (-4, -3), (-1, 2), (2, -3), (5, 2), (7, -1)], 'w thin')]
     else:
-        prims.append(tx(0, 0, s, 'ref' if len(s) <= 2 else 'valsm', ctr=True))
+        prims.append(tx(0, 0, s, 'ref' if len(s) <= 2 else 'valsm', ctr=True, fit=22))
     return G(prims, two_pins(h), above(-20))
 
 

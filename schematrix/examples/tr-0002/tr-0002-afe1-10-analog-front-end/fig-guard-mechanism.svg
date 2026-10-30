@@ -1,0 +1,25 @@
+<svg viewBox="0 0 780 340" width="780" height="340" role="img" aria-label="Equivalent circuit of the rejected low-resistance guard: the guard follower drives the isolated node through R_s into C_g, so the node lags I minus and current flows through the coupling capacitance C." xmlns="http://www.w3.org/2000/svg"><style>
+.w { fill: none; stroke: #292b31; stroke-width: 1.5; stroke-linejoin: round; stroke-linecap: round; }
+.plate { stroke-width: 2.2; }
+.acc { stroke: #23699f; stroke-width: 2.2; }
+.para { stroke-dasharray: 5 3; }
+.accf { fill: #23699f; }
+.dot, .arrow { fill: #292b31; }
+.amp { fill: #ffffff; stroke: #292b31; stroke-width: 1.6; }
+.pad { fill: #ffffff; stroke: #292b31; stroke-width: 1.4; }
+.term { fill: #ffffff; stroke: #292b31; stroke-width: 1.8; }
+.flag { fill: #eef0f4; stroke: #292b31; stroke-width: 1.2; }
+.box { fill: #eef0f4; stroke: #292b31; stroke-width: 1.6; }
+.grp { fill: #eef0f4; stroke: none; }
+text { font-family: "JetBrains Mono", monospace; fill: #292b31; }
+.lbl, .ref { font-size: 12px; font-weight: 500; }
+.val { font-size: 11.5px; fill: #545866; }
+.valsm { font-size: 10.5px; fill: #545866; }
+.node { font-size: 12px; font-weight: 500; font-style: italic; }
+.net { font-size: 11px; font-weight: 500; }
+.pin { font-size: 13px; font-weight: 600; }
+.termlbl { font-size: 12.5px; font-weight: 600; }
+.accl { font-size: 12px; font-weight: 600; fill: #23699f; }
+.grplbl { font-size: 10px; font-weight: 600; letter-spacing: .08em; fill: #545866; }
+.note { font-family: "Inter", sans-serif; font-size: 12px; fill: #545866; }
+</style><rect width="780" height="340" fill="#ffffff"/><polyline class="w" points="60,100 300,100"/><text class="node" x="66" y="90" text-anchor="start">I−</text><polygon class="arrow" points="60,96 60,104 70,100"/><text class="valsm" x="40" y="104" text-anchor="end">I_DUT</text><circle class="dot" cx="110" cy="100" r="3"/><polyline class="w" points="110,100 110,130.0 104,133.3 116,140.0 104,146.7 116,153.3 104,160.0 116,166.7 110,170.0 110,200"/><polyline class="w" points="110,200 110,208"/><polyline class="w" points="100,208 120,208"/><polyline class="w" points="104,212 116,212"/><polyline class="w" points="108,216 112,216"/><text class="ref" x="124" y="146" text-anchor="start">R_tap</text><text class="valsm" x="124" y="160" text-anchor="start">10 kΩ / 100 kΩ</text><circle class="dot" cx="190" cy="100" r="3"/><polyline class="w" points="190,100 190,280 284,280"/><polygon class="amp" points="290,233 290,297 352,265"/><text class="pin" x="298" y="254" text-anchor="middle">−</text><text class="pin" x="298" y="284" text-anchor="middle">+</text><polyline class="w" points="290,250 284,250"/><polyline class="w" points="290,280 284,280"/><polyline class="w" points="352,265 356,265"/><text class="ref" x="320" y="320" text-anchor="middle">guard (OPA2156), not fitted</text><polyline class="w" points="356,265 380,265"/><circle class="dot" cx="380" cy="265" r="3"/><polyline class="w" points="380,265 380,215 270,215 270,250 284,250"/><polyline class="w" points="300,100 366.0,100"/><polyline class="w" points="374.0,100 440,100"/><polyline class="w plate" points="366.0,89 366.0,111"/><polyline class="w plate" points="374.0,89 374.0,111"/><text class="ref" x="370" y="78" text-anchor="middle">C</text><text class="valsm" x="370" y="128" text-anchor="middle">Qi / Qi2 C_oss</text><circle class="dot" cx="520" cy="100" r="3"/><polyline class="w" points="440,100 640,100"/><text class="node" x="526" y="90" text-anchor="start">ihi / ilo</text><polyline class="w" points="380,265 520,265"/><polyline class="w acc" points="520,265 520,160.5 514,164.2 526,171.5 514,178.8 526,186.2 514,193.5 526,200.8 520,204.5 520,100"/><text class="accl" x="534" y="178" text-anchor="start">R_s</text><text class="valsm" x="534" y="192" text-anchor="start">Rgo + Qg R_on</text><polyline class="w" points="640,100 640,146.0"/><polyline class="w" points="640,154.0 640,200"/><polyline class="w plate" points="629,146.0 651,146.0"/><polyline class="w plate" points="629,154.0 651,154.0"/><polyline class="w" points="640,200 640,208"/><polyline class="w" points="630,208 650,208"/><polyline class="w" points="634,212 646,212"/><polyline class="w" points="638,216 642,216"/><text class="ref" x="656" y="146" text-anchor="start">C_g ≈ 9.6 nF</text><text class="valsm" x="656" y="160" text-anchor="start">mostly off tap-FET C_GS</text><text class="valsm" x="656" y="174" text-anchor="start">to their driver rails</text></svg>

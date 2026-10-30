@@ -22,6 +22,7 @@ from fastapi.staticfiles import StaticFiles
 
 from . import __version__
 from . import document as D
+from . import export as EX
 from . import netio
 from . import netlist as NET
 from . import render as R
@@ -63,6 +64,11 @@ def safe_path(rel: str) -> Path:
     return p
 
 
+def _has(mod):
+    import importlib.util
+    return importlib.util.find_spec(mod) is not None
+
+
 def pdf_available():
     try:
         import cairosvg  # noqa: F401
@@ -100,7 +106,7 @@ def create_app() -> FastAPI:
         return {'version': __version__, 'pdf': pdf_available(), 'scripts': _truthy(os.environ.get('SCHEMATRIX_SCRIPTS')),
                 'workspace': str(workspace()), 'themes': {k: v for k, v in TH.THEMES.items()},
                 'text_classes': TH.TEXT_CLASSES, 'css': {k: TH.css(k) for k in TH.THEMES},
-                'netlist_formats': netio.info()}
+                'netlist_formats': netio.info(), 'pillow': _has('PIL')}
 
     @app.get('/api/symbols')
     def symbols():
@@ -139,6 +145,19 @@ def create_app() -> FastAPI:
             return Response(data, media_type='image/png' if format == 'png' else 'application/pdf',
                             headers={'Content-Disposition': f'attachment; filename="{name}.{format}"'})
         raise HTTPException(400, 'format must be svg, png, pdf or spice')
+
+    @app.post('/api/export')
+    def export(body: dict = Body(...)):
+        """body: {doc, format: svg|png|jpeg|webp|pdf|eps|tikz|tikz-standalone, ids?: [element ids to export, cropped],
+        background?: true (theme paper) | false (transparent) | '#rrggbb', scale?: 2, margin?: 20, fonts?: true}"""
+        doc = _doc(body)
+        try:
+            data, mime, ext = EX.export(doc, body.get('format', 'svg'), ids=body.get('ids'), background=body.get('background', True),
+                                        scale=float(body.get('scale', 2)), margin=body.get('margin'), fonts=body.get('fonts', True))
+        except EX.ExportError as e:
+            raise HTTPException(501 if 'needs' in str(e) else 400, str(e))
+        name = re.sub(r'[^\w\-]+', '-', body.get('name') or doc.get('meta', {}).get('title') or 'schematic').strip('-') or 'schematic'
+        return Response(data, media_type=mime, headers={'Content-Disposition': f'attachment; filename="{name}.{ext}"'})
 
     @app.post('/api/netlist')
     def netlist(body: dict = Body(...)):

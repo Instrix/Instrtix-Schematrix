@@ -9,6 +9,7 @@ editable elements (components, wires, texts) into a `Schematic`; raw `s.add(...)
 from __future__ import annotations
 
 import ast
+import re
 import inspect
 import os
 
@@ -113,6 +114,11 @@ def _figure_names(tree):
             if strs:
                 names.setdefault(node.elts[-1].id, strs[-1])
     return names
+
+
+def is_legacy(code: str) -> bool:
+    """an old figure script built on the hand-rolled S class (it defines `class S` with an svg() method)"""
+    return bool(re.search(r'^class\s+S\b', code, re.M) and re.search(r'def\s+svg\s*\(', code))
 
 
 def import_legacy(path=None, source=None, filename='legacy.py'):

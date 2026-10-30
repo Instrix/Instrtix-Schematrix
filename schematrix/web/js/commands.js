@@ -1,9 +1,10 @@
 // Commands, menus, keyboard shortcuts and resizable panels.
+import { exportDialog, quickExport } from './exporter.js';
 import { exportAs, exportNetlist, filesDialog, importFile, save } from './files.js';
 import { renderInspector } from './inspector.js';
 import { buildPalette } from './palette.js';
 import { refreshNetlist, refreshScripts, runScript } from './panes.js';
-import { copySel, del, nudge, paste, reorder, toggleAccent, transformSel } from './selection.js';
+import { copySel, del, nudge, paste, reorder, step, toggleAccent, transformSel } from './selection.js';
 import { D, edit, newDoc, openTab, persist, redo, S, T, undo } from './state.js';
 import { finishDraft, setTool } from './tools.js';
 import { ask, closeModal, helpDialog, modal, toast } from './ui.js';
@@ -17,7 +18,7 @@ export function showPane(name) {
   if (name === 'netlist') refreshNetlist(); else { S.netHL = null; renderOverlay(); }
 }
 export function setStyle(st) { S.style = st; $$('#stylepick button').forEach((b) => b.classList.toggle('on', b.dataset.style === st)); }
-export function closeMenus() { $$('.menu').forEach((m) => m.classList.remove('open')); }
+export function closeMenus() { $$('.menu').forEach((m) => m.classList.remove('open')); $$('.ctx').forEach((m) => m.remove()); }
 
 export const COMMANDS = {
   new: () => openTab(newDoc()), open: filesDialog, upload: () => { $('#fileinput').dataset.legacy = ''; $('#fileinput').click(); },
@@ -26,12 +27,15 @@ export const COMMANDS = {
   cut: () => { if (copySel()) del(); }, copy: copySel, paste, duplicate: () => { if (copySel()) paste(); }, delete: del,
   selectall: () => { T().sel = new Set(D().elements.map((e) => e.id)); render(); renderInspector(); },
   rotate: () => transformSel('rot'), mirror: () => transformSel('mir'), accent: toggleAccent, front: () => reorder(true), back: () => reorder(false),
+  forward: () => step(1), backward: () => step(-1),
   fit, zoomin: () => zoomAt(1.25), zoomout: () => zoomAt(0.8), zoom100: () => zoomAt(1 / T().view.k),
   grid: () => { S.grid = !S.grid; render(); }, help: helpDialog,
   junctions: () => edit((d) => { d.page.junctions = d.page.junctions === false; }),
   hops: () => edit((d) => { d.page.hops = !d.page.hops; }),
-  'export-svg': () => exportAs('svg'), 'export-svg-plain': () => exportAs('svg-plain'), 'export-png': () => exportAs('png'),
-  'export-pdf': () => exportAs('pdf'), 'export-spice': () => exportNetlist('spice'), 'export-kicad': () => exportNetlist('kicad'), 'export-netjson': () => exportNetlist('json'),
+  export: () => exportDialog(false), 'export-selection': () => exportDialog(true),
+  'export-svg': () => quickExport('svg'), 'export-svg-plain': () => quickExport('svg-plain'), 'export-png': () => quickExport('png'),
+  'export-jpeg': () => quickExport('jpeg'), 'export-pdf': () => quickExport('pdf'), 'export-eps': () => quickExport('eps'),
+  'export-tikz': () => quickExport('tikz'), 'export-spice': () => exportNetlist('spice'), 'export-kicad': () => exportNetlist('kicad'), 'export-netjson': () => exportNetlist('json'),
   'import-netlist': () => { $('#fileinput').dataset.legacy = ''; $('#fileinput').click(); }, 'export-json': () => exportAs('json'),
   'copy-svg': async () => { try { const b = await api.blob('/api/render?format=svg&fonts=false', { doc: D() }); await navigator.clipboard.writeText(await b.text()); toast('SVG copied'); } catch (err) { toast(err.message, true); } },
 };
@@ -88,7 +92,7 @@ document.addEventListener('keydown', (ev) => {
   if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
   const mod = ev.ctrlKey || ev.metaKey, k = ev.key;
   if (mod) {
-    const map = { z: ev.shiftKey ? 'redo' : 'undo', y: 'redo', c: 'copy', x: 'cut', v: 'paste', d: 'duplicate', a: 'selectall', s: ev.shiftKey ? 'saveas' : 'save', o: 'open', n: 'new', ']': 'front', '[': 'back' };
+    const map = { z: ev.shiftKey ? 'redo' : 'undo', y: 'redo', c: 'copy', x: 'cut', v: 'paste', d: 'duplicate', a: 'selectall', s: ev.shiftKey ? 'saveas' : 'save', e: 'export', o: 'open', n: 'new', ']': 'front', '[': 'back' };
     const c = map[k.toLowerCase()];
     if (c) { ev.preventDefault(); cmd(c); }
     return;
@@ -101,6 +105,7 @@ document.addEventListener('keydown', (ev) => {
   if (k === 'Enter' && S.draft) { finishDraft(); return; }
   if (k === 'Backspace' && S.draft) { if (S.draft.pts.length > 1) S.draft.pts.pop(); else S.draft = null; renderOverlay(); ev.preventDefault(); return; }
   if (k === 'Delete' || k === 'Backspace') { del(); ev.preventDefault(); return; }
+  if (k === 'PageUp' || k === 'PageDown') { cmd(k === 'PageUp' ? 'forward' : 'backward'); ev.preventDefault(); return; }
   if (k.startsWith('Arrow')) {
     const g = (D().page.grid || 5) * (ev.shiftKey ? 4 : 1);
     nudge(k === 'ArrowLeft' ? -g : k === 'ArrowRight' ? g : 0, k === 'ArrowUp' ? -g : k === 'ArrowDown' ? g : 0);

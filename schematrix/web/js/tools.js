@@ -4,9 +4,9 @@ import { closeMenus } from './commands.js';
 import { renderInspector, seg } from './inspector.js';
 import { buildPalette } from './palette.js';
 import { byId, changed, D, edit, geoOf, nextId, nextRef, pinsOf, pushUndo, S, selected, snapshot, T } from './state.js';
-import { ask } from './ui.js';
+import { ask, contextMenu } from './ui.js';
 import { $, $$, clone, snapTo, svg } from './util.js';
-import { applyView, bboxOf, fit, render, renderOverlay, renderStatus, toScreen, toWorld, zoomAt } from './view.js';
+import { applyView, bboxOf, overlaySoon, renderSoon, fit, render, renderOverlay, renderStatus, toScreen, toWorld, zoomAt } from './view.js';
 
 // ---------------------------------------------------------------- tools
 export function setTool(t) {
@@ -29,7 +29,7 @@ export function updateGhost(w) {
   const g = D().page.grid || 5;
   const { sym, props, rot, mirror } = S.placing;
   S.ghost = { id: 'ghost', type: 'comp', sym, x: snapTo(w[0], g), y: snapTo(w[1], g), rot, mirror, props: { ...props }, style: S.style === 'bus' ? '' : S.style };
-  renderOverlay();
+  overlaySoon();
 }
 export function placeAt(w) {
   const { sym, props, rot, mirror } = S.placing, c = S.cat[sym], g = D().page.grid || 5;
@@ -259,7 +259,11 @@ svg.addEventListener('pointerdown', (ev) => {
     S.drag = { kind: 'pan', sx: ev.clientX, sy: ev.clientY, vx: T().view.x, vy: T().view.y };
     svg.classList.add('panning'); svg.setPointerCapture(ev.pointerId); ev.preventDefault(); return;
   }
-  if (ev.button === 2) { if (S.draft) finishDraft(); return; }
+  if (ev.button === 2) {                  // right button: drag pans; a click without movement opens the menu on release
+    S.drag = { kind: 'pan', sx: ev.clientX, sy: ev.clientY, vx: T().view.x, vy: T().view.y, right: true, moved: false,
+      target: ev.target.closest('#content [data-id]')?.dataset.id };
+    svg.setPointerCapture(ev.pointerId); ev.preventDefault(); return;
+  }
   if (ev.button !== 0) return;
   svg.setPointerCapture(ev.pointerId);
   const g = D().page.grid || 5;
@@ -309,39 +313,61 @@ svg.addEventListener('pointermove', (ev) => {
   S.mouse = w;
   $('#st-xy').textContent = `${Math.round(w[0])}, ${Math.round(w[1])}`;
   const dr = S.drag, g = D().page.grid || 5;
+  if (dr?.kind === 'pan' && dr.right && !dr.moved) {
+    if (Math.hypot(ev.clientX - dr.sx, ev.clientY - dr.sy) < 4) return;
+    dr.moved = true; svg.classList.add('panning');
+  }
   if (dr?.kind === 'pan') { T().fitPending = false; T().view.x = dr.vx + ev.clientX - dr.sx; T().view.y = dr.vy + ev.clientY - dr.sy; applyView(); return; }
   if (S.placing) { updateGhost(w); return; }
   if (S.draft) {
     const sn = S.draft.kind === 'arrow' ? { p: [snapTo(w[0], g), snapTo(w[1], g)], kind: 'grid' } : snapPoint(w);
-    S.draft.cur = sn.p; S.draft.snapKind = sn.kind; renderOverlay(); return;
+    S.draft.cur = sn.p; S.draft.snapKind = sn.kind; overlaySoon(); return;
   }
   if (!dr && (S.tool === 'wire' || S.tool === 'flag' || S.tool === 'arrow')) {
     const sn = S.tool === 'arrow' ? { p: [snapTo(w[0], g), snapTo(w[1], g)], kind: 'grid' } : snapPoint(w);
-    S.hover = sn.p; S.hoverKind = sn.kind; renderOverlay(); return;
+    S.hover = sn.p; S.hoverKind = sn.kind; overlaySoon(); return;
   }
   if (!dr) return;
   if (dr.kind === 'move') {
     const dx = snapTo(w[0] - dr.start[0], g), dy = snapTo(w[1] - dr.start[1], g);
-    if (dx !== dr.dx || dy !== dr.dy) { dr.dx = dx; dr.dy = dy; applyMove(dx, dy); render(); }
+    if (dx !== dr.dx || dy !== dr.dy) { dr.dx = dx; dr.dy = dy; applyMove(dx, dy); renderSoon(); }
   } else if (dr.kind === 'wend' || dr.kind === 'wseg') {
-    applyWireDrag(w); render();
+    applyWireDrag(w); renderSoon();
   } else if (dr.kind === 'vertex') {
     const e = byId(dr.id), sn = e.type === 'wire' ? snapPoint(w, e.id) : { p: [snapTo(w[0], g), snapTo(w[1], g)] };
-    e.points[dr.idx] = sn.p; render();
+    e.points[dr.idx] = sn.p; renderSoon();
   } else if (dr.kind === 'label') {
     const e = byId(dr.id);
-    e.label_offset = [dr.orig[0] + Math.round(w[0] - dr.start[0]), dr.orig[1] + Math.round(w[1] - dr.start[1])]; render();
+    e.label_offset = [dr.orig[0] + Math.round(w[0] - dr.start[0]), dr.orig[1] + Math.round(w[1] - dr.start[1])]; renderSoon();
   } else if (dr.kind === 'resize') {
     const e = byId(dr.id);
-    e.w = Math.max(10, snapTo(w[0], g) - e.x); e.h = Math.max(10, snapTo(w[1], g) - e.y); render();
-  } else if (dr.kind === 'marquee') { dr.cur = w; renderOverlay(); } else if (dr.kind === 'rect') { dr.cur = [snapTo(w[0], g), snapTo(w[1], g)]; renderOverlay(); }
+    e.w = Math.max(10, snapTo(w[0], g) - e.x); e.h = Math.max(10, snapTo(w[1], g) - e.y); renderSoon();
+  } else if (dr.kind === 'marquee') { dr.cur = w; overlaySoon(); } else if (dr.kind === 'rect') { dr.cur = [snapTo(w[0], g), snapTo(w[1], g)]; overlaySoon(); }
 });
 
-svg.addEventListener('pointerup', () => {
-  if (S.drag?.kind === 'pan') { S.drag = null; svg.classList.remove('panning'); return; }
+svg.addEventListener('pointerup', (ev) => {
+  if (S.drag?.kind === 'pan') {
+    const dr = S.drag;
+    S.drag = null; svg.classList.remove('panning');
+    if (dr.right && !dr.moved) { if (S.draft) finishDraft(); else showContextMenu(ev.clientX, ev.clientY, dr.target); }
+    return;
+  }
   endDrag();
 });
 svg.addEventListener('contextmenu', (ev) => ev.preventDefault());
+function showContextMenu(x, y, id) {
+  if (S.tool !== 'select') return;
+  const t = T();
+  if (id && !t.sel.has(id)) { t.sel = new Set([id]); render(); renderInspector(); }
+  const items = t.sel.size ? [
+    ['Bring to front', 'front', 'Ctrl ]'], ['Bring forward', 'forward', 'PgUp'], ['Send backward', 'backward', 'PgDn'],
+    ['Send to back', 'back', 'Ctrl ['], null,
+    ['Rotate', 'rotate', 'R'], ['Mirror', 'mirror', 'M'], ['Toggle accent', 'accent', 'E'], null,
+    ['Cut', 'cut', 'Ctrl X'], ['Copy', 'copy', 'Ctrl C'], ['Duplicate', 'duplicate', 'Ctrl D'], null,
+    ['Export selection…', 'export-selection', ''], ['Delete', 'delete', 'Del'],
+  ] : [['Paste', 'paste', 'Ctrl V'], ['Select all', 'selectall', 'Ctrl A'], null, ['Fit to page', 'fit', 'F'], ['Export…', 'export', 'Ctrl E']];
+  contextMenu(x, y, items);
+}
 svg.addEventListener('dblclick', (ev) => {
   if (S.tool !== 'select') { if (S.draft) finishDraft(); return; }
   const id = ev.target.closest('#content [data-id]')?.dataset.id;

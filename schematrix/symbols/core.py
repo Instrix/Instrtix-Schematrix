@@ -22,6 +22,8 @@ import math
 from dataclasses import dataclass, field
 from typing import Any, Callable
 
+from ..markup import width_chars
+
 FONT_SIZES = {'lbl': 12, 'ref': 12, 'val': 11.5, 'valsm': 10.5, 'node': 12, 'net': 11, 'pin': 13, 'termlbl': 12.5,
               'accl': 12, 'grplbl': 10, 'note': 12, 'title': 15}
 
@@ -51,13 +53,19 @@ def rc(x, y, w, h, c='box', rx=3):
     return {'k': 'rc', 'x': r1(x), 'y': r1(y), 'w': r1(w), 'h': r1(h), 'rx': rx, 'c': c}
 
 
-def tx(x, y, s, c='lbl', a='middle', ctr=False):
-    return {'k': 'tx', 'x': r1(x), 'y': r1(y), 's': s, 'c': c, 'a': a, 'ctr': ctr}
+def tx(x, y, s, c='lbl', a='middle', ctr=False, fit=None):
+    """upright text; fit = the width it must stay within (user text inside a body shrinks rather than overflow)"""
+    d = {'k': 'tx', 'x': r1(x), 'y': r1(y), 's': s, 'c': c, 'a': a, 'ctr': ctr}
+    if fit:
+        w = text_width(s, c)
+        if w > fit:
+            d['z'] = round(max(0.35, fit / w), 3)       # font scale, applied by both renderers
+    return d
 
 
 def text_width(s: str, cls: str = 'lbl') -> float:
     fs = FONT_SIZES.get(cls, 12)
-    return len(s) * fs * (0.55 if cls in ('note', 'title') else 0.6)
+    return width_chars(s) * fs * (0.55 if cls in ('note', 'title') else 0.6)
 
 
 def G(prims, pins, label=None):
@@ -351,7 +359,8 @@ def prim_bbox(prims, pins=None):
         elif k == 'rc':
             xs += [p['x'], p['x'] + p['w']]; ys += [p['y'], p['y'] + p['h']]
         elif k == 'tx':
-            w = text_width(p['s'], p['c']); fs = FONT_SIZES.get(p['c'], 12)
+            z = p.get('z', 1)
+            w = text_width(p['s'], p['c']) * z; fs = FONT_SIZES.get(p['c'], 12) * z
             x0 = p['x'] - (w / 2 if p['a'] == 'middle' else (w if p['a'] == 'end' else 0))
             xs += [x0, x0 + w]; ys += [p['y'] - fs, p['y'] + fs * 0.3]
     for x, y in (pins or {}).values():

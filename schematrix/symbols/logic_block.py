@@ -101,7 +101,7 @@ def block(title, left, right, top=(), bottom=(), min_w=40):
     h = y0 + PITCH * rows + (10 if bottom else 0)
     prims = [rc(0, 0, w, h, 'box', 2)]
     if title:
-        prims.append(tx(w / 2, 13 + yt, title, 'valsm'))
+        prims.append(tx(w / 2, 13 + yt, title, 'valsm', fit=w - 8))
     pins = {}
     for side, lst in (('l', left), ('r', right)):
         for i, p in enumerate(lst):

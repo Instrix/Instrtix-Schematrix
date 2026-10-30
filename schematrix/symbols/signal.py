@@ -3,17 +3,21 @@ from __future__ import annotations
 
 import math
 
-from .core import ENUM, FLAG, G, Prop, above, ci, pg, pl, rc, symbol, tx
+from .core import ENUM, FLAG, G, Prop, above, ci, pg, pl, rc, symbol, text_width, tx
 
 
 @symbol('amplifier', 'Amplifier (block)', 'Signal flow', 'A', None,
         {'gain': Prop('', 'str', True, label='Text inside', help='e.g. ×10, G, 20 dB'), 'size': Prop(40, 'num', True, label='Size')},
         fields=('Gain', 'Bandwidth'))
 def amplifier(p):
-    s = float(p['size']); h = s / 2
+    s = float(p['size'])
+    if p['gain']:                       # grow (up to 2x) so the text keeps at least 80 % of its size, then shrink it
+        s = min(2 * s, max(s, 2 * 0.8 * text_width(str(p['gain']), 'valsm') / 1.05))
+        s = math.ceil(s / 10) * 10
+    h = s / 2
     prims = [pg([(-h, -h), (-h, h), (h, 0)]), pl([(-h - 10, 0), (-h, 0)]), pl([(h, 0), (h + 10, 0)])]
     if p['gain']:
-        prims.append(tx(-h / 3, 0, str(p['gain']), 'valsm', ctr=True))
+        prims.append(tx(-h / 3, 0, str(p['gain']), 'valsm', ctr=True, fit=h * 1.05))
     return G(prims, {'in': (-h - 10, 0), 'out': (h + 10, 0)}, above(-h - 6))
 
 
@@ -67,7 +71,7 @@ def filter_(p):
         fields=('Resolution', 'Sample rate', 'Efficiency'))
 def converter(p):
     prims = [rc(-20, -20, 40, 40, 'box', 2), pl([(-20, 20), (20, -20)], 'w thin'),
-             tx(-10, -8, str(p['src']), 'valsm', ctr=True), tx(10, 9, str(p['dst']), 'valsm', ctr=True),
+             tx(-10, -8, str(p['src']), 'valsm', ctr=True, fit=17), tx(10, 9, str(p['dst']), 'valsm', ctr=True, fit=17),
              pl([(-30, 0), (-20, 0)]), pl([(20, 0), (30, 0)])]
     if p['isolated']:
         prims.append(pl([(0, -26), (0, 26)], 'w para'))

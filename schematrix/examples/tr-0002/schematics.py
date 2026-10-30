@@ -756,5 +756,6 @@ if __name__ == '__main__':
                           ('tr-0002-afe1-10-analog-front-end', 'fig-chain', chain),
                           ('tr-0002-afe1-10-analog-front-end', 'fig-switch-timing', switch_timing),
                           ('tr-0002-afe1-10-analog-front-end', 'fig-dsp', dsp_pipeline)):
+        os.makedirs(os.path.join(HERE, doc), exist_ok=True)
         open(os.path.join(HERE, doc, name + '.svg'), 'w').write(fn())
         print('Wrote', f'{doc}/{name}.svg')

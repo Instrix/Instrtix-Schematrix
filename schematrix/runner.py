@@ -26,7 +26,8 @@ def child_main():
     res = {'ok': True, 'docs': [], 'stdout': '', 'error': None}
     try:
         with contextlib.redirect_stdout(buf), contextlib.redirect_stderr(buf):
-            if req.get('mode') == 'legacy':
+            from .compat import is_legacy
+            if req.get('mode') == 'legacy' or is_legacy(req['code']):      # old S-class figure scripts import
                 for name, sch in import_legacy(source=req['code'], filename=req.get('filename') or 'legacy.py'):
                     res['docs'].append({'name': name, 'doc': sch.doc})
             else:

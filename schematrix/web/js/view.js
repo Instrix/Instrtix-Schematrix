@@ -75,7 +75,7 @@ export function setThemeCss() {
   const name = typeof th === 'string' ? th : th?.base || 'instrix';
   const tok = { ...S.info.themes?.instrix, ...(S.info.themes?.[name] || {}), ...(typeof th === 'object' ? th : {}) };
   let css = S.info.css?.[name] || S.info.css?.instrix || '';
-  if (typeof th === 'object') for (const [k, v] of Object.entries(th)) if (S.info.themes?.instrix?.[k]) css = css.split(S.info.themes.instrix[k]).join(v);
+  if (typeof th === 'object') for (const [k, v] of Object.entries(th)) if (String(S.info.themes?.instrix?.[k] || '').startsWith('#')) css = css.split(S.info.themes.instrix[k]).join(v);
   css = scopeCss(css, '.sch');
   themeCss = css;
   let st = $('#themecss');
@@ -94,7 +94,14 @@ export function hitShape(e) {
   return '';
 }
 
+// pointer-driven redraws are coalesced to one per animation frame (WebKitGTK, used by the desktop window on
+// Linux, is noticeably slower than Chromium at replacing the sheet's markup)
+let frame = 0, overlayFrame = 0;
+export function renderSoon() { if (!frame) frame = requestAnimationFrame(() => { frame = 0; render(); }); }
+export function overlaySoon() { if (!overlayFrame && !frame) overlayFrame = requestAnimationFrame(() => { overlayFrame = 0; renderOverlay(); }); }
+
 export function render() {
+  if (frame) { cancelAnimationFrame(frame); frame = 0; }
   if (!S.cur) return;
   setThemeCss();
   const d = D();
@@ -103,7 +110,7 @@ export function render() {
   for (const e of d.elements) html += `<g class="el" data-id="${e.id}">${hitShape(e)}${G.elementSvg(e, S.cat, geoOf, hops[e.id])}</g>`;
   if (d.page.junctions !== false) {
     const manual = new Set(d.elements.filter((e) => e.type === 'comp' && e.sym === 'dot').map((e) => G.key([e.x, e.y])));
-    for (const p of G.junctions(d, geoOf)) if (!manual.has(G.key(p))) html += `<circle class="dot" cx="${p[0]}" cy="${p[1]}" r="3"/>`;
+    for (const p of G.junctions(d, geoOf)) if (!manual.has(G.key(p))) html += `<circle class="dot jn" cx="${p[0]}" cy="${p[1]}" r="3"/>`;
   }
   const content = $('#content');
   content.innerHTML = html;
@@ -125,6 +132,7 @@ export function render() {
 }
 
 export function renderOverlay() {
+  if (overlayFrame) { cancelAnimationFrame(overlayFrame); overlayFrame = 0; }
   const ov = $('#overlay'), t = T(), k = t.view?.k || 1;
   let s = '';
   for (const e of selected()) {

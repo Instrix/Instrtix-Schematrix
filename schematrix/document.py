@@ -177,6 +177,20 @@ class Schematic:
             f.write(R.to_png(self.to_svg(), scale))
         return path
 
+    def export(self, path, fmt=None, **options):
+        """write any export format (svg, png, jpeg, webp, pdf, eps, tikz, tex) chosen by fmt or the extension.
+        options: ids=[...] (only those elements, cropped), background=True | False | '#fff', scale=, margin=, fonts="""
+        from . import export as EX
+        fmt = fmt or os.path.splitext(str(path))[1].lstrip('.').lower()
+        data = EX.export(self.doc, fmt, **options)[0]
+        with open(path, 'wb') as f:
+            f.write(data)
+        return path
+
+    def to_tikz(self, standalone=False, background=False) -> str:
+        from . import tikz
+        return tikz.to_tikz(self.doc, background=background, standalone=standalone)
+
     def save_pdf(self, path):
         with open(path, 'wb') as f:
             f.write(R.to_pdf(self.to_svg()))

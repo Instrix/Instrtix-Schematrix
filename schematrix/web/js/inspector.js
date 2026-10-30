@@ -1,6 +1,6 @@
 // The properties inspector.
 import * as G from './geom.js';
-import { del, reorder, transformSel } from './selection.js';
+import { del, reorder, step, transformSel } from './selection.js';
 import { D, edit, pinsOf, S, selected } from './state.js';
 import { $ } from './util.js';
 import { docBBox, pageBox } from './view.js';
@@ -90,6 +90,7 @@ export function seg(value, options, onChange) {
 }
 export const STYLES = [['', 'Ink'], ['acc', 'Accent'], ['para', 'Dash'], ['acc para', 'Acc·dash']];
 export const WIRE_STYLES = [...STYLES, ['bus', 'Bus']];
+const ZORDER = () => [['To front', () => reorder(true)], ['Forward', () => step(1)], ['Backward', () => step(-1)], ['To back', () => reorder(false)]];
 export const sect = (t) => { const d = document.createElement('div'); d.className = 'sect'; d.textContent = t; return d; };
 
 export function renderInspector() { keepFocus(buildInspector); }
@@ -129,7 +130,7 @@ function buildInspector() {
     head(`${sel.length} selected`, [...new Set(sel.map((e) => e.type === 'comp' ? S.cat[e.sym]?.title : e.type))].join(', '));
     const styled = sel.filter((e) => e.type === 'comp' || e.type === 'wire' || e.type === 'arrow');
     if (styled.length) p.append(field('Style', seg(styled[0].style || '', STYLES, (v) => edit(() => { for (const e of styled) e.style = v; }))));
-    p.append(btns([['Rotate', () => transformSel('rot')], ['Mirror', () => transformSel('mir')], ['To front', () => reorder(true)], ['To back', () => reorder(false)], ['Delete', del, 'danger']]));
+    p.append(btns([['Rotate', () => transformSel('rot')], ['Mirror', () => transformSel('mir')], ...ZORDER(), ['Delete', del, 'danger']]));
     return;
   }
   const e = sel[0];
@@ -163,7 +164,7 @@ function buildInspector() {
     p.insertAdjacentHTML('beforeend', `<div class="sect">Pins</div><div class="pinlist">${Object.entries(pins).map(([n, q]) => `<b>${G.esc(n)}</b> ${q[0]}, ${q[1]}`).join('<br>')}</div>`);
     const b = [['Rotate', () => transformSel('rot')], ['Mirror', () => transformSel('mir')]];
     if (e.label_offset) b.push(['Reset label', () => edit(() => { delete e.label_offset; })]);
-    b.push(['To front', () => reorder(true)], ['To back', () => reorder(false)], ['Delete', del, 'danger']);
+    b.push(...ZORDER(), ['Delete', del, 'danger']);
     p.append(btns(b));
   } else if (e.type === 'wire' || e.type === 'arrow') {
     head(e.type === 'wire' ? 'Wire' : 'Arrow', `${e.points.length} points · double-click a segment to add a corner`);
@@ -172,7 +173,7 @@ function buildInspector() {
     ta.onchange = () => { const pts = ta.value.split('\n').map((l) => l.split(/[,\s]+/).filter(Boolean).map(Number)).filter((q) => q.length === 2 && q.every(Number.isFinite)); if (pts.length >= 2) edit(() => { e.points = pts; }); };
     ta.onkeydown = (ev) => ev.stopPropagation();
     p.append(field('Points', ta));
-    p.append(btns([['Reverse', () => edit(() => { e.points.reverse(); })], ['Delete', del, 'danger']]));
+    p.append(btns([['Reverse', () => edit(() => { e.points.reverse(); })], ...ZORDER(), ['Delete', del, 'danger']]));
   } else if (e.type === 'text') {
     head('Text', '');
     const ta = document.createElement('textarea'); ta.value = e.text; ta.rows = 3;
@@ -181,7 +182,7 @@ function buildInspector() {
     p.append(field('Class', sel_(e.cls || 'lbl', Object.entries(S.info.text_classes || {}).map(([k, v]) => [k, `${v} (${k})`]), set(e, 'cls'))));
     p.append(field('Anchor', seg(e.anchor || 'start', [['start', 'Start'], ['middle', 'Middle'], ['end', 'End']], set(e, 'anchor'))));
     p.append(field('Position', pair(inp(e.x, set(e, 'x'), { type: 'number', mono: true }), inp(e.y, set(e, 'y'), { type: 'number', mono: true }))));
-    p.append(btns([['Delete', del, 'danger']]));
+    p.append(btns([...ZORDER(), ['Delete', del, 'danger']]));
   } else if (e.type === 'rect') {
     head('Box', 'group shading, frame or block outline');
     p.append(field('Kind', sel_(e.cls || 'grp', [['grp', 'Group shading'], ['box', 'Box'], ['accbox', 'Accent box'], ['frame', 'Frame outline']], set(e, 'cls'))));
@@ -189,7 +190,7 @@ function buildInspector() {
     p.append(field('Position', pair(inp(e.x, set(e, 'x'), { type: 'number', mono: true }), inp(e.y, set(e, 'y'), { type: 'number', mono: true }))));
     p.append(field('Size', pair(inp(e.w, set(e, 'w'), { type: 'number', mono: true }), inp(e.h, set(e, 'h'), { type: 'number', mono: true }))));
     p.append(field('Corner', inp(e.rx ?? 4, set(e, 'rx'), { type: 'number', mono: true })));
-    p.append(btns([['To front', () => reorder(true)], ['To back', () => reorder(false)], ['Delete', del, 'danger']]));
+    p.append(btns([...ZORDER(), ['Delete', del, 'danger']]));
   } else if (e.type === 'raw') {
     head('Raw SVG', 'markup kept verbatim (from an imported script)');
     p.append(field('Offset', pair(inp(e.x || 0, set(e, 'x'), { type: 'number', mono: true }), inp(e.y || 0, set(e, 'y'), { type: 'number', mono: true }))));

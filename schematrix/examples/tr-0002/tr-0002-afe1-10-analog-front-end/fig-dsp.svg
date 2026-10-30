@@ -1,0 +1,25 @@
+<svg viewBox="0 0 962 170" width="962" height="170" role="img" aria-label="Digital compensation pipeline: ADCs, chain select, per-tap calibration, range-switch correction, timestamp shift by group delay, then power, charge and averaging" xmlns="http://www.w3.org/2000/svg"><style>
+.w { fill: none; stroke: #292b31; stroke-width: 1.5; stroke-linejoin: round; stroke-linecap: round; }
+.plate { stroke-width: 2.2; }
+.acc { stroke: #23699f; stroke-width: 2.2; }
+.para { stroke-dasharray: 5 3; }
+.accf { fill: #23699f; }
+.dot, .arrow { fill: #292b31; }
+.amp { fill: #ffffff; stroke: #292b31; stroke-width: 1.6; }
+.pad { fill: #ffffff; stroke: #292b31; stroke-width: 1.4; }
+.term { fill: #ffffff; stroke: #292b31; stroke-width: 1.8; }
+.flag { fill: #eef0f4; stroke: #292b31; stroke-width: 1.2; }
+.box { fill: #eef0f4; stroke: #292b31; stroke-width: 1.6; }
+.grp { fill: #eef0f4; stroke: none; }
+text { font-family: "JetBrains Mono", monospace; fill: #292b31; }
+.lbl, .ref { font-size: 12px; font-weight: 500; }
+.val { font-size: 11.5px; fill: #545866; }
+.valsm { font-size: 10.5px; fill: #545866; }
+.node { font-size: 12px; font-weight: 500; font-style: italic; }
+.net { font-size: 11px; font-weight: 500; }
+.pin { font-size: 13px; font-weight: 600; }
+.termlbl { font-size: 12.5px; font-weight: 600; }
+.accl { font-size: 12px; font-weight: 600; fill: #23699f; }
+.grplbl { font-size: 10px; font-weight: 600; letter-spacing: .08em; fill: #545866; }
+.note { font-family: "Inter", sans-serif; font-size: 12px; fill: #545866; }
+</style><rect width="962" height="170" fill="#ffffff"/><rect class="box" x="16" y="40" width="140" height="70" rx="3"/><text class="ref" x="86.0" y="58" text-anchor="middle">3 current ADCs</text><text class="valsm" x="86.0" y="76" text-anchor="middle">2 MS/s, same edge</text><text class="valsm" x="86.0" y="90" text-anchor="middle">as the voltage ADC</text><rect class="box" x="174" y="40" width="140" height="70" rx="3"/><text class="ref" x="244.0" y="58" text-anchor="middle">Chain select</text><text class="valsm" x="244.0" y="76" text-anchor="middle">owner chain, or</text><text class="valsm" x="244.0" y="90" text-anchor="middle">a bridge chain</text><polyline class="w" points="156,75.0 168,75.0"/><polygon class="arrow" points="168,71.0 168,79.0 174,75.0"/><rect class="box" x="332" y="40" width="140" height="70" rx="3"/><text class="ref" x="402.0" y="58" text-anchor="middle">Calibrate</text><text class="valsm" x="402.0" y="76" text-anchor="middle">offset and gain</text><text class="valsm" x="402.0" y="90" text-anchor="middle">per tap (2 points)</text><polyline class="w" points="314,75.0 326,75.0"/><polygon class="arrow" points="326,71.0 326,79.0 332,75.0"/><rect class="box" x="490" y="40" width="140" height="70" rx="3"/><text class="ref" x="560.0" y="58" text-anchor="middle">Switch correction</text><text class="valsm" x="560.0" y="76" text-anchor="middle">÷ R_eff(t),</text><text class="valsm" x="560.0" y="90" text-anchor="middle">− a(n) − b(n)·Î</text><polyline class="w" points="472,75.0 484,75.0"/><polygon class="arrow" points="484,71.0 484,79.0 490,75.0"/><rect class="box" x="648" y="40" width="140" height="70" rx="3"/><text class="ref" x="718.0" y="58" text-anchor="middle">Timestamp</text><text class="valsm" x="718.0" y="76" text-anchor="middle">− group delay</text><text class="valsm" x="718.0" y="90" text-anchor="middle">of the chain</text><polyline class="w" points="630,75.0 642,75.0"/><polygon class="arrow" points="642,71.0 642,79.0 648,75.0"/><rect class="box" x="806" y="40" width="140" height="70" rx="3"/><text class="ref" x="876.0" y="58" text-anchor="middle">Use</text><text class="valsm" x="876.0" y="76" text-anchor="middle">I × V, charge,</text><text class="valsm" x="876.0" y="90" text-anchor="middle">average / decimate</text><polyline class="w" points="788,75.0 800,75.0"/><polygon class="arrow" points="800,71.0 800,79.0 806,75.0"/><text class="note" x="16" y="140" text-anchor="start">Per-unit tables: six offsets and gains, the chains' step response s(t), and two correction vectors</text><text class="note" x="16" y="158" text-anchor="start">per switch type (~30 samples each). The range comparators and tap enables run alongside.</text></svg>

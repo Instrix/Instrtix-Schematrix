@@ -14,10 +14,47 @@ from pathlib import Path
 from .runner import RUNNER_FLAG
 
 
-def _free_port():
-    with socket.socket() as s:
-        s.bind(('127.0.0.1', 0))
-        return s.getsockname()[1]
+APP_PORT = 47815      # fixed so the editor's browser storage (autosave, settings) survives restarts
+
+
+def _free_port(prefer=None):
+    for p in ([prefer] if prefer else []) + [0]:
+        with socket.socket() as s:
+            try:
+                s.bind(('127.0.0.1', p))
+                return s.getsockname()[1]
+            except OSError:
+                continue
+
+
+def _schematrix_at(port) -> bool:
+    """is a Schematrix server already answering on this port?"""
+    import urllib.request
+    try:
+        with urllib.request.urlopen(f'http://127.0.0.1:{port}/api/health', timeout=0.5) as r:
+            return b'"ok"' in r.read()
+    except Exception:  # noqa: BLE001
+        return False
+
+
+def _chromium():
+    """a Chromium-family browser that can open an app window, or None"""
+    import shutil
+    for exe in ('chromium', 'chromium-browser', 'google-chrome', 'google-chrome-stable', 'brave-browser',
+                'microsoft-edge', 'microsoft-edge-stable', 'vivaldi'):
+        path = shutil.which(exe)
+        if path:
+            return path
+    return None
+
+
+def _chromium_window(exe, url):
+    """open url as a standalone app window (no tabs or address bar) with its own profile; returns the process"""
+    import subprocess
+    profile = Path(os.environ.get('XDG_CACHE_HOME') or Path.home() / '.cache') / 'schematrix' / 'chromium-profile'
+    profile.mkdir(parents=True, exist_ok=True)
+    return subprocess.Popen([exe, f'--app={url}', f'--user-data-dir={profile}', '--no-first-run', '--no-default-browser-check',
+                             '--window-size=1440,900', '--class=Schematrix'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
 def _serve(host, port, workspace=None, log='info'):
@@ -37,18 +74,43 @@ def cmd_serve(a):
 
 
 def cmd_app(a):
-    """local server on a free port + a native window (pywebview), falling back to the default browser"""
-    port = a.port or _free_port()
+    """local server + an app window: Chromium app mode (fastest on Linux) or pywebview, else the default browser"""
+    engine = a.engine or os.environ.get('SCHEMATRIX_ENGINE') or 'auto'
+    if a.browser:
+        engine = 'browser'
+    if engine == 'auto':
+        engine = 'chromium' if sys.platform.startswith('linux') and _chromium() else 'webview'
+    if not a.port and not a.workspace and _schematrix_at(APP_PORT):     # already running: just open another window
+        url = f'http://127.0.0.1:{APP_PORT}/'
+        if engine == 'chromium' and _chromium():
+            _chromium_window(_chromium(), url)
+        else:
+            webbrowser.open(url)
+        return
+    port = a.port or _free_port(APP_PORT)
     t = threading.Thread(target=_serve, args=('127.0.0.1', port, a.workspace, 'warning'), daemon=True)
     t.start()
     url = f'http://127.0.0.1:{port}/'
+    t0 = time.monotonic()
     for _ in range(100):
         try:
             with socket.create_connection(('127.0.0.1', port), timeout=0.2):
                 break
         except OSError:
             time.sleep(0.05)
-    why = 'asked for the browser' if a.browser else None
+    why = 'asked for the browser' if engine == 'browser' else None
+    if engine == 'chromium':
+        exe = _chromium()
+        if exe:
+            proc = _chromium_window(exe, url)
+            try:
+                proc.wait()
+                if time.monotonic() - t0 < 3:      # the browser handed the window to a running instance: keep serving
+                    t.join()
+            except KeyboardInterrupt:
+                pass
+            return
+        why = 'no Chromium / Chrome found for the app window'
     if not why:
         try:
             import webview  # pywebview
@@ -131,17 +193,15 @@ def _load_any(path):
 
 
 def _write(doc, out: Path, fmt, fonts):
+    from . import export as EX
     from . import netlist as NET
-    from . import render as R
     out.parent.mkdir(parents=True, exist_ok=True)
-    if fmt == 'json':
+    if fmt in ('png', 'jpg', 'jpeg', 'webp', 'pdf', 'eps', 'tikz', 'tex', 'svg') and getattr(_write, 'opts', None):
+        out.write_bytes(EX.export(doc, fmt, **_write.opts)[0])
+    elif fmt == 'json':
         out.write_text(json.dumps(doc, indent=1, ensure_ascii=False), encoding='utf-8')
-    elif fmt == 'svg':
-        out.write_text(R.render_svg(doc, embed_fonts=fonts), encoding='utf-8')
-    elif fmt == 'png':
-        out.write_bytes(R.to_png(R.render_svg(doc)))
-    elif fmt == 'pdf':
-        out.write_bytes(R.to_pdf(R.render_svg(doc)))
+    elif fmt in ('svg', 'png', 'jpg', 'jpeg', 'webp', 'pdf', 'eps', 'tikz', 'tex'):
+        out.write_bytes(EX.export(doc, fmt, fonts=fonts)[0])
     elif fmt in ('cir', 'spice'):
         out.write_text(NET.to_spice(doc), encoding='utf-8')
     elif fmt == 'net':
@@ -158,6 +218,8 @@ def _slug(s):
 
 
 def cmd_render(a):
+    bg = {'paper': True, 'none': False, 'transparent': False}.get(a.background, a.background)
+    _write.opts = {'fonts': a.fonts, 'background': bg, 'scale': a.scale, 'margin': a.margin}
     docs = _load_any(a.input)
     fmts = a.format.split(',')
     if a.output and len(docs) == 1 and Path(a.output).suffix:
@@ -215,6 +277,8 @@ def main(argv=None):
     sub = ap.add_subparsers(dest='cmd')
     s = sub.add_parser('app', help='open the editor in a native window (default)')
     s.add_argument('--port', type=int); s.add_argument('--workspace'); s.add_argument('--browser', action='store_true', help='use the web browser instead')
+    s.add_argument('--engine', choices=['auto', 'chromium', 'webview', 'browser'],
+                   help='window: chromium (app mode, default on Linux when installed), webview (pywebview), browser')
     s.set_defaults(fn=cmd_app)
     s = sub.add_parser('serve', help='run the web server')
     s.add_argument('--host', default=os.environ.get('SCHEMATRIX_HOST', '127.0.0.1'))
@@ -223,8 +287,11 @@ def main(argv=None):
     s.set_defaults(fn=cmd_serve)
     s = sub.add_parser('render', help='render a .json document or a .py script to svg/png/pdf/json/cir')
     s.add_argument('input'); s.add_argument('-o', '--output', help='file (single result) or folder')
-    s.add_argument('-f', '--format', default='svg', help='comma list: svg,png,pdf,json,cir (SPICE),net (KiCad netlist)')
+    s.add_argument('-f', '--format', default='svg', help='comma list: svg,png,jpg,webp,pdf,eps,tikz,tex,json,cir (SPICE),net (KiCad netlist)')
     s.add_argument('--fonts', action='store_true', help='embed the fonts in SVGs (portable, ~200 kB)')
+    s.add_argument('--background', default='paper', help='paper (theme), none / transparent, or a colour like "#fff"')
+    s.add_argument('--scale', type=float, default=2.0, help='bitmap scale (2 = 192 dpi)')
+    s.add_argument('--margin', type=float, help='crop margin around the drawing')
     s.set_defaults(fn=cmd_render)
     s = sub.add_parser('netlist', help='write the netlist of a document or script (SPICE, KiCad .net or JSON)')
     s.add_argument('input'); s.add_argument('-f', '--format', default='spice', choices=['spice', 'kicad', 'json'])

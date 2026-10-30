@@ -1,0 +1,25 @@
+<svg viewBox="0 0 900 320" width="900" height="320" role="img" aria-label="Where the transient noise sources sit: a current source across every ladder resistor, a voltage source in series with the owner chain stage-1 input and with the follower input, and with NOISE_DS the downstream op-amps and resistors" xmlns="http://www.w3.org/2000/svg"><style>
+.w { fill: none; stroke: #292b31; stroke-width: 1.5; stroke-linejoin: round; stroke-linecap: round; }
+.plate { stroke-width: 2.2; }
+.acc { stroke: #23699f; stroke-width: 2.2; }
+.para { stroke-dasharray: 5 3; }
+.accf { fill: #23699f; }
+.dot, .arrow { fill: #292b31; }
+.amp { fill: #ffffff; stroke: #292b31; stroke-width: 1.6; }
+.pad { fill: #ffffff; stroke: #292b31; stroke-width: 1.4; }
+.term { fill: #ffffff; stroke: #292b31; stroke-width: 1.8; }
+.flag { fill: #eef0f4; stroke: #292b31; stroke-width: 1.2; }
+.box { fill: #eef0f4; stroke: #292b31; stroke-width: 1.6; }
+.grp { fill: #eef0f4; stroke: none; }
+text { font-family: "JetBrains Mono", monospace; fill: #292b31; }
+.lbl, .ref { font-size: 12px; font-weight: 500; }
+.val { font-size: 11.5px; fill: #545866; }
+.valsm { font-size: 10.5px; fill: #545866; }
+.node { font-size: 12px; font-weight: 500; font-style: italic; }
+.net { font-size: 11px; font-weight: 500; }
+.pin { font-size: 13px; font-weight: 600; }
+.termlbl { font-size: 12.5px; font-weight: 600; }
+.accl { font-size: 12px; font-weight: 600; fill: #23699f; }
+.grplbl { font-size: 10px; font-weight: 600; letter-spacing: .08em; fill: #545866; }
+.note { font-family: "Inter", sans-serif; font-size: 12px; fill: #545866; }
+</style><rect width="900" height="320" fill="#ffffff"/><polyline class="w" points="40,120 90,120"/><polyline class="w" points="90,120 115.0,120 117.5,114 122.5,126 127.5,114 132.5,126 137.5,114 142.5,126 145.0,120 170,120"/><polyline class="w" points="170,120 210,120"/><text class="val" x="130" y="104" text-anchor="middle">R_k</text><polyline class="w" points="100,120 100,160"/><polyline class="w" points="160,120 160,160"/><polyline class="w" points="100,160 114,160"/><polyline class="w" points="146,160 160,160"/><circle class="amp" cx="130" cy="160" r="16"/><polygon class="arrow" points="124,156 124,164 135,160"/><polyline class="w" points="120,160 130,160"/><text class="valsm" x="130" y="200" text-anchor="middle">√(4kT/R_k) per √Hz</text><text class="ref" x="130" y="60" text-anchor="middle">Every ladder segment</text><polygon class="amp" points="390,108 390,172 452,140"/><text class="pin" x="398" y="129" text-anchor="middle">+</text><text class="pin" x="398" y="159" text-anchor="middle">−</text><polyline class="w" points="390,125 384,125"/><polyline class="w" points="390,155 384,155"/><polyline class="w" points="452,140 456,140"/><polyline class="w" points="384,125 360,125"/><circle class="amp" cx="344" cy="125" r="16"/><text class="lbl" x="344" y="129" text-anchor="middle">eₙ</text><polyline class="w" points="328,125 290,125"/><polygon class="flag" points="290,125 282,116 215,116 215,134 282,134"/><text class="net" x="248.7" y="129" text-anchor="middle">tap node</text><text class="ref" x="410" y="60" text-anchor="middle">Stage 1 of the owner chain</text><text class="valsm" x="410" y="210" text-anchor="middle">√(eₙ² + 4kT·Rg‖Rf): OPA210 2.26, OPA387 8.5 nV/√Hz (chain C: one per half)</text><polygon class="amp" points="690,108 690,172 752,140"/><text class="pin" x="698" y="129" text-anchor="middle">+</text><text class="pin" x="698" y="159" text-anchor="middle">−</text><polyline class="w" points="690,125 684,125"/><polyline class="w" points="690,155 684,155"/><polyline class="w" points="752,140 756,140"/><polyline class="w" points="684,125 660,125"/><circle class="amp" cx="644" cy="125" r="16"/><text class="lbl" x="644" y="129" text-anchor="middle">eₙ</text><polyline class="w" points="628,125 600,125"/><polygon class="flag" points="600,125 592,116 569,116 569,134 592,134"/><text class="net" x="580.3" y="129" text-anchor="middle">I−</text><text class="ref" x="720" y="60" text-anchor="middle">Follower U7</text><text class="valsm" x="720" y="210" text-anchor="middle">OPA2156 2.8 nV/√Hz</text><text class="note" x="40" y="262" text-anchor="start">NOISE_DS=1 adds, in the owner chain's DOWNSTREAM block: 5.2 nV/√Hz on each OPA2189 / OPA4189 + input, and</text><text class="note" x="40" y="280" text-anchor="start">√(4kT/R) across every resistor of stages 2–3, the filter and the ADC network. ADC noise is added in the analysis.</text><text class="note" x="40" y="304" text-anchor="start">Each source: Vnz (TRNOISE, unit density, Ts = 9.7 ns) → B-source × V(ngate); ngate steps 0 → 1 at 30–31 µs.</text></svg>

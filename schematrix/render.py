@@ -5,6 +5,7 @@ import math
 from xml.sax.saxutils import escape
 
 from . import geometry as GEO
+from . import markup as MU
 from . import symbols as SYM
 from . import theme as TH
 
@@ -48,15 +49,19 @@ def prim_svg(p, comp=None, style=''):
                 f'height="{num(abs(by - ay))}" rx="{num(p.get("rx", 0))}"/>')
     if k == 'tx':
         x, y = P(p['x'], p['y'])
+        z = p.get('z', 1)
         if p.get('ctr'):
-            y += GEO.ctr_offset(p['c'])
+            y += GEO.ctr_offset(p['c']) * z
         a = GEO.text_anchor(p.get('a', 'middle'), rot, mir)
-        return f'<text class="{p["c"]}" x="{num(x)}" y="{num(y)}" text-anchor="{a}">{esc(p["s"])}</text>'
+        fs = f' style="font-size:{num(SYM.FONT_SIZES.get(p["c"], 12) * z)}px"' if z != 1 else ''
+        inner = MU.svg_inner(p['s'], SYM.FONT_SIZES.get(p['c'], 12) * z, esc)
+        return f'<text class="{p["c"]}" x="{num(x)}" y="{num(y)}" text-anchor="{a}"{fs}>{inner}</text>'
     return ''
 
 
 def text_svg(x, y, s, cls='lbl', anchor='middle'):
-    return f'<text class="{cls}" x="{num(x)}" y="{num(y)}" text-anchor="{anchor}">{esc(s)}</text>'
+    inner = MU.svg_inner(s, SYM.FONT_SIZES.get(cls, 12), esc)
+    return f'<text class="{cls}" x="{num(x)}" y="{num(y)}" text-anchor="{anchor}">{inner}</text>'
 
 
 def arrow_head(a, b, cls='arrow', L=9, W=4):
@@ -79,7 +84,7 @@ def element_svg(e, hop=None):
     if t == 'wire':
         if len(e.get('points', [])) < 2:
             return ''
-        cls = style_cls('w', e.get('style', ''))
+        cls = style_cls('w wire', e.get('style', ''))
         if hop:
             return f'<path class="{cls}" d="{GEO.wire_path(e["points"], hop)}"/>'
         return f'<polyline class="{cls}" points="{" ".join(f"{num(x)},{num(y)}" for x, y in e["points"])}"/>'
@@ -136,10 +141,12 @@ def render_svg(doc, embed_fonts=False, font_urls=False, background=True) -> str:
     body = [element_svg(e, hp.get(e.get('id'))) for e in doc['elements']]
     if doc.get('page', {}).get('junctions', True):
         manual = {GEO._key((e['x'], e['y'])) for e in doc['elements'] if e['type'] == 'comp' and e['sym'] == 'dot'}
-        body += [f'<circle class="dot" cx="{num(px)}" cy="{num(py)}" r="3"/>'
+        body += [f'<circle class="dot jn" cx="{num(px)}" cy="{num(py)}" r="3"/>'
                  for px, py in GEO.junctions(doc) if GEO._key((px, py)) not in manual]
-    paper = TH.resolve(doc.get('theme'))['paper']
-    bg = f'<rect x="{num(x)}" y="{num(y)}" width="{num(w)}" height="{num(h)}" fill="{paper}"/>' if background else ''
+    # background: True = the theme's paper, False / None / 'none' = transparent, or any CSS colour
+    fill = TH.resolve(doc.get('theme'))['paper'] if background is True else background
+    bg = (f'<rect x="{num(x)}" y="{num(y)}" width="{num(w)}" height="{num(h)}" fill="{esc(fill)}"/>'
+          if fill and fill not in ('none', 'transparent') else '')
     vb = f'{num(x)} {num(y)} {num(w)} {num(h)}'
     return (f'<svg viewBox="{vb}" width="{num(w)}" height="{num(h)}" role="img" aria-label="{esc(label)}" '
             f'xmlns="http://www.w3.org/2000/svg"><style>{style}</style>{bg}' + ''.join(body) + '</svg>')

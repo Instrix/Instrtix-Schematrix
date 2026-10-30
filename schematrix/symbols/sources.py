@@ -136,6 +136,6 @@ def solar(p):
         aliases=('Generator', 'Generator_AC', 'Generator_DC'))
 def generator(p):
     prims, h = _circ_src(p)
-    prims.append(tx(0, 0, str(p['letter']), 'ref', ctr=True))
+    prims.append(tx(0, 0, str(p['letter']), 'ref', ctr=True, fit=24))
     return G(prims, two_pins(h), above(-24))
 

@@ -59,6 +59,15 @@ export function nudge(dx, dy) {
     for (const e of selected()) { if ('x' in e) { e.x += dx; e.y += dy; } if (e.points) e.points = e.points.map(([x, y]) => [x + dx, y + dy]); }
   }, 'nudge');
 }
+// one step up or down the drawing order: each selected element swaps with its unselected neighbour
+export function step(dir) {
+  const t = T();
+  edit((d) => {
+    const E = d.elements, idx = E.map((e, i) => (t.sel.has(e.id) ? i : -1)).filter((i) => i >= 0);
+    if (dir > 0) { for (const i of idx.reverse()) if (i + 1 < E.length && !t.sel.has(E[i + 1].id)) [E[i], E[i + 1]] = [E[i + 1], E[i]]; }
+    else for (const i of idx) if (i > 0 && !t.sel.has(E[i - 1].id)) [E[i - 1], E[i]] = [E[i], E[i - 1]];
+  });
+}
 export function reorder(front) {
   const t = T();
   edit((d) => {

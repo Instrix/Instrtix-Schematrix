@@ -1,0 +1,25 @@
+<svg viewBox="0 0 920 200" width="920" height="200" role="img" aria-label="Timeline of a ladder deck: start from initial conditions on tap 1, move to the deck tap at 5 microseconds, ramp the DUT current in from 12 to 17, events at 40 and 60 microseconds" xmlns="http://www.w3.org/2000/svg"><style>
+.w { fill: none; stroke: #292b31; stroke-width: 1.5; stroke-linejoin: round; stroke-linecap: round; }
+.plate { stroke-width: 2.2; }
+.acc { stroke: #23699f; stroke-width: 2.2; }
+.para { stroke-dasharray: 5 3; }
+.accf { fill: #23699f; }
+.dot, .arrow { fill: #292b31; }
+.amp { fill: #ffffff; stroke: #292b31; stroke-width: 1.6; }
+.pad { fill: #ffffff; stroke: #292b31; stroke-width: 1.4; }
+.term { fill: #ffffff; stroke: #292b31; stroke-width: 1.8; }
+.flag { fill: #eef0f4; stroke: #292b31; stroke-width: 1.2; }
+.box { fill: #eef0f4; stroke: #292b31; stroke-width: 1.6; }
+.grp { fill: #eef0f4; stroke: none; }
+text { font-family: "JetBrains Mono", monospace; fill: #292b31; }
+.lbl, .ref { font-size: 12px; font-weight: 500; }
+.val { font-size: 11.5px; fill: #545866; }
+.valsm { font-size: 10.5px; fill: #545866; }
+.node { font-size: 12px; font-weight: 500; font-style: italic; }
+.net { font-size: 11px; font-weight: 500; }
+.pin { font-size: 13px; font-weight: 600; }
+.termlbl { font-size: 12.5px; font-weight: 600; }
+.accl { font-size: 12px; font-weight: 600; fill: #23699f; }
+.grplbl { font-size: 10px; font-weight: 600; letter-spacing: .08em; fill: #545866; }
+.note { font-family: "Inter", sans-serif; font-size: 12px; fill: #545866; }
+</style><rect width="920" height="200" fill="#ffffff"/><polyline class="w" points="100,120 830,120"/><polyline class="w" points="100.0,114 100.0,126"/><text class="lbl" x="100.0" y="144" text-anchor="middle">0 µs</text><polyline class="w para" points="100.0,114 100.0,103"/><text class="valsm" x="100.0" y="98" text-anchor="middle">start (uic), tap 1 on</text><polyline class="w" points="181.11111111111111,114 181.11111111111111,126"/><text class="lbl" x="181.11111111111111" y="144" text-anchor="middle">5 µs</text><polyline class="w para" points="181.11111111111111,114 181.11111111111111,81"/><text class="valsm" x="181.11111111111111" y="76" text-anchor="middle">T_CFG: the deck's tap</text><polyline class="w" points="262.22222222222223,114 262.22222222222223,126"/><text class="lbl" x="262.22222222222223" y="144" text-anchor="middle">10 µs</text><polyline class="w para" points="262.22222222222223,114 262.22222222222223,59"/><text class="valsm" x="262.22222222222223" y="54" text-anchor="middle">follower settled</text><polyline class="w" points="343.33333333333337,114 343.33333333333337,126"/><text class="lbl" x="343.33333333333337" y="144" text-anchor="middle">12 µs</text><polyline class="w para" points="343.33333333333337,114 343.33333333333337,103"/><text class="valsm" x="343.33333333333337" y="98" text-anchor="middle">DUT ramp starts</text><polyline class="w" points="424.44444444444446,114 424.44444444444446,126"/><text class="lbl" x="424.44444444444446" y="144" text-anchor="middle">17 µs</text><polyline class="w para" points="424.44444444444446,114 424.44444444444446,81"/><text class="valsm" x="424.44444444444446" y="76" text-anchor="middle">DUT at its level</text><polyline class="w" points="505.55555555555554,114 505.55555555555554,126"/><text class="lbl" x="505.55555555555554" y="144" text-anchor="middle">31 µs</text><polyline class="w para" points="505.55555555555554,114 505.55555555555554,59"/><text class="valsm" x="505.55555555555554" y="54" text-anchor="middle">noise sources on</text><polyline class="w" points="586.6666666666667,114 586.6666666666667,126"/><text class="lbl" x="586.6666666666667" y="144" text-anchor="middle">40 µs</text><polyline class="w para" points="586.6666666666667,114 586.6666666666667,103"/><text class="valsm" x="586.6666666666667" y="98" text-anchor="middle">TEV: switch, event</text><polyline class="w" points="667.7777777777778,114 667.7777777777778,126"/><text class="lbl" x="667.7777777777778" y="144" text-anchor="middle">60 µs</text><polyline class="w para" points="667.7777777777778,114 667.7777777777778,81"/><text class="valsm" x="667.7777777777778" y="76" text-anchor="middle">T_STEP / T_UP: step</text><polyline class="w" points="748.8888888888889,114 748.8888888888889,126"/><text class="lbl" x="748.8888888888889" y="144" text-anchor="middle">160 µs</text><polyline class="w para" points="748.8888888888889,114 748.8888888888889,59"/><text class="valsm" x="748.8888888888889" y="54" text-anchor="middle">T_DN: step back</text><polyline class="w" points="830.0,114 830.0,126"/><text class="lbl" x="830.0" y="144" text-anchor="middle">200 µs</text><polyline class="w para" points="830.0,114 830.0,103"/><text class="valsm" x="830.0" y="98" text-anchor="middle">stop (tran, bw)</text><text class="note" x="100" y="180" text-anchor="start">Not to scale. lin: 0 A held 17–100 µs, then 7 levels × 40 µs; noise runs 2.05 ms (samples from 100 µs); walks 250 µs.</text></svg>
