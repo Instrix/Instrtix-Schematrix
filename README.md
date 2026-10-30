@@ -97,8 +97,10 @@ pytest -q
   if PNG/PDF export reports a missing `libcairo-2.dll`, install GTK3 for Windows (or use MSYS2's `mingw-w64-x86_64-cairo`)
   and put its `bin` folder on PATH. If you skip it, you can still export SVG, and PNG from the editor.
 - **Linux**: for the native window, install your distribution's WebKitGTK bindings, e.g. on Debian/Ubuntu
-  `sudo apt install python3-gi gir1.2-webkit2-4.1` (then create the venv with `--system-site-packages` so it can
-  see them). Cairo is usually already installed (`libcairo2`). For PNG/PDF that match the editor, install the fonts
+  `sudo apt install python3-gi gir1.2-webkit2-4.1` (Fedora: `python3-gobject webkit2gtk4.1`; Arch:
+  `python-gobject webkit2gtk-4.1`). Schematrix finds them even from a pipx or venv install, as long as that uses
+  the system Python. Alternatively use Qt: `pipx inject schematrix qtpy pyqt6 pyqt6-webengine`. With neither,
+  `schematrix` says so and opens the editor in your browser. Cairo is usually already installed (`libcairo2`). For PNG/PDF that match the editor, install the fonts
   too: `sudo apt install fonts-jetbrains-mono fonts-inter`.
 - **macOS**: works too (`brew install cairo` for PNG/PDF); the native window uses the system WebKit.
 

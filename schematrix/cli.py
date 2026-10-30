@@ -48,19 +48,70 @@ def cmd_app(a):
                 break
         except OSError:
             time.sleep(0.05)
-    try:
-        if a.browser:
-            raise ImportError
-        import webview  # pywebview
-        webview.create_window('Schematrix', url, width=1440, height=900, min_size=(900, 600))
-        webview.start()
-    except ImportError:
-        print(f'Schematrix running at {url} (install pywebview for a native window). Ctrl+C to quit.')
-        webbrowser.open(url)
+    why = 'asked for the browser' if a.browser else None
+    if not why:
         try:
-            t.join()
-        except KeyboardInterrupt:
-            pass
+            import webview  # pywebview
+        except ImportError:
+            why = 'pywebview is not installed (install the "desktop" extra for a native window)'
+    if not why:
+        gui = _gui_backend()
+        if gui is False:
+            why = ('no GUI toolkit for a native window. Either install GTK bindings and reinstall with '
+                   '"pipx install --system-site-packages ..." (Debian/Ubuntu: sudo apt install python3-gi gir1.2-webkit2-4.1), '
+                   'or add Qt: "pipx inject schematrix qtpy pyqt6 pyqt6-webengine"')
+        else:
+            try:
+                webview.create_window('Schematrix', url, width=1440, height=900, min_size=(900, 600))
+                webview.start(gui=gui)
+                return
+            except Exception as e:  # noqa: BLE001  (any toolkit failure: fall back to the browser)
+                why = f'the native window failed ({e})'
+    print(f'Schematrix running at {url} in your browser: {why}. Ctrl+C to quit.')
+    webbrowser.open(url)
+    try:
+        t.join()
+    except KeyboardInterrupt:
+        pass
+
+
+def _borrow_system_gi():
+    """pipx / venv installs can't see the distribution's GTK bindings (python3-gi); append the system
+    site-packages that hold them to the end of sys.path, so they never shadow the venv's own packages"""
+    v = f'python{sys.version_info.major}.{sys.version_info.minor}'
+    for d in ('/usr/lib/python3/dist-packages', f'/usr/lib/{v}/site-packages', f'/usr/lib64/{v}/site-packages',
+              f'/usr/local/lib/{v}/dist-packages'):
+        if os.path.isdir(os.path.join(d, 'gi')) and d not in sys.path:
+            sys.path.append(d)
+            return
+
+
+def _gui_backend():
+    """the pywebview GUI to use: None (platform default), 'gtk' or 'qt'; False if Linux has neither"""
+    if not sys.platform.startswith('linux'):
+        return None                     # Windows (Edge WebView2) and macOS (Cocoa) are built in
+    import importlib.util
+    if not importlib.util.find_spec('gi'):
+        _borrow_system_gi()
+    try:
+        import gi
+        gi.require_version('Gtk', '3.0')
+        from gi.repository import Gtk  # noqa: F401
+        for wk in ('4.1', '4.0'):
+            try:
+                gi.require_version('WebKit2', wk)
+                from gi.repository import WebKit2  # noqa: F401
+                return 'gtk'
+            except (ValueError, ImportError):
+                continue
+    except Exception:  # noqa: BLE001  (missing or broken bindings: try Qt)
+        pass
+    try:
+        import qtpy  # noqa: F401
+        from qtpy import QtWebEngineWidgets  # noqa: F401
+        return 'qt'
+    except Exception:  # noqa: BLE001
+        return False
 
 
 def _load_any(path):
