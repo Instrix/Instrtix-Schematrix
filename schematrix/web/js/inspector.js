@@ -89,6 +89,7 @@ export function seg(value, options, onChange) {
   return d;
 }
 export const STYLES = [['', 'Ink'], ['acc', 'Accent'], ['para', 'Dash'], ['acc para', 'Acc·dash']];
+export const WIRE_STYLES = [...STYLES, ['bus', 'Bus']];
 export const sect = (t) => { const d = document.createElement('div'); d.className = 'sect'; d.textContent = t; return d; };
 
 export function renderInspector() { keepFocus(buildInspector); }
@@ -166,7 +167,7 @@ function buildInspector() {
     p.append(btns(b));
   } else if (e.type === 'wire' || e.type === 'arrow') {
     head(e.type === 'wire' ? 'Wire' : 'Arrow', `${e.points.length} points · double-click a segment to add a corner`);
-    p.append(field('Style', seg(e.style || '', STYLES, set(e, 'style'))));
+    p.append(field('Style', seg(e.style || '', e.type === 'wire' ? WIRE_STYLES : STYLES, set(e, 'style'))));
     const ta = document.createElement('textarea'); ta.value = e.points.map((q) => q.join(', ')).join('\n'); ta.rows = Math.min(8, e.points.length + 1);
     ta.onchange = () => { const pts = ta.value.split('\n').map((l) => l.split(/[,\s]+/).filter(Boolean).map(Number)).filter((q) => q.length === 2 && q.every(Number.isFinite)); if (pts.length >= 2) edit(() => { e.points = pts; }); };
     ta.onkeydown = (ev) => ev.stopPropagation();

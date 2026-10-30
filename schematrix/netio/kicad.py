@@ -59,7 +59,11 @@ def val(node, key, default=''):
 
 
 # ---------------------------------------------------------------- writing
-def lib_part(sym) -> tuple:
+def lib_part(sym, props=None) -> tuple:
+    """the KiCad library part to name: a matching preset's alias (D_Zener, 74HC00), else the symbol's own"""
+    pre = SYM.preset_for(sym.name, props or {}) if sym else None
+    if pre and pre[2]:
+        return 'Device', pre[2][0]
     if sym and sym.aliases:
         return 'Device', sym.aliases[0]
     return 'Schematrix', sym.name if sym else 'unknown'
@@ -74,7 +78,7 @@ def export(nl: Netlist, title=None) -> str:
     for p in nl.parts:
         sym = p.symbol
         numbering[p.ref] = sym.numbering(p.all_props()) if sym else {}
-        lib, part = lib_part(sym)
+        lib, part = lib_part(sym, p.all_props())
         out.append(f'    (comp (ref {q(p.ref)})')
         out.append(f'      (value {q(p.value or "~")})')
         fp = p.fields.get('Footprint', '')
@@ -106,14 +110,6 @@ def export(nl: Netlist, title=None) -> str:
 SKIP_FIELDS = {'Reference', 'Value', 'Datasheet', 'Description', 'Sim.Device', 'Sim.Pins', 'Sim.Type', 'Sim.Library'}
 
 
-def _alias_index():
-    idx = {}
-    for s in SYM.REGISTRY.values():
-        for a in s.aliases:
-            idx.setdefault(a.lower(), s.name)
-    return idx
-
-
 PREFIXES = [('LED', 'diode', {'kind': 'led'}), ('RV', 'potentiometer', {}), ('TH', 'thermistor', {}), ('BT', 'battery', {}),
             ('SW', 'switch', {}), ('TP', 'testpoint', {}), ('FB', 'ferrite', {}), ('JP', 'jumper', {}), ('LS', 'speaker', {}),
             ('BZ', 'buzzer', {}), ('MK', 'microphone', {}), ('AE', 'antenna', {}), ('R', 'resistor', {}), ('C', 'capacitor', {}),
@@ -124,19 +120,9 @@ PREFIXES = [('LED', 'diode', {'kind': 'led'}), ('RV', 'potentiometer', {}), ('TH
 
 def guess(ref: str, libpart: str):
     """-> (symbol name, props) or (None, {})"""
-    part = libpart.split(':')[-1]
-    idx = _alias_index()
-    if part.lower() in idx:
-        name = idx[part.lower()]
-        props = {}
-        low = part.lower()
-        if name == 'diode':
-            for k in ('schottky', 'zener', 'tvs', 'led', 'photo', 'varactor', 'tunnel', 'laser'):
-                if k in low:
-                    props['kind'] = {'photo': 'photodiode', 'capacitance': 'varactor'}.get(k, k)
-        if name == 'capacitor' and ('polarized' in low or low.startswith('cp')):
-            props['polarized'] = True
-        return name, props
+    hit = SYM.by_alias(libpart.split(':')[-1])
+    if hit:
+        return hit
     letters = re.match(r'^[A-Za-z]+', ref)
     pre = letters.group(0).upper() if letters else ''
     for p, name, props in PREFIXES:

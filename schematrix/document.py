@@ -272,6 +272,7 @@ class Schematic:
     def add(self, sym, at=(0, 0), rot=0, mirror=False, *, anchor=None, ref=None, value=None, part=None, style='',
             label_offset=None, hide_labels=False, id=None, fields=None, **props) -> Comp:
         """place a symbol. fields: {name: value} (hidden), {name: (value, show)} or [{'name', 'value', 'show'}]"""
+        sym, props = SYM.resolve(sym, props)        # presets ('zener', 'nand_gate', ...) are a symbol plus props
         s = SYM.get(sym)
         if s.lines and s.lines[0][0] == 'ref' and ref is None and s.prefix:
             ref = self.next_ref(s.prefix)
@@ -302,12 +303,12 @@ class Schematic:
         return Comp(self, el)
 
     def __getattr__(self, name):
-        if name.startswith('_') or name not in SYM.REGISTRY:
+        if name.startswith('_') or (name not in SYM.REGISTRY and name not in SYM.PRESETS):
             raise AttributeError(name)
 
         def make(at=(0, 0), rot=0, mirror=False, **kw):
             return self.add(name, at, rot, mirror, **kw)
-        make.__doc__ = f'add a {SYM.REGISTRY[name].title}'
+        make.__doc__ = f'add a {SYM.REGISTRY[name].title if name in SYM.REGISTRY else SYM.PRESETS[name][2]}'
         return make
 
     # shorthand for the net symbols, which take their name positionally

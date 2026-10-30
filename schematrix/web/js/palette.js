@@ -5,8 +5,7 @@ import { startPlacing } from './tools.js';
 import { $, svg } from './util.js';
 
 // ---------------------------------------------------------------- palette
-export function symThumb(entry, props) {
-  const g = entry.geometry;
+export function symThumb(entry, props, g = entry.geometry) {
   const c = { id: 't', type: 'comp', sym: entry.name, x: 0, y: 0, rot: 0, props: props || {}, hide_labels: true };
   const body = g.prims.map((p) => G.primSvg(p, c, '')).join('');
   const [x0, y0, x1, y1] = g.bbox, pad = 4;
@@ -20,8 +19,14 @@ export function buildPalette(filter = '') {
   const pal = $('#palette'), f = filter.trim().toLowerCase(), fold = folded();
   pal.innerHTML = '';
   let lastCat = null, grid = null;
+  const same = (a, b) => JSON.stringify(a || {}) === JSON.stringify(b || {});
   for (const e of S.catList) {
-    if (f && !(e.title.toLowerCase().includes(f) || e.name.includes(f) || e.category.toLowerCase().includes(f))) continue;
+    // one tile per preset (Zener diode, NAND gate, ...); the bare symbol too unless a preset stands for it
+    const tiles = (e.presets || []).some((p) => same(p.props, {})) ? [] : [{ name: e.name, title: e.title, props: {}, geometry: e.geometry }];
+    tiles.push(...(e.presets || []));
+    const shown = tiles.filter((t) => !f || t.title.toLowerCase().includes(f) || t.name.includes(f) || e.name.includes(f)
+      || e.category.toLowerCase().includes(f));
+    if (!shown.length) continue;
     if (e.category !== lastCat) {
       lastCat = e.category;
       const cat = e.category, head = document.createElement('div');
@@ -30,11 +35,13 @@ export function buildPalette(filter = '') {
       grid = document.createElement('div'); grid.className = 'syms'; grid.hidden = !f && fold.has(cat);
       pal.append(head, grid);
     }
-    const b = document.createElement('div');
-    b.className = 'sym' + (S.placing?.sym === e.name ? ' on' : '');
-    b.title = `${e.title}${e.help ? ' — ' + e.help : ''}\npins: ${Object.keys(e.geometry.pins).join(', ')}`;
-    b.innerHTML = symThumb(e) + `<span>${G.esc(e.title)}</span>`;
-    b.onclick = () => startPlacing(e.name);
-    grid.append(b);
+    for (const t of shown) {
+      const b = document.createElement('div');
+      b.className = 'sym' + (S.placing?.sym === e.name && same(S.placing.props, t.props) ? ' on' : '');
+      b.title = `${t.title}${e.help ? ' — ' + e.help : ''}\npins: ${Object.keys(t.geometry.pins).join(', ')}`;
+      b.innerHTML = symThumb(e, t.props, t.geometry) + `<span>${G.esc(t.title)}</span>`;
+      b.onclick = () => startPlacing(e.name, { ...t.props });
+      grid.append(b);
+    }
   }
 }

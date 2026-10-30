@@ -28,13 +28,13 @@ export function updateGhost(w) {
   if (!S.placing) return;
   const g = D().page.grid || 5;
   const { sym, props, rot, mirror } = S.placing;
-  S.ghost = { id: 'ghost', type: 'comp', sym, x: snapTo(w[0], g), y: snapTo(w[1], g), rot, mirror, props: { ...props }, style: S.style };
+  S.ghost = { id: 'ghost', type: 'comp', sym, x: snapTo(w[0], g), y: snapTo(w[1], g), rot, mirror, props: { ...props }, style: S.style === 'bus' ? '' : S.style };
   renderOverlay();
 }
 export function placeAt(w) {
   const { sym, props, rot, mirror } = S.placing, c = S.cat[sym], g = D().page.grid || 5;
   edit((d) => {
-    const el = { id: nextId(d), type: 'comp', sym, x: snapTo(w[0], g), y: snapTo(w[1], g), rot, mirror, props: { ...props }, style: S.style };
+    const el = { id: nextId(d), type: 'comp', sym, x: snapTo(w[0], g), y: snapTo(w[1], g), rot, mirror, props: { ...props }, style: S.style === 'bus' ? '' : S.style };
     if (c.props.ref && !props.ref) el.props.ref = nextRef(c.prefix, d);
     d.elements.push(el);
     T().sel = new Set([el.id]);

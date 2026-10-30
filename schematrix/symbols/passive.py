@@ -96,7 +96,9 @@ def shunt(p):
 @symbol('capacitor', 'Capacitor', 'Passive', 'C', 'C {1} {2} {value}',
         {'length': LEN(40), 'polarized': FLAG(False, 'Polarized'),
          'plate': ENUM('flat', ['flat', 'curved'], 'Negative plate', help='curved: electrolytic style')},
-        fields=C_FIELDS, aliases=('C', 'C_Small', 'C_Polarized', 'CP', 'C_Polarized_Small', 'CP_Small'))
+        fields=C_FIELDS, aliases=('C', 'C_Small'),
+        presets=(('capacitor_polarized', 'Capacitor, polarized', {'polarized': True}, ('C_Polarized', 'CP', 'C_Polarized_Small', 'CP_Small')),
+                 ('electrolytic', 'Electrolytic capacitor', {'polarized': True, 'plate': 'curved'}, ('C_Polarized_US', 'CP1', 'CP1_Small'))))
 def capacitor(p):
     h = abs(float(p['length'])) / 2
     if p.get('plate') == 'curved':

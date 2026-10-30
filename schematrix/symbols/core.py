@@ -232,6 +232,7 @@ class Symbol:
     pin_numbers: dict | None = None # pin name -> number for netlists (KiCad); default: digits as-is, else 1..n
     aliases: tuple = ()             # other names this symbol answers to on netlist import (KiCad lib parts, ...)
     is_part: bool | None = None     # a real component (BOM / netlist); default: it has a reference
+    presets: tuple = ()             # named variants: (key, title, props[, aliases]) — own palette tile and method
 
     def __post_init__(self):
         if self.is_part is None:
@@ -279,10 +280,12 @@ class Symbol:
                 'spice': self.spice[0] if self.spice else None, 'spice_template': self.spice,
                 'net_prop': self.net_prop, 'help': self.help, 'fields': list(self.fields), 'is_part': self.is_part,
                 'props': {k: p.spec(k) for k, p in self.all_props().items()},
-                'geom_keys': self.geom_keys(), 'geometry': self.geometry()}
+                'geom_keys': self.geom_keys(), 'geometry': self.geometry(),
+                'presets': [{'name': p[0], 'title': p[1], 'props': p[2], 'geometry': self.geometry(p[2])} for p in self.presets]}
 
 
 REGISTRY: dict[str, Symbol] = {}
+PRESETS: dict[str, tuple] = {}      # preset key -> (symbol name, props, title, aliases)
 
 
 def symbol(name, title, category, prefix='U', spice=None, props=None, lines=None, net_prop=None, help='', **extra):
@@ -290,9 +293,44 @@ def symbol(name, title, category, prefix='U', spice=None, props=None, lines=None
     def deco(fn):
         if lines is not None:
             extra['lines'] = lines
-        REGISTRY[name] = Symbol(name, title, category, fn, props or {}, prefix, spice, net_prop=net_prop, help=help, **extra)
+        sym = REGISTRY[name] = Symbol(name, title, category, fn, props or {}, prefix, spice, net_prop=net_prop, help=help, **extra)
+        for key, t, pr, *al in sym.presets:
+            if key in REGISTRY or (key in PRESETS and PRESETS[key][0] != name):
+                raise ValueError(f'preset {key!r} of {name} clashes with another symbol or preset')
+            PRESETS[key] = (name, dict(pr), t, tuple(al[0]) if al else ())
         return fn
     return deco
+
+
+def resolve(name, props=None) -> tuple:
+    """a symbol or preset name -> (symbol name, props with the preset's values under the given ones)"""
+    if name in PRESETS and name not in REGISTRY:
+        sym, pr = PRESETS[name][:2]
+        return sym, {**pr, **(props or {})}
+    return name, dict(props or {})
+
+
+def by_alias(part: str):
+    """a foreign library part name ('D_Zener', '74HC00', 'Q_NPN_BCE') -> (symbol name, props) or None;
+    preset aliases win over symbol aliases because they carry the variant"""
+    low = part.lower()
+    for sym, pr, _, al in PRESETS.values():
+        if any(a.lower() == low for a in al):
+            return sym, dict(pr)
+    for s in REGISTRY.values():
+        if any(a.lower() == low for a in s.aliases):
+            return s.name, {}
+    return None
+
+
+def preset_for(name, props: dict):
+    """the most specific preset of a symbol whose props all match, as (key, title, aliases), or None"""
+    best = None
+    for key, (sym, pr, title, al) in PRESETS.items():
+        if sym == name and all(str(props.get(k)) == str(v) for k, v in pr.items()):
+            if best is None or len(pr) > best[0]:
+                best = (len(pr), key, title, al)
+    return best[1:] if best else None
 
 
 def get(name) -> Symbol:

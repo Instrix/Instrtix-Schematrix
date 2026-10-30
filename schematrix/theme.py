@@ -52,6 +52,7 @@ def css(theme=None) -> str:
     return f"""
 .w {{ fill: none; stroke: {t['ink']}; stroke-width: 1.5; stroke-linejoin: round; stroke-linecap: round; }}
 .plate {{ stroke-width: 2.2; }}
+.bus {{ stroke-width: 3.4; }}
 .acc {{ stroke: {t['accent']}; stroke-width: 2.2; }}
 .para {{ stroke-dasharray: 5 3; }}
 .rule {{ stroke-dasharray: 2 4; }}

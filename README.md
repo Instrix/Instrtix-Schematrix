@@ -9,11 +9,18 @@ one built by a script are the same kind of document.
 - **GUI**: browser-based editor — symbol palette, wires that snap to pins and follow parts when moved, KiCad-style
   wire dragging (grab an end to stretch it, a segment to slide it), junction dots and optional wire hops, net labels,
   group boxes, notes, undo/redo, tabs, themes, netlist view, and a Python script pane.
-- **Symbols**: ~90 parts with variants — resistors (variable, thermistor, varistor, LDR, Kelvin shunt), capacitors,
-  inductors, transformers, every common diode kind, bridges, SCR / triac / diac, BJTs, MOSFETs (enhancement /
-  depletion, 4-terminal), JFETs, IGBTs, optocouplers, op-amps, comparators, in-amps, regulators, logic gates,
-  flip-flops, muxes, independent and dependent sources, batteries, current sinks, loads, motors, lamps, meters,
-  switches, relays, connectors, antennas, vacuum tubes, signal-flow blocks, Thévenin / Norton equivalents, two-ports.
+- **Symbols**: ~95 parts and ~50 named variants, each its own palette tile and Python method — resistors (variable,
+  thermistor, varistor, LDR, Kelvin shunt), capacitors (polarized, electrolytic), inductors, transformers, diodes
+  (rectifier, Zener, Schottky, LED, TVS uni/bidirectional, avalanche, photodiode, varactor, tunnel, PIN, laser,
+  step-recovery, Shockley), bridges, SCR / triac / diac, BJTs, MOSFETs (enhancement / depletion, 4-terminal), JFETs,
+  IGBTs, optocouplers, op-amps, comparators, in-amps, regulators, independent and dependent sources, batteries,
+  current sinks, loads, motors, lamps, meters, switches, relays, connectors, antennas, vacuum tubes, signal-flow
+  blocks, Thévenin / Norton equivalents, two-ports.
+- **Logic**: AND / NAND / OR / NOR / XOR / XNOR (2–16 inputs, ANSI or IEC shapes, any inputs inverted), buffers,
+  NOT and Schmitt inverters, tri-state buffers, D / JK / T flip-flops, SR and D latches, registers and latch arrays,
+  shift registers (SIPO / PISO / universal), counters, decoders, priority encoders, multiplexers and
+  demultiplexers, adders, magnitude comparators — all with configurable widths, as bus pins or one pin per bit —
+  plus a custom logic IC whose pins you type (`D[8], >CLK, ~OE`). Wires have a thick bus style.
 - **Fields**: any part can carry extra fields (tolerance, voltage rating, footprint, …); each can be shown on the
   sheet, and they travel with the netlist.
 - **Netlists**: export and import SPICE, KiCad `.net` and a JSON netlist — from the editor, the API, the CLI or Python.
@@ -166,6 +173,8 @@ print(s.spice())
 - Fields: `s.resistor(..., fields={'Tolerance': ('1%', True), 'Power': '0.25 W'})` (`True` = show on the sheet),
   then `r.field('Power')`, `r.field('Power', '0.5 W', show=True)`, `r.remove_field('Power')`.
 - Netlists: `s.export_netlist('kicad')`, `s.save_netlist('board.net')`, `Schematic.from_netlist('deck.cir')`.
+- Variants are methods too: `s.zener(...)`, `s.nand_gate(inputs=3, shape='iec')`, `s.shiftreg_sipo(bits=16, bus=True)`;
+  the document stores the base symbol plus props, so `schematrix symbols` and the palette list both.
 - Every symbol is a method: `s.resistor`, `s.nmos`, `s.opamp`, `s.vsrc`, `s.gate(kind='nand', inputs=3)`,
   `s.block(w=, h=, title=, pins='IN:l, OUT:r')`, … — `schematrix symbols` lists them with their pins and properties.
 - Placement: `at`, `rot` (0/90/180/270), `mirror`, `anchor=<pin>`; `style` = `''`, `'acc'`, `'para'` (dashed).

@@ -9,15 +9,31 @@ D_FIELDS = ('Reverse voltage', 'Forward current', 'Forward voltage', 'Power')
 Q_FIELDS = ('Vce max', 'Ic max', 'hFE', 'Power')
 M_FIELDS = ('Vds max', 'Id max', 'Rds(on)', 'Vgs(th)')
 
-DIODE_KINDS = ['standard', 'schottky', 'zener', 'tvs', 'led', 'photodiode', 'varactor', 'tunnel', 'laser']
+DIODE_KINDS = ['standard', 'schottky', 'zener', 'avalanche', 'tvs', 'tvs_uni', 'led', 'photodiode', 'varactor', 'tunnel',
+               'pin', 'laser', 'step_recovery', 'shockley']
+
+DIODE_PRESETS = (
+    ('zener', 'Zener diode', {'kind': 'zener'}, ('D_Zener', 'D_Zener_Small', 'BZX84', 'Zener')),
+    ('schottky', 'Schottky diode', {'kind': 'schottky'}, ('D_Schottky', 'D_Schottky_Small', 'BAT54', 'Schottky')),
+    ('led', 'LED', {'kind': 'led'}, ('LED', 'LED_Small', 'LED_Filled')),
+    ('tvs_diode', 'TVS diode', {'kind': 'tvs_uni'}, ('D_TVS_Unidirectional', 'TVS')),
+    ('tvs_bidirectional', 'TVS diode, bidirectional', {'kind': 'tvs'}, ('D_TVS', 'D_TVS_Small', 'SMBJ', 'TVS_Bi')),
+    ('avalanche_diode', 'Avalanche diode', {'kind': 'avalanche'}, ('D_Avalanche',)),
+    ('photodiode', 'Photodiode', {'kind': 'photodiode'}, ('D_Photo', 'Photodiode', 'BPW34')),
+    ('varactor', 'Varactor (varicap)', {'kind': 'varactor'}, ('D_Capacitance', 'D_Varactor', 'Varicap')),
+    ('tunnel_diode', 'Tunnel diode', {'kind': 'tunnel'}, ('D_Tunnel',)),
+    ('pin_diode', 'PIN diode', {'kind': 'pin'}, ('D_PIN', 'PIN_Diode')),
+    ('laser_diode', 'Laser diode', {'kind': 'laser'}, ('LASER_Diode', 'Laser_Diode')),
+    ('step_recovery_diode', 'Step-recovery diode', {'kind': 'step_recovery'}, ('D_SRD',)),
+    ('shockley_diode', 'Shockley (4-layer) diode', {'kind': 'shockley'}, ('D_Shockley',)),
+)
 
 
 # ---------------------------------------------------------------- diodes
 @symbol('diode', 'Diode', 'Semiconductor', 'D', 'D {A} {K} {model}',
         {'length': LEN(60), 'kind': ENUM('standard', DIODE_KINDS, 'Kind')}, model='DMOD', fields=D_FIELDS,
-        pin_numbers={'K': '1', 'A': '2'},
-        aliases=('D', 'D_Small', 'D_Schottky', 'D_Zener', 'D_TVS', 'LED', 'LED_Small', 'D_Photo', 'D_Capacitance',
-                 'D_Varactor', 'D_Tunnel', 'LASER_Diode', 'Diode'))
+        pin_numbers={'K': '1', 'A': '2'}, presets=DIODE_PRESETS,
+        aliases=('D', 'D_Small', 'D_Filled', 'Diode', '1N4148', '1N4007'))
 def diode(p):
     h = abs(float(p['length'])) / 2
     k = p['kind']
@@ -31,11 +47,25 @@ def diode(p):
         prims.append(pl([(10, -4), (10, -7), (6, -7), (6, 7), (2, 7), (2, 4)], 'w plate'))
     elif k == 'zener':
         prims.append(pl([(2, -9), (6, -7), (6, 7), (10, 9)], 'w plate'))
+    elif k == 'tvs_uni':                # unidirectional TVS: a zener bar with both ends bent back
+        prims.append(pl([(2, -9), (6, -7), (6, 7), (2, 9)], 'w plate'))
+    elif k == 'avalanche':              # bar with both ends bent towards the cathode
+        prims.append(pl([(10, -9), (6, -7), (6, 7), (10, 9)], 'w plate'))
     elif k == 'tunnel':
         prims.append(pl([(2, -7), (6, -7), (6, 7), (2, 7)], 'w plate'))
     elif k == 'varactor':
         prims += [pl([(6, -7), (6, 7)], 'w plate'), pl([(11, -7), (11, 7)], 'w plate')]
         prims[2] = pl([(11, 0), (h, 0)])
+    elif k == 'pin':                    # the intrinsic layer drawn as a box between anode and cathode
+        prims[1] = pg([(-9, -7), (-9, 7), (3, 0)])
+        prims += [pl([(3, -7), (3, 7)], 'w plate'), pl([(3, -7), (9, -7), (9, 7), (3, 7)], 'w thin'),
+                  pl([(9, -7), (9, 7)], 'w plate')]
+        prims[2] = pl([(9, 0), (h, 0)])
+    elif k == 'step_recovery':          # bar with a short tail on each end, pointing back
+        prims.append(pl([(6, -7), (6, 7)], 'w plate'))
+        prims += [pl([(6, -7), (3, -10)]), pl([(6, 7), (9, 10)])]
+    elif k == 'shockley':               # four-layer diode: the bar is bent into a step
+        prims.append(pl([(6, -7), (6, 7), (1, 7)], 'w plate'))
     else:
         prims.append(pl([(6, -7), (6, 7)], 'w plate'))
     if k in ('led', 'laser'):

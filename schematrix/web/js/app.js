@@ -17,7 +17,10 @@ export async function boot() {
     document.body.innerHTML = `<p style="padding:40px;font-family:sans-serif">Schematrix could not reach its server: ${G.esc(err.message)}</p>`;
     return;
   }
-  for (const e of S.catList) { S.cat[e.name] = e; S.geo.set(geoKey(e.name, {}), e.geometry); }
+  for (const e of S.catList) {
+    S.cat[e.name] = e; S.geo.set(geoKey(e.name, {}), e.geometry);
+    for (const p of e.presets || []) S.geo.set(geoKey(e.name, p.props), p.geometry);
+  }
   const pst = document.createElement('style');           // palette thumbnails always use the light theme
   pst.textContent = scopeCss(S.info.css.instrix, '.schp');
   document.head.append(pst);
