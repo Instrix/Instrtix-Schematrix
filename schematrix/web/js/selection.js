@@ -1,0 +1,102 @@
+// Operations on the selection: transform, delete, nudge, z-order, clipboard.
+import { setStyle } from './commands.js';
+import { renderInspector } from './inspector.js';
+import { D, edit, nextId, nextRef, S, selected, T } from './state.js';
+import { updateGhost } from './tools.js';
+import { $, clone, snapTo } from './util.js';
+import { bboxOf, union } from './view.js';
+
+// ---------------------------------------------------------------- selection operations
+export function selCenter() {
+  const bs = selected().map((e) => bboxOf(e, false)).filter(Boolean);
+  const b = union(bs), g = D().page.grid || 5;
+  return [snapTo((b[0] + b[2]) / 2, g), snapTo((b[1] + b[3]) / 2, g)];
+}
+export function transformSel(kind) {
+  if (S.placing) {
+    if (kind === 'rot') S.placing.rot = (S.placing.rot + 90) % 360;
+    else { S.placing.rot = (360 - S.placing.rot) % 360; S.placing.mirror = !S.placing.mirror; }
+    updateGhost(S.mouse); return;
+  }
+  const sel = selected();
+  if (!sel.length) return;
+  const single = sel.length === 1 && sel[0].type === 'comp';
+  const c = single ? [sel[0].x, sel[0].y] : selCenter();
+  const f = kind === 'rot' ? ([x, y]) => [c[0] - (y - c[1]), c[1] + (x - c[0])] : ([x, y]) => [2 * c[0] - x, y];
+  edit(() => {
+    for (const e of sel) {
+      if (e.type === 'comp') {
+        [e.x, e.y] = f([e.x, e.y]);
+        if (kind === 'rot') e.rot = ((e.rot || 0) + 90) % 360; else { e.rot = (360 - (e.rot || 0)) % 360; e.mirror = !e.mirror; }
+        if (e.label_offset) e.label_offset = kind === 'rot' ? [-e.label_offset[1], e.label_offset[0]] : [-e.label_offset[0], e.label_offset[1]];
+      } else if (e.points) e.points = e.points.map(f);
+      else if (e.type === 'text') {
+        [e.x, e.y] = f([e.x, e.y]);
+        if (kind === 'mir' && e.anchor !== 'middle') e.anchor = e.anchor === 'end' ? 'start' : 'end';
+      } else if (e.type === 'rect') {
+        const pts = [f([e.x, e.y]), f([e.x + e.w, e.y + e.h])];
+        e.x = Math.min(pts[0][0], pts[1][0]); e.y = Math.min(pts[0][1], pts[1][1]);
+        e.w = Math.abs(pts[1][0] - pts[0][0]); e.h = Math.abs(pts[1][1] - pts[0][1]);
+      }
+    }
+  });
+}
+export function toggleAccent() {
+  const sel = selected().filter((e) => e.type === 'comp' || e.type === 'wire' || e.type === 'arrow');
+  if (!sel.length) { setStyle(S.style === 'acc' ? '' : 'acc'); return; }
+  const on = !sel.every((e) => (e.style || '').split(' ').includes('acc'));
+  edit(() => { for (const e of sel) { const t = (e.style || '').split(' ').filter((s) => s && s !== 'acc'); if (on) t.push('acc'); e.style = t.join(' '); } });
+}
+export function del() {
+  const t = T();
+  if (!t.sel.size) return;
+  edit((d) => { d.elements = d.elements.filter((e) => !t.sel.has(e.id)); });
+  t.sel.clear(); renderInspector();
+}
+export function nudge(dx, dy) {
+  if (!T().sel.size) return;
+  edit(() => {
+    for (const e of selected()) { if ('x' in e) { e.x += dx; e.y += dy; } if (e.points) e.points = e.points.map(([x, y]) => [x + dx, y + dy]); }
+  }, 'nudge');
+}
+export function reorder(front) {
+  const t = T();
+  edit((d) => {
+    const s = d.elements.filter((e) => t.sel.has(e.id)), r = d.elements.filter((e) => !t.sel.has(e.id));
+    d.elements = front ? [...r, ...s] : [...s, ...r];
+  });
+}
+
+// clipboard: element JSON, also on the system clipboard so it pastes across tabs and windows
+export function copySel() {
+  const els = selected();
+  if (!els.length) return false;
+  const text = JSON.stringify({ schematrix: 1, elements: els });
+  S.clip = text;
+  navigator.clipboard?.writeText(text).catch(() => {});
+  return true;
+}
+export async function paste() {
+  let text = S.clip;
+  try { const t = await navigator.clipboard.readText(); if (t && t.includes('"schematrix"')) text = t; } catch { /* clipboard permission */ }
+  if (!text) return;
+  let data;
+  try { data = JSON.parse(text); } catch { return; }
+  if (!data?.elements) return;
+  const els = clone(data.elements);
+  const off = (D().page.grid || 5) * 4;
+  edit((d) => {
+    const sel = new Set(), refs = new Set();
+    for (const e of els) {
+      e.id = nextId(d);
+      if ('x' in e) { e.x += off; e.y += off; }
+      if (e.points) e.points = e.points.map(([x, y]) => [x + off, y + off]);
+      if (e.type === 'comp' && e.props?.ref && d.elements.some((o) => o.props?.ref === e.props.ref)) {
+        e.props.ref = nextRef(S.cat[e.sym]?.prefix || e.props.ref.replace(/\d+$/, ''), d, refs);
+      }
+      if (e.props?.ref) refs.add(e.props.ref);
+      d.elements.push(e); sel.add(e.id);
+    }
+    T().sel = sel;
+  });
+}
