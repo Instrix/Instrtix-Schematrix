@@ -1,0 +1,8 @@
+title: Schematrix
+description: Electrical schematic editor and Python scripting library
+theme: jekyll-theme-primer
+plugins:
+  - jekyll-relative-links
+relative_links:
+  enabled: true
+  collections: false
