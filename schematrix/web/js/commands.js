@@ -30,7 +30,7 @@ export const COMMANDS = {
   selectall: () => { T().sel = new Set(D().elements.filter((e) => !e.locked).map((e) => e.id)); render(); renderInspector(); },
   rotate: () => transformSel('rot'), mirror: () => transformSel('mir'), accent: toggleAccent, front: () => reorder(true), back: () => reorder(false),
   forward: () => step(1), backward: () => step(-1), find: findDialog,
-  'symbol-new': () => openSymbolEditor(), 'symbol-edit': () => { const e = selected()[0]; if (e?.type === 'comp') openSymbolEditor(S.cat[e.sym]?.custom ? { edit: e.sym } : { copy: e.sym, props: e.props, comp: e.id }); },
+  'symbol-new': () => { if (!S.info.public) openSymbolEditor(); }, 'symbol-edit': () => { const e = selected()[0]; if (e?.type === 'comp') openSymbolEditor(S.cat[e.sym]?.custom ? { edit: e.sym } : { copy: e.sym, props: e.props, comp: e.id }); },
   'align-left': () => align('left'), 'align-center': () => align('center'), 'align-right': () => align('right'),
   'align-top': () => align('top'), 'align-middle': () => align('middle'), 'align-bottom': () => align('bottom'),
   'distribute-h': () => distribute('h'), 'distribute-v': () => distribute('v'),

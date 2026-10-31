@@ -19,7 +19,7 @@ export async function filesDialog() {
     const d = document.createElement('div');
     d.className = 'file';
     const ext = f.path.split('.').pop();
-    d.innerHTML = `<span class="ic">${ext.toUpperCase()}</span><span>${G.esc(f.path)}</span><span class="m">${f.modified.replace('T', ' ').slice(0, 16)}</span><button title="Delete">✕</button>`;
+    d.innerHTML = `<span class="ic">${ext.toUpperCase()}</span><span>${G.esc(f.path)}</span><span class="m">${f.modified.replace('T', ' ').slice(0, 16)}</span>${f.readonly ? '<span></span>' : '<button title="Delete">✕</button>'}`;
     d.onclick = async (ev) => {
       if (ev.target.tagName === 'BUTTON') {
         if (await confirmBox(`Delete ${f.path} from the workspace?`, 'Delete')) { await api.del('/api/files/' + encodeURI(f.path)); filesDialog(); }
@@ -30,6 +30,7 @@ export async function filesDialog() {
     };
     body.append(d);
   }
+  if (S.info.public) { modal('Examples <small style="font-weight:400;color:var(--faint);font-size:11px">read-only; your own sheets stay in this browser</small>', body); return; }
   modal(`Workspace <small style="font-weight:400;color:var(--faint);font-family:var(--mono);font-size:11px">${G.esc(S.info.workspace || '')}</small>`, body);
 }
 export async function openWorkspaceFile(path) {
@@ -51,6 +52,11 @@ export async function openWorkspaceFile(path) {
 }
 export async function save(as = false) {
   const t = T();
+  if (S.info.public) {                       // public server: nothing is stored there, the sheet is downloaded
+    download(new Blob([JSON.stringify(t.doc, null, 1)], { type: 'application/json' }), fileBase() + '.json');
+    t.dirty = false; renderTabs(); persist(); toast('Downloaded ' + fileBase() + '.json (open it again with File > Open file)');
+    return;
+  }
   let path = t.path;
   if (as || !path) {
     const name = await ask('Save as (in the workspace)', path || (G.esc(tabTitle(t)).replace(/[^\w\- ]+/g, '').trim().replace(/\s+/g, '-').toLowerCase() || 'schematic') + '.json');

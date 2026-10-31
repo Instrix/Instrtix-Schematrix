@@ -416,7 +416,7 @@ export async function refreshCatalog(changed) {
 // the inspector's button for a selected part: edit it (custom) or start a custom copy of it (built-in)
 export function symbolButton(e) {
   const c = S.cat[e.sym];
-  if (!c) return null;
+  if (!c || S.info.public) return null;
   return c.custom ? ['Edit symbol…', () => openSymbolEditor({ edit: e.sym })]
     : ['Customise symbol…', () => openSymbolEditor({ copy: e.sym, props: e.props, comp: e.id })];
 }

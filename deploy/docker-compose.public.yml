@@ -1,0 +1,65 @@
+# Schematrix as a public, anonymous web app: no token, no accounts, no data stored on the server.
+#
+#   docker compose -f deploy/docker-compose.public.yml up -d                     # http://<host>:8000
+#   SCHEMATRIX_DOMAIN=schematrix.example.org \
+#     docker compose -f deploy/docker-compose.public.yml --profile https up -d   # + HTTPS on 80/443
+#
+# Public mode (SCHEMATRIX_PUBLIC=1) is what makes this safe to open to anyone:
+#   - no Python scripts and no legacy-script import: nobody can run code on the server;
+#   - nothing is written on the server: visitors keep their sheets in their own browser and download them with
+#     File > Save; the bundled examples are served read-only; custom symbols are off;
+#   - per-client request rates, request / document sizes, export sizes and parallel exports are capped
+#     (tune with SCHEMATRIX_PUBLIC_RATE, _HEAVY_RATE, _MAX_BODY, _MAX_ELEMENTS, _MAX_SCALE, _MAX_PIXELS, _PARALLEL);
+#   - exported files are served sandboxed and the app page with a strict content security policy.
+# The container itself is read-only, unprivileged and resource-limited, so there is no volume to manage.
+
+name: schematrix-public
+
+services:
+  schematrix:
+    image: ${SCHEMATRIX_IMAGE:-ghcr.io/instrix/instrtix-schematrix}:${SCHEMATRIX_VERSION:-latest}
+    # build: ..                           # or build from this checkout instead of pulling
+    restart: unless-stopped
+    ports:
+      - "${SCHEMATRIX_BIND:-0.0.0.0}:${SCHEMATRIX_PORT:-8000}:8000"
+    environment:
+      SCHEMATRIX_PUBLIC: "1"
+      SCHEMATRIX_SCRIPTS: "0"
+      SCHEMATRIX_WORKSPACE: /tmp/workspace          # unused in public mode; points at scratch space
+      # rate limits key on the visitor's address: behind the https profile's proxy, trust its X-Forwarded-For
+      SCHEMATRIX_TRUST_PROXY: ${SCHEMATRIX_TRUST_PROXY:-0}
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /home/schematrix/.cache                     # fontconfig cache for PNG / PDF export
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: ${SCHEMATRIX_MEMORY:-1g}
+    cpus: ${SCHEMATRIX_CPUS:-2}
+    pids_limit: 128
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "3" }
+
+  # HTTPS front end: docker compose --profile https up -d (set SCHEMATRIX_DOMAIN and SCHEMATRIX_TRUST_PROXY=1, and
+  # SCHEMATRIX_BIND=127.0.0.1 so the app is reachable only through the proxy)
+  caddy:
+    image: caddy:2
+    profiles: [https]
+    restart: unless-stopped
+    depends_on: [schematrix]
+    command: caddy reverse-proxy --from ${SCHEMATRIX_DOMAIN:-schematrix.example.org} --to schematrix:8000
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - caddy-data:/data                             # certificates only
+      - caddy-config:/config
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "3" }
+
+volumes:
+  caddy-data:
+  caddy-config:

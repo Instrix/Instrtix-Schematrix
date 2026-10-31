@@ -46,6 +46,7 @@ export function buildPalette(filter = '') {
       // press and drag onto the sheet drops one part; a plain click enters click-to-place mode (repeatable)
       b.oncontextmenu = (ev) => {                   // right-click: edit a custom symbol, or start a custom copy
         ev.preventDefault();
+        if (S.info.public) return;
         openSymbolEditor(e.custom ? { edit: e.name } : { copy: e.name, props: t.props });
       };
       if (e.custom) b.classList.add('custom');

@@ -25,7 +25,6 @@ services:
       # SCHEMATRIX_BIND=0.0.0.0 to expose it directly on the network
       - "${SCHEMATRIX_BIND:-127.0.0.1}:${SCHEMATRIX_PORT:-8000}:8000"
     environment:
-      SCHEMATRIX_WORKSPACE: /data
       # every request needs the token (cookie set by /?token=..., or "Authorization: Bearer ...")
       SCHEMATRIX_TOKEN: ${SCHEMATRIX_TOKEN:?set SCHEMATRIX_TOKEN in deploy/.env}
       # the editor's Script pane runs Python on the server: keep it only for trusted users

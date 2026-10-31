@@ -143,6 +143,28 @@ docker compose -f deploy/docker-compose.yml --profile https up -d    # + HTTPS f
 Documents, scripts and custom symbols live in the `schematrix_data` volume; the header of
 `deploy/docker-compose.yml` shows how to update and back up.
 
+### Public instance (no token)
+
+To let anyone use it anonymously, run it in public mode with `deploy/docker-compose.public.yml`:
+
+```bash
+docker compose -f deploy/docker-compose.public.yml up -d             # http://<host>:8000, no token, no volume
+```
+
+Public mode (`SCHEMATRIX_PUBLIC=1`) is safe because of what the server will not do, not because of a password:
+
+- **no code execution**: scripts and legacy-script import are off, whatever `SCHEMATRIX_SCRIPTS` says;
+- **nothing stored on the server**: visitors keep their sheets in their own browser and File > Save downloads a
+  `.json` (File > Open file brings it back); the bundled examples are served read-only; custom symbols are off;
+- **bounded work**: per-visitor request rates, request and document sizes, bitmap export size and the number of
+  exports running at once are capped (`SCHEMATRIX_PUBLIC_RATE`, `_HEAVY_RATE`, `_MAX_BODY`, `_MAX_ELEMENTS`,
+  `_MAX_SCALE`, `_MAX_PIXELS`, `_PARALLEL`);
+- **hardened output**: raw SVG in documents is stripped of scripts, exports are served sandboxed, the app page gets
+  a strict content security policy.
+
+Behind the `https` profile's Caddy proxy set `SCHEMATRIX_TRUST_PROXY=1` (rate limits then use the visitor's address)
+and `SCHEMATRIX_BIND=127.0.0.1` (so the app is only reachable through the proxy).
+
 | Variable | Default | |
 |---|---|---|
 | `SCHEMATRIX_WORKSPACE` | `~/Schematrix` (`/data` in Docker) | documents and scripts |

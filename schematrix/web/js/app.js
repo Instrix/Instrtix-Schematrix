@@ -6,6 +6,7 @@ import { buildPalette } from './palette.js';
 import { refreshScripts, SAMPLE } from './panes.js';
 import { geoKey, newDoc, openTab, restore, S } from './state.js';
 import { setTool } from './tools.js';
+import { toast } from './ui.js';
 import { $, api } from './util.js';
 import { render, scopeCss } from './view.js';
 
@@ -27,6 +28,15 @@ export async function boot() {
   buildPalette();
   $('#code').value = localStorage.getItem('schematrix-script') || SAMPLE;
   if (!S.info.scripts) { $('#runscript').disabled = true; $('#runscript').title = 'Script execution is disabled on this server'; }
+  if (S.info.public) {                       // anonymous public server: hide what it does not offer
+    document.body.classList.add('public');
+    try {
+      if (!localStorage.getItem('schematrix-public-notice')) {
+        toast('Public server: nothing is stored here. Your sheets are kept in this browser; File > Save downloads them.');
+        localStorage.setItem('schematrix-public-notice', '1');
+      }
+    } catch { /* storage blocked */ }
+  }
   if (!restore()) openTab(newDoc());
   setTool('select');
   refreshScripts();

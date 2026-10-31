@@ -283,3 +283,7 @@ pre.code { margin: 0; padding: 10px; background: var(--paper); border: 1px solid
 .sym { position: relative; }
 #symedit .props input, #symedit .props select, #symedit .props textarea { width: 100%; min-width: 0; box-sizing: border-box; }
 #symedit .props .f { grid-template-columns: 1fr; }
+
+/* public server: no scripts, no symbol library, no server-side saving */
+body.public [data-pane="script"], body.public [data-cmd="import-legacy"], body.public [data-cmd="symbol-new"],
+body.public [data-cmd="saveas"] { display: none !important; }

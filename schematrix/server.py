@@ -1,6 +1,9 @@
 """HTTP API + the web editor.
 
 Environment:
+    SCHEMATRIX_PUBLIC      1 = anonymous public instance: no scripts, nothing stored on the server, read-only
+                         examples, request / size / rate limits (see public.py); no token needed
+    SCHEMATRIX_TRUST_PROXY 1 = behind a reverse proxy: rate-limit by the X-Forwarded-For address it appends
     SCHEMATRIX_WORKSPACE   folder for saved documents and scripts (default ~/Schematrix, /data in Docker)
     SCHEMATRIX_SCRIPTS     1 (default) lets the editor run Python scripts on the server; set 0 on a shared deployment
     SCHEMATRIX_TOKEN       if set, every API call needs it (header "Authorization: Bearer <token>" or the cookie
@@ -24,6 +27,7 @@ from . import __version__
 from . import document as D
 from . import export as EX
 from . import netio
+from . import public as PUB
 from . import netlist as NET
 from . import render as R
 from . import runner
@@ -104,6 +108,36 @@ def pdf_available():
 def create_app() -> FastAPI:
     app = FastAPI(title='Schematrix', version=__version__, docs_url='/api/docs', redoc_url=None)
     token = os.environ.get('SCHEMATRIX_TOKEN') or None
+    public = PUB.enabled()
+    scripts_on = lambda: not public and _truthy(os.environ.get('SCHEMATRIX_SCRIPTS'))
+    limiter = PUB.RateLimiter()
+
+    @app.middleware('http')
+    async def guard(request: Request, call_next):
+        """public mode: request size and rate limits; every mode: security headers"""
+        path = request.url.path
+        if public and path.startswith('/api/') and path != '/api/health':
+            if request.method in ('POST', 'PUT'):
+                n = request.headers.get('content-length')
+                if n is None:
+                    return JSONResponse({'detail': 'Content-Length required'}, 411)
+                if int(n) > PUB.LIMITS['max_body']:
+                    return JSONResponse({'detail': 'request too large for this public server'}, 413)
+            ip = PUB.client_ip(request)
+            wait = limiter.allow(('all', ip), PUB.LIMITS['rate'])
+            if not wait and path in PUB.HEAVY:
+                wait = limiter.allow(('heavy', ip), PUB.LIMITS['heavy_rate'])
+            if wait:
+                return JSONResponse({'detail': 'too many requests, slow down'}, 429, headers={'Retry-After': str(int(wait))})
+        resp = await call_next(request)
+        resp.headers.setdefault('X-Content-Type-Options', 'nosniff')
+        resp.headers.setdefault('Referrer-Policy', 'no-referrer')
+        if path in ('/api/render', '/api/export'):
+            resp.headers['Content-Security-Policy'] = PUB.EXPORT_CSP
+        elif public and (path == '/' or path.startswith('/static/')):
+            resp.headers['Content-Security-Policy'] = PUB.APP_CSP
+            resp.headers['X-Frame-Options'] = 'DENY'
+        return resp
 
     @app.middleware('http')
     async def auth(request: Request, call_next):
@@ -127,8 +161,8 @@ def create_app() -> FastAPI:
 
     @app.get('/api/info')
     def info():
-        return {'version': __version__, 'pdf': pdf_available(), 'scripts': _truthy(os.environ.get('SCHEMATRIX_SCRIPTS')),
-                'workspace': str(workspace()), 'themes': {k: v for k, v in TH.THEMES.items()},
+        return {'version': __version__, 'pdf': pdf_available(), 'scripts': scripts_on(), 'public': public,
+                'workspace': 'public: read-only examples' if public else str(workspace()), 'themes': {k: v for k, v in TH.THEMES.items()},
                 'text_classes': TH.TEXT_CLASSES, 'css': {k: TH.css(k) for k in TH.THEMES},
                 'netlist_formats': netio.info(), 'pillow': _has('PIL'),
                 'frame_sizes': list(__import__('schematrix.frame', fromlist=['SIZES']).SIZES)}
@@ -136,14 +170,20 @@ def create_app() -> FastAPI:
     def _symdir():
         return workspace() / 'symbols'
 
+    def _no_public(what):
+        if public:
+            raise HTTPException(403, f'{what} is not available on this public server')
+
     @app.get('/api/symbols')
     def symbols():
-        CUSTOM.load_dir(_symdir())                    # pick up symbols added or edited on disk
+        if not public:
+            CUSTOM.load_dir(_symdir())                # pick up symbols added or edited on disk
         return SYM.catalog()
 
     @app.put('/api/symbols/custom/{name}')
     def save_symbol(name: str, body: dict = Body(...)):
         """create or replace a user-drawn symbol (saved to the workspace's symbols/ folder)"""
+        _no_public('saving symbols')
         try:
             sym = CUSTOM.save(_symdir(), {**body, 'name': name})
         except CUSTOM.SymbolError as e:
@@ -152,6 +192,7 @@ def create_app() -> FastAPI:
 
     @app.delete('/api/symbols/custom/{name}')
     def delete_symbol(name: str):
+        _no_public('deleting symbols')
         if name not in SYM.REGISTRY or not SYM.REGISTRY[name].custom:
             raise HTTPException(404, 'no such custom symbol')
         f = _symdir() / f'{name}.json'
@@ -163,6 +204,7 @@ def create_app() -> FastAPI:
     @app.post('/api/symbols/embedded')
     def embedded_symbols(body: dict = Body(...)):
         """register symbols carried inside a document for this session (not saved to the library)"""
+        _no_public('custom symbols')
         added = []
         for name, defn in (body.get('symbols') or {}).items():
             if name in SYM.REGISTRY:
@@ -184,7 +226,7 @@ def create_app() -> FastAPI:
     @app.post('/api/geometry')
     def geometry(body: dict = Body(...)):
         out = []
-        for it in body.get('items', []):
+        for it in body.get('items', [])[:500 if public else None]:
             try:
                 out.append(SYM.get(it['sym']).geometry(it.get('props') or {}))
             except Exception as e:  # noqa: BLE001
@@ -193,7 +235,8 @@ def create_app() -> FastAPI:
 
     def _doc(body):
         try:
-            return D.normalize(body['doc'] if 'doc' in body else body)
+            d = body['doc'] if 'doc' in body else body
+            return D.normalize(PUB.check_doc(d) if public else d)
         except Exception as e:  # noqa: BLE001
             raise HTTPException(400, f'bad document: {e}')
 
@@ -209,8 +252,15 @@ def create_app() -> FastAPI:
         if format in ('png', 'pdf'):
             if not pdf_available():
                 raise HTTPException(501, 'PNG/PDF export needs cairosvg on the server (pip install cairosvg)')
+            if public:
+                _, _, pw, ph = R.page_box(doc)
+                try:
+                    scale = PUB.check_scale(scale, pw, ph)
+                except ValueError as e:
+                    raise HTTPException(400, str(e))
             svg = R.render_svg(doc)
-            data = R.to_png(svg, scale) if format == 'png' else R.to_pdf(svg)
+            with _slot():
+                data = R.to_png(svg, scale) if format == 'png' else R.to_pdf(svg)
             return Response(data, media_type='image/png' if format == 'png' else 'application/pdf',
                             headers={'Content-Disposition': f'attachment; filename="{name}.{format}"'})
         raise HTTPException(400, 'format must be svg, png, pdf or spice')
@@ -220,10 +270,15 @@ def create_app() -> FastAPI:
         """body: {doc, format: svg|png|jpeg|webp|pdf|eps|tikz|tikz-standalone, ids?: [element ids to export, cropped],
         background?: true (theme paper) | false (transparent) | '#rrggbb', scale?: 2, margin?: 20, fonts?: true}"""
         doc = _doc(body)
+        scale = float(body.get('scale', 2))
         try:
-            data, mime, ext = EX.export(doc, body.get('format', 'svg'), ids=body.get('ids'), background=body.get('background', True),
-                                        scale=float(body.get('scale', 2)), margin=body.get('margin'), fonts=body.get('fonts', True))
-        except EX.ExportError as e:
+            if public:
+                _, _, pw, ph = R.page_box(EX.subset(doc, body.get('ids'), body.get('margin')))
+                scale = PUB.check_scale(scale, pw, ph)
+            with _slot():
+                data, mime, ext = EX.export(doc, body.get('format', 'svg'), ids=body.get('ids'), background=body.get('background', True),
+                                            scale=scale, margin=body.get('margin'), fonts=body.get('fonts', True))
+        except (EX.ExportError, ValueError) as e:
             raise HTTPException(501 if 'needs' in str(e) else 400, str(e))
         name = re.sub(r'[^\w\-]+', '-', body.get('name') or doc.get('meta', {}).get('title') or 'schematic').strip('-') or 'schematic'
         return Response(data, media_type=mime, headers={'Content-Disposition': f'attachment; filename="{name}.{ext}"'})
@@ -268,8 +323,9 @@ def create_app() -> FastAPI:
         return {'format': fmt, 'doc': sch.doc, 'warnings': sch.warnings}
 
     def _run(code, mode, filename):
-        if not _truthy(os.environ.get('SCHEMATRIX_SCRIPTS')):
-            raise HTTPException(403, 'script execution is disabled on this server (SCHEMATRIX_SCRIPTS=0)')
+        if not scripts_on():
+            raise HTTPException(403, 'script execution is disabled on this server'
+                                + (' (public server)' if public else ' (SCHEMATRIX_SCRIPTS=0)'))
         return runner.run(code, mode, filename, float(os.environ.get('SCHEMATRIX_SCRIPT_TIMEOUT', 30)), cwd=str(workspace()))
 
     @app.post('/api/run')
@@ -280,8 +336,15 @@ def create_app() -> FastAPI:
     def import_legacy(body: dict = Body(...)):
         return _run(body.get('code', ''), 'legacy', body.get('filename') or 'legacy.py')
 
+    def _examples():
+        return [p for p in sorted(EXAMPLES.rglob('*')) if p.is_file() and p.suffix.lower() in ALLOWED_EXT
+                and '__pycache__' not in p.parts and not p.name.startswith('.')]
+
     @app.get('/api/files')
     def files():
+        if public:                                    # read-only: the bundled examples, nothing else
+            return [{'path': 'examples/' + p.relative_to(EXAMPLES).as_posix(), 'size': p.stat().st_size, 'modified': '',
+                     'readonly': True} for p in _examples()]
         ws = workspace()
         out = []
         for p in sorted(ws.rglob('*')):
@@ -293,6 +356,11 @@ def create_app() -> FastAPI:
 
     @app.get('/api/files/{path:path}')
     def read_file(path: str):
+        if public:
+            p = (EXAMPLES / path.removeprefix('examples/')).resolve()
+            if not path.startswith('examples/') or p not in [q.resolve() for q in _examples()]:
+                raise HTTPException(404, 'no such file')
+            return FileResponse(p)
         p = safe_path(path)
         if not p.exists():
             raise HTTPException(404, 'no such file')
@@ -300,6 +368,7 @@ def create_app() -> FastAPI:
 
     @app.put('/api/files/{path:path}')
     async def write_file(path: str, request: Request):
+        _no_public('saving files (use File > Save to download)')
         p = safe_path(path)
         data = await request.body()
         if len(data) > 20 << 20:
@@ -318,10 +387,26 @@ def create_app() -> FastAPI:
 
     @app.delete('/api/files/{path:path}')
     def delete_file(path: str):
+        _no_public('deleting files')
         p = safe_path(path)
         if p.exists():
             p.unlink()
         return {'ok': True}
+
+    import contextlib
+
+    @contextlib.contextmanager
+    def _slot():
+        """public mode: at most a few cairo exports at once, server-wide"""
+        if not public:
+            yield
+            return
+        if not PUB.heavy_slots.acquire(timeout=15):
+            raise HTTPException(503, 'the server is busy, try again in a moment')
+        try:
+            yield
+        finally:
+            PUB.heavy_slots.release()
 
     app.mount('/static', StaticFiles(directory=WEB), name='static')
 
