@@ -1,0 +1,36 @@
+<svg viewBox="-46 -31 92 62" width="92" height="62" role="img" aria-label="schematic" xmlns="http://www.w3.org/2000/svg"><style>
+.w { fill: none; stroke: #292b31; stroke-width: 1.5; stroke-linejoin: round; stroke-linecap: round; }
+.wire { stroke: #292b31; }
+.plate { stroke-width: 2.2; }
+.bus { stroke-width: 3.4; }
+.acc { stroke: #23699f; stroke-width: 2.2; }
+.para { stroke-dasharray: 5 3; }
+.rule { stroke-dasharray: 2 4; }
+.thin { stroke-width: 1; }
+.accf { fill: #23699f; }
+.dot, .arrow { fill: #292b31; }
+.jn { fill: #292b31; }
+.acc.arrow, .acc.dot { fill: #23699f; stroke: none; }
+.amp { fill: #ffffff; stroke: #292b31; stroke-width: 1.6; }
+.amp.acc { stroke: #23699f; }
+.pad { fill: #ffffff; stroke: #292b31; stroke-width: 1; }
+.term { fill: #ffffff; stroke: #292b31; stroke-width: 2.2; }
+.flag { fill: #eef0f4; stroke: #292b31; stroke-width: 1; }
+.box { fill: #eef0f4; stroke: #292b31; stroke-width: 1.6; }
+.accbox { fill: #dbe8f3; stroke: #292b31; stroke-width: 1.6; }
+.grp { fill: #eef0f4; stroke: none; }
+.frame { fill: none; stroke: #d3d6df; stroke-width: 1; }
+text { font-family: "JetBrains Mono", ui-monospace, monospace; fill: #292b31; }
+.lbl, .ref { font-size: 12px; font-weight: 500; }
+.ref { font-style: normal; }
+.val { font-size: 11.5px; fill: #545866; }
+.valsm { font-size: 10.5px; fill: #545866; }
+.node { font-size: 12px; font-weight: 500; font-style: italic; }
+.net { font-size: 11px; font-weight: 500; }
+.pin { font-size: 13px; font-weight: 600; }
+.termlbl { font-size: 12.5px; font-weight: 600; }
+.accl { font-size: 12px; font-weight: 600; fill: #23699f; font-style: normal; }
+.grplbl { font-size: 10px; font-weight: 600; letter-spacing: .08em; fill: #545866; }
+.note { font-family: "Inter", system-ui, sans-serif; font-size: 12px; fill: #545866; }
+.title { font-family: "Inter", system-ui, sans-serif; font-size: 15px; font-weight: 600; }
+</style><rect x="-46" y="-31" width="92" height="62" fill="#ffffff"/><rect class="box" x="-30" y="-25" width="60" height="50" rx="2"/><text class="ref" x="0" y="4.2" text-anchor="middle">N</text><polyline class="w" points="-40,-15 -30,-15"/><polyline class="w" points="-40,15 -30,15"/><polyline class="w" points="30,-15 40,-15"/><polyline class="w" points="30,15 40,15"/></svg>

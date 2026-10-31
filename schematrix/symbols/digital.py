@@ -18,13 +18,8 @@ BUS = FLAG(False, 'Bus pins', help='one thick bus pin per port instead of one pi
 
 
 def spaced(pins):
-    """control pins one row apart (a net label is taller than the 10-unit data-bit pitch)"""
-    out = []
-    for p in pins:
-        if out:
-            out.append(None)
-        out.append(p)
-    return out
+    """control pins, one per row (the 20-unit pitch already leaves room for net labels)"""
+    return list(pins)
 
 
 def _g(*args, **kw):

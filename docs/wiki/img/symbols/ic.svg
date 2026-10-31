@@ -1,0 +1,36 @@
+<svg viewBox="-46 -10 92 66" width="92" height="66" role="img" aria-label="schematic" xmlns="http://www.w3.org/2000/svg"><style>
+.w { fill: none; stroke: #292b31; stroke-width: 1.5; stroke-linejoin: round; stroke-linecap: round; }
+.wire { stroke: #292b31; }
+.plate { stroke-width: 2.2; }
+.bus { stroke-width: 3.4; }
+.acc { stroke: #23699f; stroke-width: 2.2; }
+.para { stroke-dasharray: 5 3; }
+.rule { stroke-dasharray: 2 4; }
+.thin { stroke-width: 1; }
+.accf { fill: #23699f; }
+.dot, .arrow { fill: #292b31; }
+.jn { fill: #292b31; }
+.acc.arrow, .acc.dot { fill: #23699f; stroke: none; }
+.amp { fill: #ffffff; stroke: #292b31; stroke-width: 1.6; }
+.amp.acc { stroke: #23699f; }
+.pad { fill: #ffffff; stroke: #292b31; stroke-width: 1; }
+.term { fill: #ffffff; stroke: #292b31; stroke-width: 2.2; }
+.flag { fill: #eef0f4; stroke: #292b31; stroke-width: 1; }
+.box { fill: #eef0f4; stroke: #292b31; stroke-width: 1.6; }
+.accbox { fill: #dbe8f3; stroke: #292b31; stroke-width: 1.6; }
+.grp { fill: #eef0f4; stroke: none; }
+.frame { fill: none; stroke: #d3d6df; stroke-width: 1; }
+text { font-family: "JetBrains Mono", ui-monospace, monospace; fill: #292b31; }
+.lbl, .ref { font-size: 12px; font-weight: 500; }
+.ref { font-style: normal; }
+.val { font-size: 11.5px; fill: #545866; }
+.valsm { font-size: 10.5px; fill: #545866; }
+.node { font-size: 12px; font-weight: 500; font-style: italic; }
+.net { font-size: 11px; font-weight: 500; }
+.pin { font-size: 13px; font-weight: 600; }
+.termlbl { font-size: 12.5px; font-weight: 600; }
+.accl { font-size: 12px; font-weight: 600; fill: #23699f; font-style: normal; }
+.grplbl { font-size: 10px; font-weight: 600; letter-spacing: .08em; fill: #545866; }
+.note { font-family: "Inter", system-ui, sans-serif; font-size: 12px; fill: #545866; }
+.title { font-family: "Inter", system-ui, sans-serif; font-size: 15px; font-weight: 600; }
+</style><rect x="-46" y="-10" width="92" height="66" fill="#ffffff"/><rect class="box" x="-30" y="0" width="60" height="50" rx="2"/><polygon class="w thin" points="-4,0 4,0 0,4"/><text class="valsm" x="0" y="28.67" text-anchor="middle">IC</text><polyline class="w" points="-40,10 -30,10"/><text class="valsm" x="-35" y="7" text-anchor="start">1</text><polyline class="w" points="-40,20 -30,20"/><text class="valsm" x="-35" y="17" text-anchor="start">2</text><polyline class="w" points="-40,30 -30,30"/><text class="valsm" x="-35" y="27" text-anchor="start">3</text><polyline class="w" points="-40,40 -30,40"/><text class="valsm" x="-35" y="37" text-anchor="start">4</text><polyline class="w" points="40,40 30,40"/><text class="valsm" x="35" y="37" text-anchor="end">5</text><polyline class="w" points="40,30 30,30"/><text class="valsm" x="35" y="27" text-anchor="end">6</text><polyline class="w" points="40,20 30,20"/><text class="valsm" x="35" y="17" text-anchor="end">7</text><polyline class="w" points="40,10 30,10"/><text class="valsm" x="35" y="7" text-anchor="end">8</text></svg>

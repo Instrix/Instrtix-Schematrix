@@ -148,6 +148,7 @@ function buildInspector() {
     sp.onkeydown = (ev) => ev.stopPropagation();
     const spf = field('SPICE lines', sp); spf.title = 'Analyses, models and options appended to the SPICE netlist';
     p.append(spf);
+    p.append(field('Theme', sel_(typeof d.theme === 'string' ? d.theme : 'custom', [...Object.keys(S.info.themes || {}), ...(typeof d.theme === 'object' ? ['custom'] : [])], (v) => edit(() => { d.theme = v; }))));
     p.append(sect('Page frame'));
     const fr = pg.frame || {}, ff = fr.fields || {};
     const setFrame = (patch) => applyFrame({ size: fr.size || '', orientation: fr.orientation || 'landscape', fields: { ...ff }, ...patch });
@@ -161,7 +162,6 @@ function buildInspector() {
         p.append(field(label, i));
       }
     }
-    p.append(field('Theme', sel_(typeof d.theme === 'string' ? d.theme : 'custom', [...Object.keys(S.info.themes || {}), ...(typeof d.theme === 'object' ? ['custom'] : [])], (v) => edit(() => { d.theme = v; }))));
     p.append(btns([['Fit page to drawing', () => edit(() => {
       const bb = docBBox(), m = pg.margin ?? 20;
       Object.assign(pg, { auto: false, x: Math.floor(bb[0] - m), y: Math.floor(bb[1] - m), width: Math.ceil(bb[2] - bb[0] + 2 * m), height: Math.ceil(bb[3] - bb[1] + 2 * m) });

@@ -18,7 +18,7 @@
   {
    "type": "comp",
    "sym": "counter",
-   "x": 140,
+   "x": 160,
    "y": 60,
    "rot": 0,
    "mirror": false,
@@ -37,7 +37,7 @@
   {
    "type": "comp",
    "sym": "decoder",
-   "x": 330,
+   "x": 360,
    "y": 40,
    "rot": 0,
    "mirror": false,
@@ -53,19 +53,19 @@
    "type": "wire",
    "points": [
     [
-     240,
+     260,
      80
-    ],
-    [
-     300,
-     80
-    ],
-    [
-     300,
-     60
     ],
     [
      320,
+     80
+    ],
+    [
+     320,
+     60
+    ],
+    [
+     350,
      60
     ]
    ],
@@ -76,16 +76,16 @@
    "type": "wire",
    "points": [
     [
-     320,
-     80
-    ],
-    [
-     310,
-     80
-    ],
-    [
-     310,
+     350,
      100
+    ],
+    [
+     340,
+     100
+    ],
+    [
+     340,
+     130
     ]
    ],
    "style": "",
@@ -94,8 +94,8 @@
   {
    "type": "comp",
    "sym": "ground",
-   "x": 310,
-   "y": 100,
+   "x": 340,
+   "y": 130,
    "rot": 0,
    "mirror": false,
    "props": {
@@ -105,10 +105,300 @@
    "id": "e5"
   },
   {
+   "type": "wire",
+   "points": [
+    [
+     150,
+     80
+    ],
+    [
+     120,
+     80
+    ]
+   ],
+   "style": "",
+   "id": "e6"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 120,
+   "y": 80,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "CLK",
+    "side": "left"
+   },
+   "style": "",
+   "id": "e7"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     150,
+     100
+    ],
+    [
+     120,
+     100
+    ]
+   ],
+   "style": "",
+   "id": "e8"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 120,
+   "y": 100,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "~{RST}",
+    "side": "left"
+   },
+   "style": "",
+   "id": "e9"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     440,
+     60
+    ],
+    [
+     460,
+     60
+    ]
+   ],
+   "style": "",
+   "id": "e10"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 460,
+   "y": 60,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "~{SEL0}",
+    "side": "right"
+   },
+   "style": "",
+   "id": "e11"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     440,
+     80
+    ],
+    [
+     460,
+     80
+    ]
+   ],
+   "style": "",
+   "id": "e12"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 460,
+   "y": 80,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "~{SEL1}",
+    "side": "right"
+   },
+   "style": "",
+   "id": "e13"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     440,
+     100
+    ],
+    [
+     460,
+     100
+    ]
+   ],
+   "style": "",
+   "id": "e14"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 460,
+   "y": 100,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "~{SEL2}",
+    "side": "right"
+   },
+   "style": "",
+   "id": "e15"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     440,
+     120
+    ],
+    [
+     460,
+     120
+    ]
+   ],
+   "style": "",
+   "id": "e16"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 460,
+   "y": 120,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "~{SEL3}",
+    "side": "right"
+   },
+   "style": "",
+   "id": "e17"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     440,
+     140
+    ],
+    [
+     460,
+     140
+    ]
+   ],
+   "style": "",
+   "id": "e18"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 460,
+   "y": 140,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "~{SEL4}",
+    "side": "right"
+   },
+   "style": "",
+   "id": "e19"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     440,
+     160
+    ],
+    [
+     460,
+     160
+    ]
+   ],
+   "style": "",
+   "id": "e20"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 460,
+   "y": 160,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "~{SEL5}",
+    "side": "right"
+   },
+   "style": "",
+   "id": "e21"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     440,
+     180
+    ],
+    [
+     460,
+     180
+    ]
+   ],
+   "style": "",
+   "id": "e22"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 460,
+   "y": 180,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "~{SEL6}",
+    "side": "right"
+   },
+   "style": "",
+   "id": "e23"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     440,
+     200
+    ],
+    [
+     460,
+     200
+    ]
+   ],
+   "style": "",
+   "id": "e24"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 460,
+   "y": 200,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "~{SEL7}",
+    "side": "right"
+   },
+   "style": "",
+   "id": "e25"
+  },
+  {
    "type": "comp",
    "sym": "vsrc",
-   "x": 70,
-   "y": 180,
+   "x": 80,
+   "y": 260,
    "rot": 90,
    "mirror": false,
    "props": {
@@ -118,304 +408,49 @@
     "value": "PULSE(0 5 0 1n 1n 50u 100u)"
    },
    "style": "",
-   "id": "e6"
+   "id": "e26"
   },
   {
    "type": "wire",
    "points": [
     [
-     70,
-     140
+     80,
+     220
     ],
     [
-     70,
-     80
-    ],
-    [
-     130,
-     80
+     80,
+     200
     ]
    ],
    "style": "",
-   "id": "e7"
+   "id": "e27"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 80,
+   "y": 200,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "CLK",
+    "side": "right"
+   },
+   "style": "",
+   "id": "e28"
   },
   {
    "type": "comp",
    "sym": "ground",
-   "x": 70,
-   "y": 220,
+   "x": 80,
+   "y": 300,
    "rot": 0,
    "mirror": false,
    "props": {
     "kind": "earth"
    },
    "style": "",
-   "id": "e8"
-  },
-  {
-   "type": "wire",
-   "points": [
-    [
-     130,
-     100
-    ],
-    [
-     110,
-     100
-    ],
-    [
-     110,
-     30
-    ]
-   ],
-   "style": "",
-   "id": "e9"
-  },
-  {
-   "type": "comp",
-   "sym": "rail",
-   "x": 110,
-   "y": 30,
-   "rot": 0,
-   "mirror": false,
-   "props": {
-    "net": "+5 V",
-    "kind": "bar"
-   },
-   "style": "",
-   "id": "e10"
-  },
-  {
-   "type": "wire",
-   "points": [
-    [
-     410,
-     60
-    ],
-    [
-     430,
-     60
-    ]
-   ],
-   "style": "",
-   "id": "e11"
-  },
-  {
-   "type": "comp",
-   "sym": "flag",
-   "x": 430,
-   "y": 60,
-   "rot": 0,
-   "mirror": false,
-   "props": {
-    "label": "~{SEL0}",
-    "side": "right"
-   },
-   "style": "",
-   "id": "e12"
-  },
-  {
-   "type": "wire",
-   "points": [
-    [
-     410,
-     70
-    ],
-    [
-     490,
-     70
-    ]
-   ],
-   "style": "",
-   "id": "e13"
-  },
-  {
-   "type": "comp",
-   "sym": "flag",
-   "x": 490,
-   "y": 70,
-   "rot": 0,
-   "mirror": false,
-   "props": {
-    "label": "~{SEL1}",
-    "side": "right"
-   },
-   "style": "",
-   "id": "e14"
-  },
-  {
-   "type": "wire",
-   "points": [
-    [
-     410,
-     80
-    ],
-    [
-     430,
-     80
-    ]
-   ],
-   "style": "",
-   "id": "e15"
-  },
-  {
-   "type": "comp",
-   "sym": "flag",
-   "x": 430,
-   "y": 80,
-   "rot": 0,
-   "mirror": false,
-   "props": {
-    "label": "~{SEL2}",
-    "side": "right"
-   },
-   "style": "",
-   "id": "e16"
-  },
-  {
-   "type": "wire",
-   "points": [
-    [
-     410,
-     90
-    ],
-    [
-     490,
-     90
-    ]
-   ],
-   "style": "",
-   "id": "e17"
-  },
-  {
-   "type": "comp",
-   "sym": "flag",
-   "x": 490,
-   "y": 90,
-   "rot": 0,
-   "mirror": false,
-   "props": {
-    "label": "~{SEL3}",
-    "side": "right"
-   },
-   "style": "",
-   "id": "e18"
-  },
-  {
-   "type": "wire",
-   "points": [
-    [
-     410,
-     100
-    ],
-    [
-     430,
-     100
-    ]
-   ],
-   "style": "",
-   "id": "e19"
-  },
-  {
-   "type": "comp",
-   "sym": "flag",
-   "x": 430,
-   "y": 100,
-   "rot": 0,
-   "mirror": false,
-   "props": {
-    "label": "~{SEL4}",
-    "side": "right"
-   },
-   "style": "",
-   "id": "e20"
-  },
-  {
-   "type": "wire",
-   "points": [
-    [
-     410,
-     110
-    ],
-    [
-     490,
-     110
-    ]
-   ],
-   "style": "",
-   "id": "e21"
-  },
-  {
-   "type": "comp",
-   "sym": "flag",
-   "x": 490,
-   "y": 110,
-   "rot": 0,
-   "mirror": false,
-   "props": {
-    "label": "~{SEL5}",
-    "side": "right"
-   },
-   "style": "",
-   "id": "e22"
-  },
-  {
-   "type": "wire",
-   "points": [
-    [
-     410,
-     120
-    ],
-    [
-     430,
-     120
-    ]
-   ],
-   "style": "",
-   "id": "e23"
-  },
-  {
-   "type": "comp",
-   "sym": "flag",
-   "x": 430,
-   "y": 120,
-   "rot": 0,
-   "mirror": false,
-   "props": {
-    "label": "~{SEL6}",
-    "side": "right"
-   },
-   "style": "",
-   "id": "e24"
-  },
-  {
-   "type": "wire",
-   "points": [
-    [
-     410,
-     130
-    ],
-    [
-     490,
-     130
-    ]
-   ],
-   "style": "",
-   "id": "e25"
-  },
-  {
-   "type": "comp",
-   "sym": "flag",
-   "x": 490,
-   "y": 130,
-   "rot": 0,
-   "mirror": false,
-   "props": {
-    "label": "~{SEL7}",
-    "side": "right"
-   },
-   "style": "",
-   "id": "e26"
+   "id": "e29"
   }
  ]
 }

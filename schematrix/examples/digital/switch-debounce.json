@@ -58,6 +58,21 @@
    "id": "e3"
   },
   {
+   "type": "wire",
+   "points": [
+    [
+     80,
+     90
+    ],
+    [
+     90,
+     90
+    ]
+   ],
+   "style": "",
+   "id": "e4"
+  },
+  {
    "type": "comp",
    "sym": "ground",
    "x": 80,
@@ -68,12 +83,12 @@
     "kind": "earth"
    },
    "style": "",
-   "id": "e4"
+   "id": "e5"
   },
   {
    "type": "comp",
    "sym": "resistor",
-   "x": 110,
+   "x": 120,
    "y": 90,
    "rot": 0,
    "mirror": false,
@@ -82,16 +97,12 @@
     "value": "10 k\\ohm"
    },
    "style": "",
-   "label_offset": [
-    0,
-    -4
-   ],
-   "id": "e5"
+   "id": "e6"
   },
   {
    "type": "comp",
    "sym": "capacitor",
-   "x": 160,
+   "x": 170,
    "y": 110,
    "rot": 90,
    "mirror": false,
@@ -100,27 +111,27 @@
     "value": "100 nF"
    },
    "style": "",
-   "id": "e6"
+   "id": "e7"
   },
   {
    "type": "wire",
    "points": [
     [
-     140,
+     150,
      90
     ],
     [
-     160,
+     170,
      90
     ]
    ],
    "style": "",
-   "id": "e7"
+   "id": "e8"
   },
   {
    "type": "comp",
    "sym": "ground",
-   "x": 160,
+   "x": 170,
    "y": 130,
    "rot": 0,
    "mirror": false,
@@ -128,12 +139,12 @@
     "kind": "earth"
    },
    "style": "",
-   "id": "e8"
+   "id": "e9"
   },
   {
    "type": "comp",
    "sym": "buffer",
-   "x": 251,
+   "x": 281,
    "y": 90,
    "rot": 0,
    "mirror": false,
@@ -144,32 +155,17 @@
     "part": "74HC14"
    },
    "style": "",
-   "id": "e9"
-  },
-  {
-   "type": "wire",
-   "points": [
-    [
-     160,
-     90
-    ],
-    [
-     230,
-     90
-    ]
-   ],
-   "style": "",
    "id": "e10"
   },
   {
    "type": "wire",
    "points": [
     [
-     274,
+     170,
      90
     ],
     [
-     304,
+     260,
      90
     ]
    ],
@@ -177,9 +173,24 @@
    "id": "e11"
   },
   {
+   "type": "wire",
+   "points": [
+    [
+     304,
+     90
+    ],
+    [
+     334,
+     90
+    ]
+   ],
+   "style": "",
+   "id": "e12"
+  },
+  {
    "type": "comp",
    "sym": "flag",
-   "x": 304,
+   "x": 334,
    "y": 90,
    "rot": 0,
    "mirror": false,
@@ -188,7 +199,7 @@
     "side": "right"
    },
    "style": "",
-   "id": "e12"
+   "id": "e13"
   },
   {
    "type": "text",
@@ -197,7 +208,7 @@
    "text": "\\tau = R2 C1 = 1 ms;  the Schmitt thresholds turn the slow RC edge into one clean step",
    "cls": "note",
    "anchor": "start",
-   "id": "e13"
+   "id": "e14"
   }
  ]
 }

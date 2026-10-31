@@ -11,7 +11,7 @@
   "margin": 20,
   "grid": 5,
   "junctions": true,
-  "hops": true
+  "hops": false
  },
  "theme": "instrix",
  "elements": [
@@ -155,12 +155,8 @@
      60
     ],
     [
-     230,
+     215,
      60
-    ],
-    [
-     230,
-     160
     ]
    ],
    "style": "",
@@ -168,46 +164,43 @@
   },
   {
    "type": "comp",
-   "sym": "resistor",
-   "x": 230,
-   "y": 180,
-   "rot": 90,
+   "sym": "flag",
+   "x": 215,
+   "y": 60,
+   "rot": 0,
    "mirror": false,
    "props": {
-    "length": 40,
-    "body": 24,
-    "ref": "R1",
-    "value": "330"
+    "label": "Q0",
+    "side": "right"
    },
    "style": "",
-   "hide_labels": true,
    "id": "e11"
   },
   {
-   "type": "comp",
-   "sym": "diode",
-   "x": 230,
-   "y": 220,
-   "rot": 90,
-   "mirror": false,
-   "props": {
-    "kind": "led",
-    "length": 40,
-    "ref": "D1"
-   },
+   "type": "wire",
+   "points": [
+    [
+     190,
+     80
+    ],
+    [
+     215,
+     80
+    ]
+   ],
    "style": "",
-   "hide_labels": true,
    "id": "e12"
   },
   {
    "type": "comp",
-   "sym": "ground",
-   "x": 230,
-   "y": 240,
+   "sym": "flag",
+   "x": 215,
+   "y": 80,
    "rot": 0,
    "mirror": false,
    "props": {
-    "kind": "earth"
+    "label": "Q1",
+    "side": "right"
    },
    "style": "",
    "id": "e13"
@@ -217,15 +210,11 @@
    "points": [
     [
      190,
-     70
+     100
     ],
     [
-     270,
-     70
-    ],
-    [
-     270,
-     160
+     215,
+     100
     ]
    ],
    "style": "",
@@ -233,46 +222,43 @@
   },
   {
    "type": "comp",
-   "sym": "resistor",
-   "x": 270,
-   "y": 180,
-   "rot": 90,
+   "sym": "flag",
+   "x": 215,
+   "y": 100,
+   "rot": 0,
    "mirror": false,
    "props": {
-    "length": 40,
-    "body": 24,
-    "ref": "R2",
-    "value": "330"
+    "label": "Q2",
+    "side": "right"
    },
    "style": "",
-   "hide_labels": true,
    "id": "e15"
   },
   {
-   "type": "comp",
-   "sym": "diode",
-   "x": 270,
-   "y": 220,
-   "rot": 90,
-   "mirror": false,
-   "props": {
-    "kind": "led",
-    "length": 40,
-    "ref": "D2"
-   },
+   "type": "wire",
+   "points": [
+    [
+     190,
+     120
+    ],
+    [
+     215,
+     120
+    ]
+   ],
    "style": "",
-   "hide_labels": true,
    "id": "e16"
   },
   {
    "type": "comp",
-   "sym": "ground",
-   "x": 270,
-   "y": 240,
+   "sym": "flag",
+   "x": 215,
+   "y": 120,
    "rot": 0,
    "mirror": false,
    "props": {
-    "kind": "earth"
+    "label": "Q3",
+    "side": "right"
    },
    "style": "",
    "id": "e17"
@@ -282,15 +268,11 @@
    "points": [
     [
      190,
-     80
+     140
     ],
     [
-     310,
-     80
-    ],
-    [
-     310,
-     160
+     215,
+     140
     ]
    ],
    "style": "",
@@ -298,46 +280,43 @@
   },
   {
    "type": "comp",
-   "sym": "resistor",
-   "x": 310,
-   "y": 180,
-   "rot": 90,
+   "sym": "flag",
+   "x": 215,
+   "y": 140,
+   "rot": 0,
    "mirror": false,
    "props": {
-    "length": 40,
-    "body": 24,
-    "ref": "R3",
-    "value": "330"
+    "label": "Q4",
+    "side": "right"
    },
    "style": "",
-   "hide_labels": true,
    "id": "e19"
   },
   {
-   "type": "comp",
-   "sym": "diode",
-   "x": 310,
-   "y": 220,
-   "rot": 90,
-   "mirror": false,
-   "props": {
-    "kind": "led",
-    "length": 40,
-    "ref": "D3"
-   },
+   "type": "wire",
+   "points": [
+    [
+     190,
+     160
+    ],
+    [
+     215,
+     160
+    ]
+   ],
    "style": "",
-   "hide_labels": true,
    "id": "e20"
   },
   {
    "type": "comp",
-   "sym": "ground",
-   "x": 310,
-   "y": 240,
+   "sym": "flag",
+   "x": 215,
+   "y": 160,
    "rot": 0,
    "mirror": false,
    "props": {
-    "kind": "earth"
+    "label": "Q5",
+    "side": "right"
    },
    "style": "",
    "id": "e21"
@@ -347,15 +326,11 @@
    "points": [
     [
      190,
-     90
+     180
     ],
     [
-     350,
-     90
-    ],
-    [
-     350,
-     160
+     215,
+     180
     ]
    ],
    "style": "",
@@ -363,80 +338,72 @@
   },
   {
    "type": "comp",
-   "sym": "resistor",
-   "x": 350,
+   "sym": "flag",
+   "x": 215,
    "y": 180,
-   "rot": 90,
-   "mirror": false,
-   "props": {
-    "length": 40,
-    "body": 24,
-    "ref": "R4",
-    "value": "330"
-   },
-   "style": "",
-   "hide_labels": true,
-   "id": "e23"
-  },
-  {
-   "type": "comp",
-   "sym": "diode",
-   "x": 350,
-   "y": 220,
-   "rot": 90,
-   "mirror": false,
-   "props": {
-    "kind": "led",
-    "length": 40,
-    "ref": "D4"
-   },
-   "style": "",
-   "hide_labels": true,
-   "id": "e24"
-  },
-  {
-   "type": "comp",
-   "sym": "ground",
-   "x": 350,
-   "y": 240,
    "rot": 0,
    "mirror": false,
    "props": {
-    "kind": "earth"
+    "label": "Q6",
+    "side": "right"
    },
    "style": "",
-   "id": "e25"
+   "id": "e23"
   },
   {
    "type": "wire",
    "points": [
     [
      190,
-     100
+     200
     ],
     [
-     390,
-     100
-    ],
-    [
-     390,
-     160
+     215,
+     200
     ]
    ],
+   "style": "",
+   "id": "e24"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 215,
+   "y": 200,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "Q7",
+    "side": "right"
+   },
+   "style": "",
+   "id": "e25"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 360,
+   "y": 60,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "Q0",
+    "side": "right"
+   },
    "style": "",
    "id": "e26"
   },
   {
    "type": "comp",
    "sym": "resistor",
-   "x": 390,
-   "y": 180,
+   "x": 360,
+   "y": 85,
    "rot": 90,
    "mirror": false,
    "props": {
-    "length": 40,
+    "length": 50,
     "body": 24,
-    "ref": "R5",
+    "ref": "R1",
     "value": "330"
    },
    "style": "",
@@ -446,14 +413,14 @@
   {
    "type": "comp",
    "sym": "diode",
-   "x": 390,
-   "y": 220,
+   "x": 360,
+   "y": 130,
    "rot": 90,
    "mirror": false,
    "props": {
     "kind": "led",
     "length": 40,
-    "ref": "D5"
+    "ref": "D1"
    },
    "style": "",
    "hide_labels": true,
@@ -462,8 +429,8 @@
   {
    "type": "comp",
    "sym": "ground",
-   "x": 390,
-   "y": 240,
+   "x": 360,
+   "y": 150,
    "rot": 0,
    "mirror": false,
    "props": {
@@ -473,35 +440,30 @@
    "id": "e29"
   },
   {
-   "type": "wire",
-   "points": [
-    [
-     190,
-     110
-    ],
-    [
-     430,
-     110
-    ],
-    [
-     430,
-     160
-    ]
-   ],
+   "type": "comp",
+   "sym": "flag",
+   "x": 410,
+   "y": 60,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "Q1",
+    "side": "right"
+   },
    "style": "",
    "id": "e30"
   },
   {
    "type": "comp",
    "sym": "resistor",
-   "x": 430,
-   "y": 180,
+   "x": 410,
+   "y": 85,
    "rot": 90,
    "mirror": false,
    "props": {
-    "length": 40,
+    "length": 50,
     "body": 24,
-    "ref": "R6",
+    "ref": "R2",
     "value": "330"
    },
    "style": "",
@@ -511,14 +473,14 @@
   {
    "type": "comp",
    "sym": "diode",
-   "x": 430,
-   "y": 220,
+   "x": 410,
+   "y": 130,
    "rot": 90,
    "mirror": false,
    "props": {
     "kind": "led",
     "length": 40,
-    "ref": "D6"
+    "ref": "D2"
    },
    "style": "",
    "hide_labels": true,
@@ -527,8 +489,8 @@
   {
    "type": "comp",
    "sym": "ground",
-   "x": 430,
-   "y": 240,
+   "x": 410,
+   "y": 150,
    "rot": 0,
    "mirror": false,
    "props": {
@@ -538,35 +500,30 @@
    "id": "e33"
   },
   {
-   "type": "wire",
-   "points": [
-    [
-     190,
-     120
-    ],
-    [
-     470,
-     120
-    ],
-    [
-     470,
-     160
-    ]
-   ],
+   "type": "comp",
+   "sym": "flag",
+   "x": 460,
+   "y": 60,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "Q2",
+    "side": "right"
+   },
    "style": "",
    "id": "e34"
   },
   {
    "type": "comp",
    "sym": "resistor",
-   "x": 470,
-   "y": 180,
+   "x": 460,
+   "y": 85,
    "rot": 90,
    "mirror": false,
    "props": {
-    "length": 40,
+    "length": 50,
     "body": 24,
-    "ref": "R7",
+    "ref": "R3",
     "value": "330"
    },
    "style": "",
@@ -576,14 +533,14 @@
   {
    "type": "comp",
    "sym": "diode",
-   "x": 470,
-   "y": 220,
+   "x": 460,
+   "y": 130,
    "rot": 90,
    "mirror": false,
    "props": {
     "kind": "led",
     "length": 40,
-    "ref": "D7"
+    "ref": "D3"
    },
    "style": "",
    "hide_labels": true,
@@ -592,8 +549,8 @@
   {
    "type": "comp",
    "sym": "ground",
-   "x": 470,
-   "y": 240,
+   "x": 460,
+   "y": 150,
    "rot": 0,
    "mirror": false,
    "props": {
@@ -603,21 +560,16 @@
    "id": "e37"
   },
   {
-   "type": "wire",
-   "points": [
-    [
-     190,
-     130
-    ],
-    [
-     510,
-     130
-    ],
-    [
-     510,
-     160
-    ]
-   ],
+   "type": "comp",
+   "sym": "flag",
+   "x": 510,
+   "y": 60,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "Q3",
+    "side": "right"
+   },
    "style": "",
    "id": "e38"
   },
@@ -625,13 +577,13 @@
    "type": "comp",
    "sym": "resistor",
    "x": 510,
-   "y": 180,
+   "y": 85,
    "rot": 90,
    "mirror": false,
    "props": {
-    "length": 40,
+    "length": 50,
     "body": 24,
-    "ref": "R8",
+    "ref": "R4",
     "value": "330"
    },
    "style": "",
@@ -642,13 +594,13 @@
    "type": "comp",
    "sym": "diode",
    "x": 510,
-   "y": 220,
+   "y": 130,
    "rot": 90,
    "mirror": false,
    "props": {
     "kind": "led",
     "length": 40,
-    "ref": "D8"
+    "ref": "D4"
    },
    "style": "",
    "hide_labels": true,
@@ -658,7 +610,7 @@
    "type": "comp",
    "sym": "ground",
    "x": 510,
-   "y": 240,
+   "y": 150,
    "rot": 0,
    "mirror": false,
    "props": {
@@ -668,13 +620,253 @@
    "id": "e41"
   },
   {
+   "type": "comp",
+   "sym": "flag",
+   "x": 560,
+   "y": 60,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "Q4",
+    "side": "right"
+   },
+   "style": "",
+   "id": "e42"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 560,
+   "y": 85,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "length": 50,
+    "body": 24,
+    "ref": "R5",
+    "value": "330"
+   },
+   "style": "",
+   "hide_labels": true,
+   "id": "e43"
+  },
+  {
+   "type": "comp",
+   "sym": "diode",
+   "x": 560,
+   "y": 130,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "kind": "led",
+    "length": 40,
+    "ref": "D5"
+   },
+   "style": "",
+   "hide_labels": true,
+   "id": "e44"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 560,
+   "y": 150,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "earth"
+   },
+   "style": "",
+   "id": "e45"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 610,
+   "y": 60,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "Q5",
+    "side": "right"
+   },
+   "style": "",
+   "id": "e46"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 610,
+   "y": 85,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "length": 50,
+    "body": 24,
+    "ref": "R6",
+    "value": "330"
+   },
+   "style": "",
+   "hide_labels": true,
+   "id": "e47"
+  },
+  {
+   "type": "comp",
+   "sym": "diode",
+   "x": 610,
+   "y": 130,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "kind": "led",
+    "length": 40,
+    "ref": "D6"
+   },
+   "style": "",
+   "hide_labels": true,
+   "id": "e48"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 610,
+   "y": 150,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "earth"
+   },
+   "style": "",
+   "id": "e49"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 660,
+   "y": 60,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "Q6",
+    "side": "right"
+   },
+   "style": "",
+   "id": "e50"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 660,
+   "y": 85,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "length": 50,
+    "body": 24,
+    "ref": "R7",
+    "value": "330"
+   },
+   "style": "",
+   "hide_labels": true,
+   "id": "e51"
+  },
+  {
+   "type": "comp",
+   "sym": "diode",
+   "x": 660,
+   "y": 130,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "kind": "led",
+    "length": 40,
+    "ref": "D7"
+   },
+   "style": "",
+   "hide_labels": true,
+   "id": "e52"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 660,
+   "y": 150,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "earth"
+   },
+   "style": "",
+   "id": "e53"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 710,
+   "y": 60,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "Q7",
+    "side": "right"
+   },
+   "style": "",
+   "id": "e54"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 710,
+   "y": 85,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "length": 50,
+    "body": 24,
+    "ref": "R8",
+    "value": "330"
+   },
+   "style": "",
+   "hide_labels": true,
+   "id": "e55"
+  },
+  {
+   "type": "comp",
+   "sym": "diode",
+   "x": 710,
+   "y": 130,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "kind": "led",
+    "length": 40,
+    "ref": "D8"
+   },
+   "style": "",
+   "hide_labels": true,
+   "id": "e56"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 710,
+   "y": 150,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "earth"
+   },
+   "style": "",
+   "id": "e57"
+  },
+  {
    "type": "text",
-   "x": 230,
-   "y": 300,
-   "text": "R1..R8 = 330 \\ohm,  D1..D8 red LEDs",
+   "x": 360,
+   "y": 210,
+   "text": "LED bank: R1..R8 = 330 \\ohm, D1..D8 red LEDs",
    "cls": "note",
    "anchor": "start",
-   "id": "e42"
+   "id": "e58"
   }
  ]
 }

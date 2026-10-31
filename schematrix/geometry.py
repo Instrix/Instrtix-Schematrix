@@ -143,7 +143,10 @@ def connection_points(doc):
 
 
 def junctions(doc):
+    """points that get a dot: three or more connections; net labels sitting on a wire don't count (as in KiCad)"""
     wires, pts = connection_points(doc)
+    labels = {e['id'] for e in doc['elements'] if e['type'] == 'comp' and e['sym'] == 'flag'}
+    pts = [(p, src) for p, src in pts if not (src[0] == 'pin' and src[1] in labels)]
     deg: dict = {}
     where: dict = {}
     for p, src in pts:

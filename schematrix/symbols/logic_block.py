@@ -5,7 +5,8 @@ Pins are given as short specs, the same syntax users type for a custom logic IC:
     'D'      a plain input / output              '~OE'   active low: drawn with an inversion bubble
     '>CLK'   clock: drawn with the clock wedge   'D[8]'  an 8-bit bus: one thick pin with a width slash,
                                                           or eight pins D0..D7 when buses are expanded
-Prefixes combine ('~>CLK'); an empty item leaves a gap. Pins sit on a 10-unit pitch, the body on the 5-unit grid.
+Prefixes combine ('~>CLK'); an empty item leaves a gap. Pins sit on a 20-unit pitch (room for pin names inside and
+net labels outside), the body on the 5-unit grid.
 """
 from __future__ import annotations
 
@@ -14,7 +15,7 @@ import re
 
 from .core import ci, pl, rc, text_width, tx
 
-PITCH = 10
+PITCH = 20
 LEAD = 10
 
 
@@ -94,7 +95,7 @@ def block(title, left, right, top=(), bottom=(), min_w=40):
     lw = lambda ps: max([text_width(p['label'], 'valsm') + (8 if p['clk'] else 0) for p in ps if p] + [0])
     w = max(min_w, text_width(title, 'valsm') + 14 if title else 0, lw(left) + lw(right) + 18,
             PITCH * (len(top) + 1), PITCH * (len(bottom) + 1))
-    w = math.ceil(w / PITCH) * PITCH
+    w = math.ceil(w / 10) * 10
     yt = 10 if top else 0                              # room for top / bottom pin names inside the body
     y0 = (20 if title else 10) + yt
     rows = max(len(left), len(right), 1)

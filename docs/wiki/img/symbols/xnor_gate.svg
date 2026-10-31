@@ -1,0 +1,36 @@
+<svg viewBox="-41 -21 82 42" width="82" height="42" role="img" aria-label="schematic" xmlns="http://www.w3.org/2000/svg"><style>
+.w { fill: none; stroke: #292b31; stroke-width: 1.5; stroke-linejoin: round; stroke-linecap: round; }
+.wire { stroke: #292b31; }
+.plate { stroke-width: 2.2; }
+.bus { stroke-width: 3.4; }
+.acc { stroke: #23699f; stroke-width: 2.2; }
+.para { stroke-dasharray: 5 3; }
+.rule { stroke-dasharray: 2 4; }
+.thin { stroke-width: 1; }
+.accf { fill: #23699f; }
+.dot, .arrow { fill: #292b31; }
+.jn { fill: #292b31; }
+.acc.arrow, .acc.dot { fill: #23699f; stroke: none; }
+.amp { fill: #ffffff; stroke: #292b31; stroke-width: 1.6; }
+.amp.acc { stroke: #23699f; }
+.pad { fill: #ffffff; stroke: #292b31; stroke-width: 1; }
+.term { fill: #ffffff; stroke: #292b31; stroke-width: 2.2; }
+.flag { fill: #eef0f4; stroke: #292b31; stroke-width: 1; }
+.box { fill: #eef0f4; stroke: #292b31; stroke-width: 1.6; }
+.accbox { fill: #dbe8f3; stroke: #292b31; stroke-width: 1.6; }
+.grp { fill: #eef0f4; stroke: none; }
+.frame { fill: none; stroke: #d3d6df; stroke-width: 1; }
+text { font-family: "JetBrains Mono", ui-monospace, monospace; fill: #292b31; }
+.lbl, .ref { font-size: 12px; font-weight: 500; }
+.ref { font-style: normal; }
+.val { font-size: 11.5px; fill: #545866; }
+.valsm { font-size: 10.5px; fill: #545866; }
+.node { font-size: 12px; font-weight: 500; font-style: italic; }
+.net { font-size: 11px; font-weight: 500; }
+.pin { font-size: 13px; font-weight: 600; }
+.termlbl { font-size: 12.5px; font-weight: 600; }
+.accl { font-size: 12px; font-weight: 600; fill: #23699f; font-style: normal; }
+.grplbl { font-size: 10px; font-weight: 600; letter-spacing: .08em; fill: #545866; }
+.note { font-family: "Inter", system-ui, sans-serif; font-size: 12px; fill: #545866; }
+.title { font-family: "Inter", system-ui, sans-serif; font-size: 15px; font-weight: 600; }
+</style><rect x="-41" y="-21" width="82" height="42" fill="#ffffff"/><polygon class="amp" points="-20,-15 -15.89,-14.9 -11.89,-14.58 -8,-14.06 -4.22,-13.33 -0.56,-12.4 3,-11.25 6.44,-9.9 9.78,-8.33 13,-6.56 16.11,-4.58 19.11,-2.4 22,0 19.11,2.4 16.11,4.58 13,6.56 9.78,8.33 6.44,9.9 3,11.25 -0.56,12.4 -4.22,13.33 -8,14.06 -11.89,14.58 -15.89,14.9 -20,15 -18.47,12.5 -17.22,10 -16.25,7.5 -15.56,5 -15.14,2.5 -15,0 -15.14,-2.5 -15.56,-5 -16.25,-7.5 -17.22,-10 -18.47,-12.5 -20,-15"/><polyline class="w" points="-26,15 -24.47,12.5 -23.22,10 -22.25,7.5 -21.56,5 -21.14,2.5 -21,0 -21.14,-2.5 -21.56,-5 -22.25,-7.5 -23.22,-10 -24.47,-12.5 -26,-15"/><polyline class="w" points="-35,-10 -23.22,-10"/><polyline class="w" points="-35,10 -23.22,10"/><circle class="pad" cx="26" cy="0" r="4"/><polyline class="w" points="30,0 35,0"/></svg>

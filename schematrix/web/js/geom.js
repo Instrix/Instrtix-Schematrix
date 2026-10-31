@@ -206,7 +206,9 @@ export function connectionPoints(doc, geoOf) {
 }
 
 export function junctions(doc, geoOf) {
-  const { wires, pts } = connectionPoints(doc, geoOf);
+  const { wires, pts: all } = connectionPoints(doc, geoOf);
+  const labels = new Set(doc.elements.filter((e) => e.type === 'comp' && e.sym === 'flag').map((e) => e.id));
+  const pts = all.filter(([, kind, id]) => !(kind === 'pin' && labels.has(id)));      // net labels make no dots
   const deg = new Map(), where = new Map();
   for (const [p, kind] of pts) {
     const k = key(p);

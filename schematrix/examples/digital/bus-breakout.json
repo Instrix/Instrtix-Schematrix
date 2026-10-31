@@ -19,7 +19,7 @@
    "type": "comp",
    "sym": "register",
    "x": 100,
-   "y": 60,
+   "y": 40,
    "rot": 0,
    "mirror": false,
    "props": {
@@ -36,11 +36,11 @@
    "points": [
     [
      90,
-     80
+     60
     ],
     [
      50,
-     80
+     60
     ]
    ],
    "style": "bus",
@@ -50,7 +50,7 @@
    "type": "comp",
    "sym": "flag",
    "x": 50,
-   "y": 80,
+   "y": 60,
    "rot": 0,
    "mirror": false,
    "props": {
@@ -94,11 +94,11 @@
    "points": [
     [
      210,
-     80
+     60
     ],
     [
-     470,
-     80
+     510,
+     60
     ]
    ],
    "style": "bus",
@@ -107,8 +107,8 @@
   {
    "type": "comp",
    "sym": "flag",
-   "x": 470,
-   "y": 80,
+   "x": 510,
+   "y": 60,
    "rot": 0,
    "mirror": false,
    "props": {
@@ -121,8 +121,8 @@
   {
    "type": "comp",
    "sym": "busentry",
-   "x": 260,
-   "y": 80,
+   "x": 270,
+   "y": 60,
    "rot": 0,
    "mirror": false,
    "props": {
@@ -135,12 +135,12 @@
    "type": "wire",
    "points": [
     [
-     270,
-     90
+     280,
+     70
     ],
     [
-     270,
-     130
+     280,
+     110
     ]
    ],
    "style": "",
@@ -149,8 +149,8 @@
   {
    "type": "comp",
    "sym": "flag",
-   "x": 270,
-   "y": 130,
+   "x": 280,
+   "y": 90,
    "rot": 0,
    "mirror": false,
    "props": {
@@ -163,8 +163,8 @@
   {
    "type": "comp",
    "sym": "resistor",
-   "x": 270,
-   "y": 190,
+   "x": 280,
+   "y": 130,
    "rot": 90,
    "mirror": false,
    "props": {
@@ -179,23 +179,9 @@
   },
   {
    "type": "comp",
-   "sym": "flag",
-   "x": 270,
-   "y": 170,
-   "rot": 0,
-   "mirror": false,
-   "props": {
-    "label": "Q0",
-    "side": "left"
-   },
-   "style": "",
-   "id": "e12"
-  },
-  {
-   "type": "comp",
    "sym": "diode",
-   "x": 270,
-   "y": 230,
+   "x": 280,
+   "y": 170,
    "rot": 90,
    "mirror": false,
    "props": {
@@ -205,54 +191,54 @@
    },
    "style": "",
    "hide_labels": true,
-   "id": "e13"
+   "id": "e12"
   },
   {
    "type": "comp",
    "sym": "ground",
-   "x": 270,
-   "y": 250,
+   "x": 280,
+   "y": 190,
    "rot": 0,
    "mirror": false,
    "props": {
     "kind": "earth"
    },
    "style": "",
-   "id": "e14"
+   "id": "e13"
   },
   {
    "type": "comp",
    "sym": "busentry",
-   "x": 310,
-   "y": 80,
+   "x": 330,
+   "y": 60,
    "rot": 0,
    "mirror": false,
    "props": {
     "direction": "down"
    },
    "style": "",
-   "id": "e15"
+   "id": "e14"
   },
   {
    "type": "wire",
    "points": [
     [
-     320,
-     90
+     340,
+     70
     ],
     [
-     320,
-     130
+     340,
+     110
     ]
    ],
    "style": "",
-   "id": "e16"
+   "id": "e15"
   },
   {
    "type": "comp",
    "sym": "flag",
-   "x": 320,
-   "y": 130,
+   "x": 340,
+   "y": 90,
    "rot": 0,
    "mirror": false,
    "props": {
@@ -260,13 +246,13 @@
     "side": "right"
    },
    "style": "",
-   "id": "e17"
+   "id": "e16"
   },
   {
    "type": "comp",
    "sym": "resistor",
-   "x": 320,
-   "y": 190,
+   "x": 340,
+   "y": 130,
    "rot": 90,
    "mirror": false,
    "props": {
@@ -277,27 +263,13 @@
    },
    "style": "",
    "hide_labels": true,
-   "id": "e18"
-  },
-  {
-   "type": "comp",
-   "sym": "flag",
-   "x": 320,
-   "y": 170,
-   "rot": 0,
-   "mirror": false,
-   "props": {
-    "label": "Q1",
-    "side": "left"
-   },
-   "style": "",
-   "id": "e19"
+   "id": "e17"
   },
   {
    "type": "comp",
    "sym": "diode",
-   "x": 320,
-   "y": 230,
+   "x": 340,
+   "y": 170,
    "rot": 90,
    "mirror": false,
    "props": {
@@ -307,54 +279,54 @@
    },
    "style": "",
    "hide_labels": true,
-   "id": "e20"
+   "id": "e18"
   },
   {
    "type": "comp",
    "sym": "ground",
-   "x": 320,
-   "y": 250,
+   "x": 340,
+   "y": 190,
    "rot": 0,
    "mirror": false,
    "props": {
     "kind": "earth"
    },
    "style": "",
-   "id": "e21"
+   "id": "e19"
   },
   {
    "type": "comp",
    "sym": "busentry",
-   "x": 360,
-   "y": 80,
+   "x": 390,
+   "y": 60,
    "rot": 0,
    "mirror": false,
    "props": {
     "direction": "down"
    },
    "style": "",
-   "id": "e22"
+   "id": "e20"
   },
   {
    "type": "wire",
    "points": [
     [
-     370,
-     90
+     400,
+     70
     ],
     [
-     370,
-     130
+     400,
+     110
     ]
    ],
    "style": "",
-   "id": "e23"
+   "id": "e21"
   },
   {
    "type": "comp",
    "sym": "flag",
-   "x": 370,
-   "y": 130,
+   "x": 400,
+   "y": 90,
    "rot": 0,
    "mirror": false,
    "props": {
@@ -362,13 +334,13 @@
     "side": "right"
    },
    "style": "",
-   "id": "e24"
+   "id": "e22"
   },
   {
    "type": "comp",
    "sym": "resistor",
-   "x": 370,
-   "y": 190,
+   "x": 400,
+   "y": 130,
    "rot": 90,
    "mirror": false,
    "props": {
@@ -379,27 +351,13 @@
    },
    "style": "",
    "hide_labels": true,
-   "id": "e25"
-  },
-  {
-   "type": "comp",
-   "sym": "flag",
-   "x": 370,
-   "y": 170,
-   "rot": 0,
-   "mirror": false,
-   "props": {
-    "label": "Q2",
-    "side": "left"
-   },
-   "style": "",
-   "id": "e26"
+   "id": "e23"
   },
   {
    "type": "comp",
    "sym": "diode",
-   "x": 370,
-   "y": 230,
+   "x": 400,
+   "y": 170,
    "rot": 90,
    "mirror": false,
    "props": {
@@ -409,54 +367,54 @@
    },
    "style": "",
    "hide_labels": true,
-   "id": "e27"
+   "id": "e24"
   },
   {
    "type": "comp",
    "sym": "ground",
-   "x": 370,
-   "y": 250,
+   "x": 400,
+   "y": 190,
    "rot": 0,
    "mirror": false,
    "props": {
     "kind": "earth"
    },
    "style": "",
-   "id": "e28"
+   "id": "e25"
   },
   {
    "type": "comp",
    "sym": "busentry",
-   "x": 410,
-   "y": 80,
+   "x": 450,
+   "y": 60,
    "rot": 0,
    "mirror": false,
    "props": {
     "direction": "down"
    },
    "style": "",
-   "id": "e29"
+   "id": "e26"
   },
   {
    "type": "wire",
    "points": [
     [
-     420,
-     90
+     460,
+     70
     ],
     [
-     420,
-     130
+     460,
+     110
     ]
    ],
    "style": "",
-   "id": "e30"
+   "id": "e27"
   },
   {
    "type": "comp",
    "sym": "flag",
-   "x": 420,
-   "y": 130,
+   "x": 460,
+   "y": 90,
    "rot": 0,
    "mirror": false,
    "props": {
@@ -464,13 +422,13 @@
     "side": "right"
    },
    "style": "",
-   "id": "e31"
+   "id": "e28"
   },
   {
    "type": "comp",
    "sym": "resistor",
-   "x": 420,
-   "y": 190,
+   "x": 460,
+   "y": 130,
    "rot": 90,
    "mirror": false,
    "props": {
@@ -481,27 +439,13 @@
    },
    "style": "",
    "hide_labels": true,
-   "id": "e32"
-  },
-  {
-   "type": "comp",
-   "sym": "flag",
-   "x": 420,
-   "y": 170,
-   "rot": 0,
-   "mirror": false,
-   "props": {
-    "label": "Q3",
-    "side": "left"
-   },
-   "style": "",
-   "id": "e33"
+   "id": "e29"
   },
   {
    "type": "comp",
    "sym": "diode",
-   "x": 420,
-   "y": 230,
+   "x": 460,
+   "y": 170,
    "rot": 90,
    "mirror": false,
    "props": {
@@ -511,29 +455,29 @@
    },
    "style": "",
    "hide_labels": true,
-   "id": "e34"
+   "id": "e30"
   },
   {
    "type": "comp",
    "sym": "ground",
-   "x": 420,
-   "y": 250,
+   "x": 460,
+   "y": 190,
    "rot": 0,
    "mirror": false,
    "props": {
     "kind": "earth"
    },
    "style": "",
-   "id": "e35"
+   "id": "e31"
   },
   {
    "type": "text",
    "x": 40,
-   "y": 300,
-   "text": "Q[7:0] names the bus; a wire labelled Q3 (net label on the bus-entry tap) is bit 3 of it",
+   "y": 250,
+   "text": "A label like Q[7:0] names a bus; a wire labelled Q3 is bit 3 of it. R1..R4 = 330 \\ohm.",
    "cls": "note",
    "anchor": "start",
-   "id": "e36"
+   "id": "e32"
   }
  ]
 }

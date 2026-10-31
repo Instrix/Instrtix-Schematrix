@@ -4,7 +4,10 @@ An electrical schematic editor in the Instrix house style (the look of the TR-00
 scripting library behind it. The same core renders, netlists and serves the GUI, so a schematic drawn by hand and
 one built by a script are the same kind of document.
 
-![Editor](docs/editor.png)
+![Editor](docs/wiki/img/editor.png)
+
+**Documentation: the [Schematrix wiki](docs/wiki/Home.md)** — every feature, how to draw, export, use the figures in
+LaTeX, simulate, script and deploy.
 
 - **GUI**: browser-based editor — symbol palette, wires that snap to pins and follow parts when moved, KiCad-style
   wire dragging (grab an end to stretch it, a segment to slide it), junction dots and optional wire hops, net labels,
@@ -30,6 +33,26 @@ one built by a script are the same kind of document.
 - **Legacy import**: figure scripts written against the old hand-rolled `S` class (like `schematics.py`) run
   unchanged and come out as editable documents, pixel-identical to the originals.
 - **Runs** as a Docker web app, or natively on Windows and Linux (own window via pywebview).
+
+## Gallery
+
+The same sheet in each built-in theme (`scripts/build_docs_images.py`):
+
+| `instrix` (default) | `instrix-dark` |
+|---|---|
+| ![instrix](docs/wiki/img/themes/instrix.png) | ![instrix-dark](docs/wiki/img/themes/instrix-dark.png) |
+| **`formal`** (Times, for LaTeX papers) | **`technical`** (datasheet look) |
+| ![formal](docs/wiki/img/themes/formal.png) | ![technical](docs/wiki/img/themes/technical.png) |
+| **`blueprint`** | **`print-mono`** |
+| ![blueprint](docs/wiki/img/themes/blueprint.png) | ![print-mono](docs/wiki/img/themes/print-mono.png) |
+| **`kicad`** | **TikZ export compiled with pdfLaTeX** |
+| ![kicad](docs/wiki/img/themes/kicad.png) | ![TikZ in LaTeX](docs/wiki/img/latex-tikz.png) |
+
+| Export dialog | Symbol editor | Text markup |
+|---|---|---|
+| ![Export](docs/wiki/img/export-dialog.png) | ![Symbol editor](docs/wiki/img/symbol-editor.png) | ![Markup](docs/wiki/img/markup.png) |
+
+The full symbol set, one picture per part and variant: [Symbol library](docs/wiki/Symbol-Library.md).
 
 ## Install
 

@@ -33,7 +33,7 @@ def vsrc(p):
     if k == 'dc':
         prims += [tx(-7.5, 0, '+', 'pin', ctr=True), tx(7.5, 0, '−', 'pin', ctr=True)]
     else:
-        prims.append(tx(-11 if k == 'ac' else -22, -10 if k == 'ac' else -12, '+', 'valsm', ctr=True))
+        prims.append(tx(-22, -12, '+', 'valsm', ctr=True))     # outside the circle, above the + lead
     return G(prims, {'p': (-h, 0), 'n': (h, 0)}, above(-24))
 
 
@@ -128,7 +128,7 @@ def battery(p):
 def solar(p):
     h = half(p, 40)
     prims = [*leads(h, 3), pl([(-3, -13), (-3, 13)], 'w plate'), pl([(3, -6), (3, 6)], 'w plate'),
-             tx(-10, -12, '+', 'valsm', ctr=True), ci(0, 0, 17, 'w thin'), *light(8, -22, inward=True, ang=-60)]
+             tx(-24, -12, '+', 'valsm', ctr=True), ci(0, 0, 17, 'w thin'), *light(8, -22, inward=True, ang=-60)]
     return G(prims, {'p': (-h, 0), 'n': (h, 0)}, below(24))
 
 

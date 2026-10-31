@@ -1,0 +1,36 @@
+<svg viewBox="75 -32 799 256" width="799" height="256" role="img" aria-label="instrix" xmlns="http://www.w3.org/2000/svg"><style>
+.w { fill: none; stroke: #292b31; stroke-width: 1.5; stroke-linejoin: round; stroke-linecap: round; }
+.wire { stroke: #292b31; }
+.plate { stroke-width: 2.2; }
+.bus { stroke-width: 3.4; }
+.acc { stroke: #23699f; stroke-width: 2.2; }
+.para { stroke-dasharray: 5 3; }
+.rule { stroke-dasharray: 2 4; }
+.thin { stroke-width: 1; }
+.accf { fill: #23699f; }
+.dot, .arrow { fill: #292b31; }
+.jn { fill: #292b31; }
+.acc.arrow, .acc.dot { fill: #23699f; stroke: none; }
+.amp { fill: #ffffff; stroke: #292b31; stroke-width: 1.6; }
+.amp.acc { stroke: #23699f; }
+.pad { fill: #ffffff; stroke: #292b31; stroke-width: 1; }
+.term { fill: #ffffff; stroke: #292b31; stroke-width: 2.2; }
+.flag { fill: #eef0f4; stroke: #292b31; stroke-width: 1; }
+.box { fill: #eef0f4; stroke: #292b31; stroke-width: 1.6; }
+.accbox { fill: #dbe8f3; stroke: #292b31; stroke-width: 1.6; }
+.grp { fill: #eef0f4; stroke: none; }
+.frame { fill: none; stroke: #d3d6df; stroke-width: 1; }
+text { font-family: "JetBrains Mono", ui-monospace, monospace; fill: #292b31; }
+.lbl, .ref { font-size: 12px; font-weight: 500; }
+.ref { font-style: normal; }
+.val { font-size: 11.5px; fill: #545866; }
+.valsm { font-size: 10.5px; fill: #545866; }
+.node { font-size: 12px; font-weight: 500; font-style: italic; }
+.net { font-size: 11px; font-weight: 500; }
+.pin { font-size: 13px; font-weight: 600; }
+.termlbl { font-size: 12.5px; font-weight: 600; }
+.accl { font-size: 12px; font-weight: 600; fill: #23699f; font-style: normal; }
+.grplbl { font-size: 10px; font-weight: 600; letter-spacing: .08em; fill: #545866; }
+.note { font-family: "Inter", system-ui, sans-serif; font-size: 12px; fill: #545866; }
+.title { font-family: "Inter", system-ui, sans-serif; font-size: 15px; font-weight: 600; }
+</style><rect x="75" y="-32" width="799" height="256" fill="#ffffff"/><polygon class="amp" points="270,78 270,142 332,110"/><text class="pin" x="278" y="99" text-anchor="middle">−</text><text class="pin" x="278" y="129" text-anchor="middle">+</text><polyline class="w" points="270,95 264,95"/><polyline class="w" points="270,125 264,125"/><polyline class="w" points="332,110 336,110"/><text class="ref" x="300" y="60" text-anchor="middle">U1</text><text class="valsm" x="300" y="74" text-anchor="middle">OPA210</text><polyline class="w" points="170,95 182,95 185,89 191,101 197,89 203,101 209,89 215,101 218,95 230,95"/><text class="ref" x="200" y="55" text-anchor="middle">R1</text><text class="val" x="200" y="69" text-anchor="middle">10 kΩ</text><text class="valsm" x="200" y="83" text-anchor="middle">±1 %</text><polyline class="w wire" points="230,95 264,95"/><polyline class="w wire" points="250,95 250,30 270,30"/><polyline class="w" points="270,30 282,30 285,24 291,36 297,24 303,36 309,24 315,36 318,30 330,30"/><text class="ref" x="300" y="4" text-anchor="middle">R2</text><text class="val" x="300" y="18" text-anchor="middle">100 kΩ</text><polyline class="w wire" points="330,30 360,30 360,110"/><polyline class="w wire" points="264,125 250,125 250,145"/><polyline class="w" points="250,145 250,153"/><polyline class="w" points="240,153 260,153"/><polyline class="w" points="244,157 256,157"/><polyline class="w" points="248,161 252,161"/><polyline class="w wire" points="170,95 130,95"/><polygon class="flag" points="130,95 122,86 95,86 95,104 122,104"/><text class="net" x="108.72" y="99" text-anchor="middle">V<tspan dy="3.52" style="font-size:7.92px">IN</tspan></text><polyline class="w wire" points="336,110 400,110"/><polygon class="flag" points="400,110 408,101 440,101 440,119 408,119"/><text class="net" x="423.88" y="114" text-anchor="middle">V<tspan dy="3.52" style="font-size:7.92px">OUT</tspan></text><polyline class="w" points="160,95 160,111"/><polyline class="w" points="160,119 160,135"/><polyline class="w plate" points="171,111 149,111"/><polyline class="w plate" points="171,119 149,119"/><text class="ref" x="176" y="112" text-anchor="start">C1</text><text class="val" x="176" y="126" text-anchor="start">1 nF</text><polyline class="w" points="160,135 160,143"/><polyline class="w" points="150,143 170,143"/><polyline class="w" points="154,147 166,147"/><polyline class="w" points="158,151 162,151"/><rect class="box" x="730" y="55" width="60" height="50" rx="2"/><polyline class="w" points="720,70 730,70"/><text class="valsm" x="734" y="73.67" text-anchor="start">D</text><polyline class="w" points="720,90 730,90"/><polyline class="w thin" points="730,85 736,90 730,95"/><text class="valsm" x="739" y="93.67" text-anchor="start">C</text><polyline class="w" points="790,70 800,70"/><text class="valsm" x="786" y="73.67" text-anchor="end">Q</text><polyline class="w" points="790,90 800,90"/><text class="valsm" x="786" y="93.67" text-anchor="end">Q</text><polyline class="w thin" points="779.7,83 786,83"/><text class="ref" x="760" y="49" text-anchor="middle">U3</text><polygon class="amp" points="637,55 662,55 662,55 664.93,55.29 667.74,56.14 670.33,57.53 672.61,59.39 674.47,61.67 675.86,64.26 676.71,67.07 677,70 676.71,72.93 675.86,75.74 674.47,78.33 672.61,80.61 670.33,82.47 667.74,83.86 664.93,84.71 662,85 662,85 637,85"/><polyline class="w" points="622,60 637,60"/><polyline class="w" points="622,80 637,80"/><circle class="pad" cx="681" cy="70" r="4"/><polyline class="w" points="685,70 690,70"/><text class="ref" x="657" y="49" text-anchor="middle">U2</text><polyline class="w wire" points="690,70 720,70"/><polyline class="w wire" points="622,60 592,60"/><polygon class="flag" points="592,60 584,51 534,51 534,69 584,69"/><text class="net" x="559" y="64" text-anchor="middle"><tspan style="text-decoration:overline">EN</tspan></text><polyline class="w wire" points="622,80 592,80"/><polygon class="flag" points="592,80 584,71 534,71 534,89 584,89"/><text class="net" x="559" y="84" text-anchor="middle">DATA</text><polyline class="w wire" points="720,90 705,90 705,130 592,130"/><polygon class="flag" points="592,130 584,121 534,121 534,139 584,139"/><text class="net" x="559" y="134" text-anchor="middle">CLK</text><polyline class="w wire" points="800,70 830,70"/><polygon class="flag" points="830,70 838,61 854,61 854,79 838,79"/><text class="net" x="846.1" y="74" text-anchor="middle">Q</text><polyline class="w wire" points="800,90 830,90"/><polygon class="flag" points="830,90 838,81 854,81 854,99 838,99"/><text class="net" x="846.1" y="94" text-anchor="middle"><tspan style="text-decoration:overline">Q</tspan></text><text class="title" x="130" y="0" text-anchor="start">instrix</text><text class="note" x="130" y="200" text-anchor="start">A<tspan dy="3.84" style="font-size:8.64px">v</tspan><tspan dy="-3.84"> = −R2 / R1 = −10,   f</tspan><tspan dy="3.84" style="font-size:8.64px">c</tspan><tspan dy="-3.84"> ≈ 16 kHz</tspan></text><circle class="dot jn" cx="160" cy="95" r="3"/><circle class="dot jn" cx="250" cy="95" r="3"/><circle class="dot jn" cx="360" cy="110" r="3"/></svg>

@@ -1,0 +1,36 @@
+<svg viewBox="-16 -6 92 212" width="92" height="212" role="img" aria-label="schematic" xmlns="http://www.w3.org/2000/svg"><style>
+.w { fill: none; stroke: #292b31; stroke-width: 1.5; stroke-linejoin: round; stroke-linecap: round; }
+.wire { stroke: #292b31; }
+.plate { stroke-width: 2.2; }
+.bus { stroke-width: 3.4; }
+.acc { stroke: #23699f; stroke-width: 2.2; }
+.para { stroke-dasharray: 5 3; }
+.rule { stroke-dasharray: 2 4; }
+.thin { stroke-width: 1; }
+.accf { fill: #23699f; }
+.dot, .arrow { fill: #292b31; }
+.jn { fill: #292b31; }
+.acc.arrow, .acc.dot { fill: #23699f; stroke: none; }
+.amp { fill: #ffffff; stroke: #292b31; stroke-width: 1.6; }
+.amp.acc { stroke: #23699f; }
+.pad { fill: #ffffff; stroke: #292b31; stroke-width: 1; }
+.term { fill: #ffffff; stroke: #292b31; stroke-width: 2.2; }
+.flag { fill: #eef0f4; stroke: #292b31; stroke-width: 1; }
+.box { fill: #eef0f4; stroke: #292b31; stroke-width: 1.6; }
+.accbox { fill: #dbe8f3; stroke: #292b31; stroke-width: 1.6; }
+.grp { fill: #eef0f4; stroke: none; }
+.frame { fill: none; stroke: #d3d6df; stroke-width: 1; }
+text { font-family: "JetBrains Mono", ui-monospace, monospace; fill: #292b31; }
+.lbl, .ref { font-size: 12px; font-weight: 500; }
+.ref { font-style: normal; }
+.val { font-size: 11.5px; fill: #545866; }
+.valsm { font-size: 10.5px; fill: #545866; }
+.node { font-size: 12px; font-weight: 500; font-style: italic; }
+.net { font-size: 11px; font-weight: 500; }
+.pin { font-size: 13px; font-weight: 600; }
+.termlbl { font-size: 12.5px; font-weight: 600; }
+.accl { font-size: 12px; font-weight: 600; fill: #23699f; font-style: normal; }
+.grplbl { font-size: 10px; font-weight: 600; letter-spacing: .08em; fill: #545866; }
+.note { font-family: "Inter", system-ui, sans-serif; font-size: 12px; fill: #545866; }
+.title { font-family: "Inter", system-ui, sans-serif; font-size: 15px; font-weight: 600; }
+</style><rect x="-16" y="-6" width="92" height="212" fill="#ffffff"/><rect class="box" x="0" y="0" width="60" height="200" rx="2"/><text class="valsm" x="30" y="13" text-anchor="middle">SRG4</text><polyline class="w" points="0,20 -10,20"/><text class="valsm" x="4" y="23.67" text-anchor="start">D0</text><polyline class="w" points="0,40 -10,40"/><text class="valsm" x="4" y="43.67" text-anchor="start">D1</text><polyline class="w" points="0,60 -10,60"/><text class="valsm" x="4" y="63.67" text-anchor="start">D2</text><polyline class="w" points="0,80 -10,80"/><text class="valsm" x="4" y="83.67" text-anchor="start">D3</text><polyline class="w" points="0,120 -10,120"/><text class="valsm" x="4" y="123.67" text-anchor="start">SER</text><circle class="pad" cx="-3" cy="140" r="3"/><polyline class="w" points="-6,140 -10,140"/><text class="valsm" x="4" y="143.67" text-anchor="start">LD</text><polyline class="w" points="0,160 -10,160"/><polyline class="w thin" points="0,156 6,160 0,164"/><text class="valsm" x="10" y="163.67" text-anchor="start">CLK</text><circle class="pad" cx="-3" cy="180" r="3"/><polyline class="w" points="-6,180 -10,180"/><text class="valsm" x="4" y="183.67" text-anchor="start">CLR</text><polyline class="w" points="60,20 70,20"/><text class="valsm" x="56" y="23.67" text-anchor="end">Q0</text><polyline class="w" points="60,40 70,40"/><text class="valsm" x="56" y="43.67" text-anchor="end">Q1</text><polyline class="w" points="60,60 70,60"/><text class="valsm" x="56" y="63.67" text-anchor="end">Q2</text><polyline class="w" points="60,80 70,80"/><text class="valsm" x="56" y="83.67" text-anchor="end">Q3</text><polyline class="w" points="60,120 70,120"/><text class="valsm" x="56" y="123.67" text-anchor="end">QS</text></svg>

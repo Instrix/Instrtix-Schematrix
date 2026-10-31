@@ -1,6 +1,7 @@
 """Net symbols and annotation: grounds, supply rails, ports, net labels, junctions, no-connect marks, test points."""
 from __future__ import annotations
 
+from ..markup import width_chars
 from .core import ENUM, G, Prop, above, ci, pg, pl, right, symbol, tx
 
 
@@ -40,10 +41,12 @@ def terminal(p):
 
 
 @symbol('flag', 'Net label', 'Nets', '', None,
-        {'label': Prop('NET', 'str', True, label='Net name'), 'side': Prop('left', 'enum', True, ['left', 'right'], 'Side')},
+        {'label': Prop('NET', 'str', True, label='Net name'), 'side': Prop('left', 'enum', True, ['left', 'right'], 'Side'),
+         'min_width': Prop(0, 'num', True, label='Minimum width', help='give several labels the same width, e.g. 60')},
         lines=(), net_prop='label')
 def flag(p):
-    label = str(p['label']); w = 9 + 7.2 * len(label)
+    label = str(p['label'])
+    w = max(9 + 7.2 * width_chars(label), float(p.get('min_width') or 0))     # visible text, not the markup
     s = -1 if p['side'] == 'left' else 1
     pts = [(0, 0), (s * 8, -9), (s * (8 + w), -9), (s * (8 + w), 9), (s * 8, 9)]
     return G([pg([(round(a), round(b)) for a, b in pts], 'flag'), tx(s * (8 + w / 2), 0, label, 'net', ctr=True)],
