@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import math
 
-from .core import ENUM, LEN, G, Prop, above, arrow, below, ci, half, leads, light, pg, pl, right, symbol, two_pins, tx
+from .core import ENUM, FLAG, LEN, G, Prop, above, arrow, below, ci, half, leads, light, pg, pl, right, symbol, two_pins, tx
 
 
 def _circ_src(p):
@@ -14,12 +14,17 @@ def _circ_src(p):
 V_KINDS = ['dc', 'ac', 'pulse', 'square', 'triangle', 'noise']
 
 
-@symbol('vsrc', 'Voltage source', 'Sources', 'V', 'V {p} {n} {src}', {'length': LEN(100), 'kind': ENUM('dc', V_KINDS, 'Kind')},
+@symbol('vsrc', 'Voltage source', 'Sources', 'V', 'V {p} {n} {src}', {'length': LEN(100), 'kind': ENUM('dc', V_KINDS, 'Kind'),
+         'text': Prop('', 'str', True, label='Text inside', help='e.g. e_{n}: drawn in the circle instead of the symbol'),
+         'signs': FLAG(True, 'Polarity signs')},
         fields=('Amplitude', 'Frequency', 'Offset', 'Output impedance'),
         aliases=('VSOURCE', 'VDC', 'VAC', 'VSIN', 'VPULSE', 'V', 'Voltage_Source'))
 def vsrc(p):
     prims, h = _circ_src(p)
     k = p['kind']
+    if p.get('text'):                                   # a label in the circle replaces the waveform (and the signs)
+        prims.append(tx(0, 0, str(p['text']), 'lbl', ctr=True, fit=26))
+        return G(prims, {'p': (-h, 0), 'n': (h, 0)}, above(-24))
     if k == 'ac':
         prims.append(pl([(5 * math.sin(2 * math.pi * i / 20), -9 + 18 * i / 20) for i in range(21)]))
     elif k == 'pulse':
@@ -30,18 +35,23 @@ def vsrc(p):
         prims.append(pl([(-9, 3), (-4.5, -4), (0, 3), (4.5, -4), (9, 3)]))
     elif k == 'noise':
         prims.append(pl([(-9, 0), (-7, -5), (-5, 3), (-3, -6), (-1, 4), (1, -3), (3, 6), (5, -4), (7, 2), (9, 0)], 'w thin'))
-    if k == 'dc':
+    if p.get('signs') is False:
+        pass
+    elif k == 'dc':
         prims += [tx(-7.5, 0, '+', 'pin', ctr=True), tx(7.5, 0, '−', 'pin', ctr=True)]
     else:
         prims.append(tx(-22, -12, '+', 'valsm', ctr=True))     # outside the circle, above the + lead
     return G(prims, {'p': (-h, 0), 'n': (h, 0)}, above(-24))
 
 
-@symbol('isrc', 'Current source', 'Sources', 'I', 'I {p} {n} {src}', {'length': LEN(100)},
+@symbol('isrc', 'Current source', 'Sources', 'I', 'I {p} {n} {src}', {'length': LEN(100), 'text': Prop('', 'str', True, label='Text inside', help='e.g. e_{n}: drawn in the circle instead of the symbol')},
         fields=('Compliance voltage',), aliases=('ISOURCE', 'IDC', 'I', 'Current_Source'))
 def isrc(p):
     prims, h = _circ_src(p)
-    prims += [pl([(-9, 0), (8, 0)]), pg([(3, -4), (3, 4), (10, 0)], 'arrow')]
+    if p.get('text'):
+        prims.append(tx(0, 0, str(p['text']), 'lbl', ctr=True, fit=26))
+    else:
+        prims += [pl([(-9, 0), (8, 0)]), pg([(3, -4), (3, 4), (10, 0)], 'arrow')]
     return G(prims, {'p': (-h, 0), 'n': (h, 0)}, above(-24))
 
 

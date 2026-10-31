@@ -63,12 +63,17 @@ def microphone(p):
     return G(prims, {'1': (0, -20), '2': (0, 20)}, {'x': 18, 'y': 0, 'nx': 1, 'ny': 0})
 
 
-@symbol('load', 'Electronic load', 'Loads & meters', 'RL', None, {'length': LEN(60), 'label': Prop('LOAD', label='Label')},
+@symbol('load', 'Electronic load', 'Loads & meters', 'RL', None,
+        {'length': LEN(60), 'label': Prop('LOAD', label='Label'),
+         'w': Prop(40, 'num', True, label='Body length', help='along the leads'),
+         'h': Prop(20, 'num', True, label='Body width', help='across the leads'),
+         'fill': ENUM('box', ['box', 'pad'], 'Fill', help='box = shaded, pad = white')},
         fields=('Mode', 'Setpoint', 'Power'), help='a generic load or DUT drawn as a box')
 def load(p):
-    h = half(p)
-    return G([*leads(h, 20), rc(-20, -10, 40, 20, 'box', 2), tx(0, 0, str(p['label']), 'valsm', ctr=True, fit=36)],
-             two_pins(h), above(-16))
+    w, bh = max(4.0, float(p.get('w') or 40)), max(4.0, float(p.get('h') or 20))
+    h = max(half(p), w / 2)
+    return G([*leads(h, w / 2), rc(-w / 2, -bh / 2, w, bh, p.get('fill') or 'box', 2),
+              tx(0, 0, str(p['label']), 'valsm', ctr=True, fit=w - 4)], two_pins(h), above(-bh / 2 - 6))
 
 
 METERS = ['V', 'A', 'Ω', 'W', 'Hz', 'mV', 'mA', 'µA', 'G', 'T']

@@ -190,6 +190,11 @@ def create_app() -> FastAPI:
     def health():
         return {'ok': True}
 
+    @app.post('/api/theme-css')
+    def theme_css(body: dict = Body(...)):
+        """drawing CSS for a document's own theme (a dict of token overrides)"""
+        return {'css': TH.css(body.get('theme'))}
+
     @app.get('/api/info')
     def info():
         return {'version': __version__, 'pdf': pdf_available(), 'scripts': scripts_on(), 'public': public,

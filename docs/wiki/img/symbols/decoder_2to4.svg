@@ -20,7 +20,7 @@
 .accbox { fill: #dbe8f3; stroke: #292b31; stroke-width: 1.6; }
 .grp { fill: #eef0f4; stroke: none; }
 .frame { fill: none; stroke: #d3d6df; stroke-width: 1; }
-text { font-family: "JetBrains Mono", ui-monospace, monospace; fill: #292b31; }
+text { font-family: "JetBrains Mono", "Inter", ui-monospace, monospace; fill: #292b31; }
 .lbl, .ref { font-size: 12px; font-weight: 500; }
 .ref { font-style: normal; }
 .val { font-size: 11.5px; fill: #545866; }

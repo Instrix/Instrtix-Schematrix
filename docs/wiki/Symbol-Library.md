@@ -782,6 +782,7 @@ Every part also has **Reference**, **Value** and **Part number**, and can carry 
 | Setting | Type | Default | |
 |---|---|---|---|
 | `length` (Length) | num | `100` | *shape* pin-to-pin distance |
+| `text` (Text inside) | str | `` | *shape* e.g. e_{n}: drawn in the circle instead of the symbol |
 
 ### Current-controlled I source (F)
 
@@ -843,6 +844,8 @@ Every part also has **Reference**, **Value** and **Part number**, and can carry 
 |---|---|---|---|
 | `length` (Length) | num | `100` | *shape* pin-to-pin distance |
 | `kind` (Kind) | enum: dc, ac, pulse, square, triangle, noise | `dc` | *shape*  |
+| `text` (Text inside) | str | `` | *shape* e.g. e_{n}: drawn in the circle instead of the symbol |
+| `signs` (Polarity signs) | bool | `True` | *shape*  |
 
 ### Voltage-controlled I source (G)
 
@@ -893,6 +896,9 @@ Every part also has **Reference**, **Value** and **Part number**, and can carry 
 |---|---|---|---|
 | `length` (Length) | num | `60` | *shape* pin-to-pin distance |
 | `label` (Label) | str | `LOAD` |   |
+| `w` (Body length) | num | `40` | *shape* along the leads |
+| `h` (Body width) | num | `20` | *shape* across the leads |
+| `fill` (Fill) | enum: box, pad | `box` | *shape* box = shaded, pad = white |
 
 ### Heater
 
@@ -1204,6 +1210,9 @@ Every part also has **Reference**, **Value** and **Part number**, and can carry 
 |---|---|---|---|
 | `length` (Length) | num | `60` | *shape* pin-to-pin distance |
 | `label` (Text inside) | str | `Z` | *shape*  |
+| `w` (Body length) | num | `32` | *shape* along the leads |
+| `h` (Body width) | num | `16` | *shape* across the leads |
+| `fill` (Fill) | enum: box, pad | `box` | *shape* box = shaded, pad = white |
 
 ### Norton equivalent
 

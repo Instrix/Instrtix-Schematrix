@@ -8,6 +8,10 @@ JSON.
 Schematrix is free and open source under the GNU GPL v3 or later, and free forever: no payments, no subscriptions,
 no locked features.
 
+It was built with the help of AI (Anthropic's Claude) to fill a specific gap: no existing tool drew schematics the way
+the Instrix documentation needs them. It is tested, but review your figures and netlists before you publish or build
+from them.
+
 ![The editor](img/editor.png)
 
 ## Start here

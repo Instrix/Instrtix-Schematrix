@@ -64,6 +64,12 @@ def text_svg(x, y, s, cls='lbl', anchor='middle'):
     return f'<text class="{cls}" x="{num(x)}" y="{num(y)}" text-anchor="{anchor}">{inner}</text>'
 
 
+def arrow_size(e):
+    """an arrow element's head: [length, half-width], default 9 x 4"""
+    h = e.get('head') or (9, 4)
+    return float(h[0]), float(h[1])
+
+
 def arrow_head(a, b, cls='arrow', L=9, W=4):
     dx, dy = b[0] - a[0], b[1] - a[1]
     n = math.hypot(dx, dy) or 1
@@ -95,12 +101,14 @@ def element_svg(e, hop=None):
         st = e.get('style', '')
         cls = style_cls('w', st)
         head_cls = 'accf' if 'acc' in st.split() else 'arrow'
+        L, W = arrow_size(e)
         a, b = P[-2], P[-1]
         n = math.hypot(b[0] - a[0], b[1] - a[1]) or 1
-        tip = (b[0] - (b[0] - a[0]) / n * 6, b[1] - (b[1] - a[1]) / n * 6)
+        cut = L * 2 / 3                                  # the line stops inside the head, not at its tip
+        tip = (b[0] - (b[0] - a[0]) / n * cut, b[1] - (b[1] - a[1]) / n * cut)
         pts = P[:-1] + [tip]
         return (f'<polyline class="{cls}" points="{" ".join(f"{num(x)},{num(y)}" for x, y in pts)}"/>'
-                + arrow_head(a, b, head_cls))
+                + arrow_head(a, b, head_cls, L, W))
     if t == 'text':
         cls = e.get('cls', 'lbl'); lh = 16 if cls in ('note', 'title') else 14
         lines = str(e.get('text', '')).split('\n')

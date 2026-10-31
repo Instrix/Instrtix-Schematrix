@@ -2,7 +2,7 @@
 import * as G from './geom.js';
 import { D, geoOf, pinsOf, S, selected, T, undo } from './state.js';
 import { draftPath, elbow } from './tools.js';
-import { $, svg } from './util.js';
+import { $, api, svg } from './util.js';
 
 // ---------------------------------------------------------------- view
 export function applyView() {
@@ -70,12 +70,20 @@ export const union = (bs) => [Math.min(...bs.map((b) => b[0])), Math.min(...bs.m
 // ---------------------------------------------------------------- rendering
 export let themeCss = '';
 export const scopeCss = (css, scope) => css.replace(/(^|\})\s*([^{}]+)\{/g, (m, a, sel) => `${a}\n${sel.split(',').map((x) => scope + ' ' + x.trim()).join(', ')} {`);
+const ownCss = new Map();        // a document's own theme (token overrides) -> CSS from the server
 export function setThemeCss() {
   const th = D().theme;
   const name = typeof th === 'string' ? th : th?.base || 'instrix';
   const tok = { ...S.info.themes?.instrix, ...(S.info.themes?.[name] || {}), ...(typeof th === 'object' ? th : {}) };
   let css = S.info.css?.[name] || S.info.css?.instrix || '';
-  if (typeof th === 'object') for (const [k, v] of Object.entries(th)) if (String(S.info.themes?.instrix?.[k] || '').startsWith('#')) css = css.split(S.info.themes.instrix[k]).join(v);
+  if (typeof th === 'object' && th) {
+    const key = JSON.stringify(th);
+    if (ownCss.has(key)) css = ownCss.get(key);
+    else {                        // meanwhile: the base theme with its colours swapped
+      for (const [k, v] of Object.entries(th)) if (String(S.info.themes?.instrix?.[k] || '').startsWith('#')) css = css.split(S.info.themes.instrix[k]).join(v);
+      api.post('/api/theme-css', { theme: th }).then((r) => { ownCss.set(key, r.css); if (JSON.stringify(D().theme) === key) setThemeCss(); }).catch(() => {});
+    }
+  }
   css = scopeCss(css, '.sch');
   themeCss = css;
   let st = $('#themecss');

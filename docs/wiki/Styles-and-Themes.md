@@ -71,6 +71,10 @@ s = Schematic('custom', theme={'base': 'formal', 'accent': '#b00020', 'lw': '1.2
 | `box` | block fill | `join` | `round` or `miter` line joins |
 | `body` | op-amp / source / gate body fill | `mono` | main font stack (CSS) |
 | `paper` | background | `sans` | notes and titles font stack |
-| `rule` | frames | | |
+| `rule` | frames | `lw_flag` | net-label outline (defaults to `lw_thin`) |
+| | | `lw_pad` | open terminals, pads, white boxes (`lw_thin`) |
+| | | `lw_term` | bold terminals (`lw_plate`) |
 
-The editor recolours custom colour tokens live; other tokens apply in exports.
+The editor shows every token of a custom theme, colours and line widths alike. Values are plain CSS values; braces,
+semicolons and angle brackets are removed. The original Instrix documentation figures used
+`{'lw_flag': '1.2', 'lw_pad': '1.4', 'lw_term': '1.8'}` (the legacy importer sets this for you).

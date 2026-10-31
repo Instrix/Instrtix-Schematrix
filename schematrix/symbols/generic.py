@@ -1,7 +1,7 @@
 """Generic and abstract parts: blocks with named pins, impedances, Thévenin / Norton equivalents, two-ports."""
 from __future__ import annotations
 
-from .core import FLAG, LEN, G, Prop, above, arrow, below, ci, half, leads, pg, pl, rc, symbol, two_pins, tx
+from .core import ENUM, FLAG, LEN, G, Prop, above, arrow, below, ci, half, leads, pg, pl, rc, symbol, two_pins, tx
 
 
 def parse_pins(spec: str, w, h):
@@ -49,10 +49,15 @@ def block(p):
 
 
 @symbol('impedance', 'Impedance (generic Z)', 'Generic', 'Z', None,
-        {'length': LEN(60), 'label': Prop('Z', 'str', True, label='Text inside')})
+        {'length': LEN(60), 'label': Prop('Z', 'str', True, label='Text inside'),
+         'w': Prop(32, 'num', True, label='Body length', help='along the leads'),
+         'h': Prop(16, 'num', True, label='Body width', help='across the leads'),
+         'fill': ENUM('box', ['box', 'pad'], 'Fill', help='box = shaded, pad = white')})
 def impedance(p):
-    h = half(p)
-    return G([*leads(h, 16), rc(-16, -8, 32, 16, 'box', 1), tx(0, 0, str(p['label']), 'valsm', ctr=True, fit=28)], two_pins(h), above(-14))
+    w, bh = max(4.0, float(p.get('w') or 32)), max(4.0, float(p.get('h') or 16))
+    h = max(half(p), w / 2)
+    return G([*leads(h, w / 2), rc(-w / 2, -bh / 2, w, bh, p.get('fill') or 'box', 1),
+              tx(0, 0, str(p['label']), 'valsm', ctr=True, fit=w - 4)], two_pins(h), above(-bh / 2 - 6))
 
 
 def _oneport(prims, label):

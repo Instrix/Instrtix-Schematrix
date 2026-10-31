@@ -149,10 +149,11 @@ export function elementSvg(e, cat, geoOf, hop) {
       const P = e.points || [];
       if (P.length < 2) return '';
       const st = e.style || '', a = P[P.length - 2], b = P[P.length - 1];
+      const [L, W] = (e.head || [9, 4]).map(Number), cut = L * 2 / 3;   // the line stops inside the head
       const n = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1;
-      const tip = [b[0] - (b[0] - a[0]) / n * 6, b[1] - (b[1] - a[1]) / n * 6];
+      const tip = [b[0] - (b[0] - a[0]) / n * cut, b[1] - (b[1] - a[1]) / n * cut];
       return `<polyline class="${styleCls('w', st)}" points="${ptsAttr([...P.slice(0, -1), tip])}"/>` +
-        arrowHead(a, b, st.split(/\s+/).includes('acc') ? 'accf' : 'arrow');
+        arrowHead(a, b, st.split(/\s+/).includes('acc') ? 'accf' : 'arrow', L, W);
     }
     case 'text': {
       const cls = e.cls || 'lbl', lh = cls === 'note' || cls === 'title' ? 16 : 14;

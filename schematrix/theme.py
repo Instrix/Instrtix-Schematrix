@@ -9,10 +9,11 @@ from __future__ import annotations
 import base64
 import functools
 import os
+import re
 
 FONT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'web', 'fonts')
 
-MONO = '"JetBrains Mono", ui-monospace, monospace'
+MONO = '"JetBrains Mono", "Inter", ui-monospace, monospace'     # Inter: glyphs JetBrains Mono lacks (ₙ, ₍, ₎)
 SANS = '"Inter", system-ui, sans-serif'
 # Times-like faces with Greek first: cairosvg (PDF / EPS) uses only the first installed family, no per-glyph fallback
 SERIF = ('"Times New Roman", "Liberation Serif", "TeX Gyre Termes", "Nimbus Roman", Times, "Latin Modern Roman", '
@@ -57,6 +58,11 @@ TEXT_CLASSES = {
 }
 
 
+def _safe(v) -> str:
+    """a token value from a document goes into CSS: keep it a value (no new rules, no markup)"""
+    return re.sub(r'[{}<>;@\\]', '', str(v))[:200]
+
+
 def resolve(theme) -> dict[str, str]:
     """theme name or override dict -> full token dict"""
     base = dict(THEMES[DEFAULT_THEME])
@@ -65,9 +71,12 @@ def resolve(theme) -> dict[str, str]:
     elif isinstance(theme, dict):
         if isinstance(theme.get('base'), str):
             base.update(THEMES.get(theme['base'], {}))
-        base.update({k: v for k, v in theme.items() if k != 'base'})
+        base.update({k: _safe(v) for k, v in theme.items() if k != 'base' and isinstance(k, str)})
     for k, v in DEFAULTS.items():
         base.setdefault(k, v)
+    base.setdefault('lw_flag', base['lw_thin'])   # net-label outline
+    base.setdefault('lw_pad', base['lw_thin'])    # open terminal circles, pads, white boxes
+    base.setdefault('lw_term', base['lw_plate'])  # bold terminals
     base.setdefault('wire', base['ink'])          # wires may differ from symbol lines (kicad)
     base.setdefault('text', base['ink'])
     base.setdefault('box', base['surface'])       # block / box fill
@@ -93,9 +102,9 @@ def css(theme=None) -> str:
 .acc.arrow, .acc.dot {{ fill: {t['accent']}; stroke: none; }}
 .amp {{ fill: {t['body']}; stroke: {t['ink']}; stroke-width: {t['lw_body']}; }}
 .amp.acc {{ stroke: {t['accent']}; }}
-.pad {{ fill: {t['paper']}; stroke: {t['ink']}; stroke-width: {t['lw_thin']}; }}
-.term {{ fill: {t['paper']}; stroke: {t['ink']}; stroke-width: {t['lw_plate']}; }}
-.flag {{ fill: {t['surface']}; stroke: {t['ink']}; stroke-width: {t['lw_thin']}; }}
+.pad {{ fill: {t['paper']}; stroke: {t['ink']}; stroke-width: {t['lw_pad']}; }}
+.term {{ fill: {t['paper']}; stroke: {t['ink']}; stroke-width: {t['lw_term']}; }}
+.flag {{ fill: {t['surface']}; stroke: {t['ink']}; stroke-width: {t['lw_flag']}; }}
 .box {{ fill: {t['box']}; stroke: {t['ink']}; stroke-width: {t['lw_body']}; }}
 .accbox {{ fill: {t['accent_fill']}; stroke: {t['ink']}; stroke-width: {t['lw_body']}; }}
 .grp {{ fill: {t['surface']}; stroke: none; }}
@@ -127,7 +136,9 @@ _FACES = [  # (family, weight, style, subset file stem)
 ]
 _RANGES = {'latin': 'U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,'
                     'U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD',
-           'greek': 'U+0370-03FF'}
+           'greek': 'U+0370-03FF',
+           # super / subscripts, arrows, maths, shapes (subset of the full fonts; Inter has the letter subscripts ₙ ₍ ₎)
+           'symbols': 'U+2070-209F,U+2190-21FF,U+2200-22FF,U+2300-23FF,U+25A0-25FF'}
 
 
 @functools.lru_cache(maxsize=4)

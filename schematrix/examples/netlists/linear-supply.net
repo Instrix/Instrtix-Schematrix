@@ -1,5 +1,5 @@
 (export (version "E")
-  (design (source "Linear power supply") (date "2026-10-31T02:14:37") (tool "Schematrix 0.2.0"))
+  (design (source "Linear power supply") (date "2026-10-31T13:38:28") (tool "Schematrix 0.2.2"))
   (components
     (comp (ref "C1")
       (value "2200 \\uF")

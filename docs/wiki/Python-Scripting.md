@@ -56,6 +56,8 @@ r = s.resistor(at=(100, 50), rot=0, mirror=False, ref=None, value=None, part=Non
 z = s.zener((200, 50), value='5V1')                  # a variant: diode with kind='zener'
 g = s.nand_gate((300, 50), inputs=3, shape='iec')
 u = s.add('opamp', (400, 50), top='+')               # by name
+en = s.vsrc((500, 50), rot=90, length=32, text='e_{n}')   # a label in the circle (noise source); signs=False hides + / −
+bl = s.load((600, 50), rot=90, length=80, w=60, h=32, fill='pad')   # body size along / across the leads, white fill
 ```
 
 - `anchor='pin'` places the part so that pin lands on `at`: `s.capacitor(anchor='1', at=r['2'], rot=90)`.
@@ -107,7 +109,8 @@ s.text(x, y, 'Gain stage', cls='lbl', anchor='start')   # text classes: see Styl
 s.note(x, y, 'f_{c} = 1 kHz'); s.heading(x, y, 'Front end')
 s.rect(x, y, w, h, cls='grp', label='Input', rx=4)      # grp, box, accbox, frame
 s.group([r1, c1, u1], label='Filter', pad=12)           # shading behind parts
-s.arrow((x1, y1), (x2, y2), style='acc')
+s.arrow((x1, y1), (x2, y2), style='acc')              # style '' = ink; head=(length, half-width), default (9, 4)
+s.arrow((0, 0), (60, 0), style='', head=(11, 4))
 s.raw('<circle cx="0" cy="0" r="3"/>', x=100, y=100)    # verbatim SVG
 ```
 

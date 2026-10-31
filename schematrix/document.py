@@ -408,8 +408,13 @@ class Schematic:
         x1 = max(b[2] for b in bs) + pad; y1 = max(b[3] for b in bs) + pad
         return self.rect(round(x0), round(y0), round(x1 - x0), round(y1 - y0), cls, label)
 
-    def arrow(self, *pts, style='acc'):
-        return self._push({'type': 'arrow', 'points': [[_n(p[0]), _n(p[1])] for p in pts], 'style': style})
+    def arrow(self, *pts, style='acc', head=None):
+        """a line ending in an arrowhead; style 'acc' (accent colour) or '' (ink); head = (length, half-width),
+        default (9, 4)"""
+        el = {'type': 'arrow', 'points': [[_n(p[0]), _n(p[1])] for p in pts], 'style': style}
+        if head:
+            el['head'] = [_n(head[0]), _n(head[1])]
+        return self._push(el)
 
     def raw(self, svg, x=0, y=0, bbox=None):
         el = {'type': 'raw', 'svg': svg, 'x': x, 'y': y}

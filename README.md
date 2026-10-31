@@ -24,6 +24,13 @@ Schematrix is free software under the [GNU GPL v3](LICENSE) (or any later versio
 no subscriptions, no accounts, no "pro" edition and no locked features. Everything described here is in the download
 and in this repository, for anyone to use, study, change and share.
 
+## Made with AI
+
+Schematrix was built with the help of AI (Anthropic's Claude) to solve one specific problem: no existing tool drew
+schematics the way the Instrix documentation needs them, scriptable from Python and consistent across every figure.
+It is tested (unit tests, pixel comparisons against the original figures, SPICE runs, builds on every platform), but
+it is not a substitute for checking your drawings: review figures and netlists before you publish or build from them.
+
 ## Gallery
 
 The same sheet in each built-in theme (`scripts/build_docs_images.py`):

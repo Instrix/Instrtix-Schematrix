@@ -1,5 +1,5 @@
 (export (version "E")
-  (design (source "Common-emitter amplifier") (date "2026-10-31T02:14:36") (tool "Schematrix 0.2.0"))
+  (design (source "Common-emitter amplifier") (date "2026-10-31T13:38:26") (tool "Schematrix 0.2.2"))
   (components
     (comp (ref "C1")
       (value "1 \\uF")

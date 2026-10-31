@@ -223,6 +223,10 @@ function buildInspector() {
     ta.onchange = () => { const pts = ta.value.split('\n').map((l) => l.split(/[,\s]+/).filter(Boolean).map(Number)).filter((q) => q.length === 2 && q.every(Number.isFinite)); if (pts.length >= 2) edit(() => { e.points = pts; }); };
     ta.onkeydown = (ev) => ev.stopPropagation();
     p.append(field('Points', ta));
+    if (e.type === 'arrow') {                    // head = [length, half-width], default 9 x 4
+      const hd = (i) => (v) => edit(() => { const h = e.head ? [...e.head] : [9, 4]; h[i] = Math.max(1, Number(v) || 0); e.head = h; if (h[0] === 9 && h[1] === 4) delete e.head; });
+      p.append(field('Head', pair(inp((e.head || [9, 4])[0], hd(0), { type: 'number', mono: true }), inp((e.head || [9, 4])[1], hd(1), { type: 'number', mono: true }))));
+    }
     p.append(btns([['Reverse', () => edit(() => { e.points.reverse(); })], ...ZORDER(), ['Delete', del, 'danger']]));
   } else if (e.type === 'text') {
     head('Text', '');
