@@ -71,4 +71,4 @@ Add `\usepackage{tikz}`; for `\resizebox` also `\usepackage{graphicx}`. See [LaT
 ### pipx upgrade says it is already up to date
 
 Installs from git are pinned to the commit; reinstall:
-`pipx install --force "schematrix[desktop] @ git+ssh://git@github.com/Instrix/instrtix-schematrix.git"`.
+`pipx install --force "schematrix[desktop] @ git+https://github.com/Instrix/Instrtix-Schematrix.git"`.

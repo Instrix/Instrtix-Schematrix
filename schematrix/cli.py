@@ -274,6 +274,8 @@ def main(argv=None):
         from .runner import child_main
         return child_main()
     ap = argparse.ArgumentParser(prog='schematrix', description='Electrical schematics: editor, renderer and scripting.')
+    from . import __version__
+    ap.add_argument('--version', action='version', version=f'schematrix {__version__}')
     sub = ap.add_subparsers(dest='cmd')
     s = sub.add_parser('app', help='open the editor in a native window (default)')
     s.add_argument('--port', type=int); s.add_argument('--workspace'); s.add_argument('--browser', action='store_true', help='use the web browser instead')

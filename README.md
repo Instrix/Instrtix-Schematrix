@@ -40,9 +40,22 @@ The full symbol set, one picture per part and variant: [Symbol library](docs/wik
 
 ## Install
 
-Needs Python 3.10 or newer. Schematrix is not on PyPI; it installs straight from this repository. The repository
-is private, so pip needs your GitHub access: an SSH key (`git+ssh://`, shown below) or HTTPS with a personal access
-token (`git+https://<token>@github.com/...`).
+### Download the app
+
+| System | Download | |
+|---|---|---|
+| Windows 10 / 11 | [Schematrix-Setup.exe](https://github.com/Instrix/Instrtix-Schematrix/releases/latest/download/Schematrix-Setup.exe) | installer; or the portable [.zip](https://github.com/Instrix/Instrtix-Schematrix/releases/latest/download/Schematrix-windows.zip) |
+| Linux (any, x86-64) | [Schematrix-x86_64.AppImage](https://github.com/Instrix/Instrtix-Schematrix/releases/latest/download/Schematrix-x86_64.AppImage) | `chmod +x` and run |
+| Debian / Ubuntu | [schematrix_amd64.deb](https://github.com/Instrix/Instrtix-Schematrix/releases/latest/download/schematrix_amd64.deb) | `sudo apt install ./schematrix_amd64.deb` |
+| macOS (Apple silicon) | [Schematrix-macos.dmg](https://github.com/Instrix/Instrtix-Schematrix/releases/latest/download/Schematrix-macos.dmg) | drag to Applications; unsigned: first open with right-click > Open |
+
+Each includes its own Python, the editor, the `schematrix` command line and PDF / PNG export. Older versions and
+checksums: [Releases](https://github.com/Instrix/Instrtix-Schematrix/releases).
+
+### With Python
+
+Needs Python 3.10 or newer. Schematrix is not on PyPI; pip installs it straight from this repository (below), or
+from the wheel attached to each release.
 
 ### Extras
 
@@ -62,7 +75,7 @@ still works without `export` (it is drawn in the browser); PDF needs it.
 PATH:
 
 ```bash
-pipx install "schematrix[desktop] @ git+ssh://git@github.com/Instrix/instrtix-schematrix.git"
+pipx install "schematrix[desktop] @ git+https://github.com/Instrix/Instrtix-Schematrix.git"
 schematrix                                   # opens the editor
 pipx upgrade schematrix                      # later: update to the latest main
 ```
@@ -78,7 +91,7 @@ Linux / macOS:
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-pip install "schematrix[export] @ git+ssh://git@github.com/Instrix/instrtix-schematrix.git"
+pip install "schematrix[export] @ git+https://github.com/Instrix/Instrtix-Schematrix.git"
 ```
 
 Windows (PowerShell):
@@ -86,13 +99,13 @@ Windows (PowerShell):
 ```powershell
 py -m venv .venv
 .venv\Scripts\Activate.ps1
-pip install "schematrix[export] @ git+ssh://git@github.com/Instrix/instrtix-schematrix.git"
+pip install "schematrix[export] @ git+https://github.com/Instrix/Instrtix-Schematrix.git"
 ```
 
 To add it to a project's `requirements.txt`:
 
 ```
-schematrix[export] @ git+ssh://git@github.com/Instrix/instrtix-schematrix.git@v0.1.0
+schematrix[export] @ git+https://github.com/Instrix/Instrtix-Schematrix.git@v0.1.0
 ```
 
 ### From a clone (for development)
@@ -142,7 +155,6 @@ and an optional Caddy front end with automatic HTTPS:
 
 ```bash
 cp deploy/.env.example deploy/.env     # set SCHEMATRIX_TOKEN (openssl rand -hex 24), image version, limits
-docker login ghcr.io                   # the image is private
 docker compose -f deploy/docker-compose.yml up -d                    # http://localhost:8000/?token=...
 docker compose -f deploy/docker-compose.yml --profile https up -d    # + HTTPS for SCHEMATRIX_DOMAIN
 ```
@@ -172,8 +184,8 @@ editor keeps showing those features, with a banner pointing to the desktop app a
 
 Before going public, check:
 
-1. **Image access.** The image on ghcr.io is private: the host needs `docker login ghcr.io` (a GitHub token with
-   `read:packages`), or uncomment `build: ..` in the compose file to build from a checkout.
+1. **Image access.** The image is `ghcr.io/instrix/instrtix-schematrix`; if its package is private the host needs
+   `docker login ghcr.io`, or uncomment `build: ..` in the compose file to build from a checkout.
 2. **HTTPS.** Point a DNS name at the host, open ports 80 and 443, and start with the `https` profile:
    ```bash
    SCHEMATRIX_DOMAIN=schematrix.example.org SCHEMATRIX_TRUST_PROXY=1 SCHEMATRIX_BIND=127.0.0.1 \
@@ -206,11 +218,13 @@ limits). On anything shared, set `SCHEMATRIX_TOKEN` or `SCHEMATRIX_SCRIPTS=0`.
 
 ```bash
 pip install ".[desktop]" pyinstaller
-pyinstaller packaging/schematrix.spec    # -> dist/Schematrix/Schematrix(.exe)
+pyinstaller packaging/schematrix.spec    # -> dist/Schematrix/Schematrix(.exe), dist/Schematrix.app on macOS
+python packaging/package.py             # -> dist/release/: AppImage + .deb, setup .exe + .zip, or .dmg
 ```
 
-The CI workflow (`.github/workflows/release.yml`) runs the tests, builds the Windows, Linux and macOS bundles and
-pushes the Docker image on a `v*` tag (or on demand from the Actions tab). Windows uses WebView2 (preinstalled on
+CI (`.github/workflows/`): `ci.yml` tests every push and pull request; `release.yml` builds the AppImage, .deb,
+Windows installer and zip, macOS .dmg, wheel and Docker image, and on a `v*` tag publishes them as a GitHub release;
+`pages.yml` publishes the wiki to GitHub Pages. Windows uses WebView2 (preinstalled on
 Windows 10/11), macOS its built-in WebKit; on Linux the app opens a Chromium app window when Chrome / Chromium is
 installed, else GTK WebKit (`gir1.2-webkit2-4.1`), else the browser.
 

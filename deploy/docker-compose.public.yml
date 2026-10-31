@@ -14,7 +14,7 @@
 # The container itself is read-only, unprivileged and resource-limited, so there is no volume to manage.
 #
 # Before going public:
-#   1. the image is private: run `docker login ghcr.io` on the host (or uncomment `build: ..` below);
+#   1. the host must pull the image (`docker login ghcr.io` if its package is private, or uncomment `build: ..`);
 #   2. serve it over HTTPS with the https profile, and then ALSO set SCHEMATRIX_BIND=127.0.0.1 (app reachable only
 #      through the proxy) and SCHEMATRIX_TRUST_PROXY=1 (rate limits see each visitor, not the proxy);
 #   3. never set SCHEMATRIX_TRUST_PROXY=1 while the app port is reachable directly: visitors could fake their address

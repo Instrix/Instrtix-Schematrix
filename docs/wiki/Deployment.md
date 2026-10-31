@@ -16,8 +16,8 @@ Both run the published image hardened: read-only filesystem (only the data volum
 Linux capabilities dropped, no privilege escalation, memory / CPU / process limits, rotated logs. Both have an `https`
 profile that puts Caddy in front with automatic certificates.
 
-The image is published privately on GitHub's registry: run `docker login ghcr.io` with a GitHub token that has
-`read:packages`, or uncomment `build: ..` in the compose file to build from a checkout.
+The image is `ghcr.io/instrix/instrtix-schematrix`, built on every release. If its package is private, run
+`docker login ghcr.io` first; or uncomment `build: ..` in the compose file to build from a checkout.
 
 ## Private server
 
@@ -80,7 +80,8 @@ when someone opens the symbol editor or legacy import, all pointing to the deskt
 
 ### Before going public
 
-1. **Image access**: `docker login ghcr.io` on the host (or build from a checkout).
+1. **Image access**: the host can pull the image (`docker login ghcr.io` if the package is private), or build from a
+   checkout.
 2. **HTTPS**: point a DNS name at the host, open ports 80 and 443, and start with the `https` profile, binding the app to
    localhost and trusting the proxy:
    ```bash
@@ -96,7 +97,7 @@ when someone opens the symbol editor or legacy import, all pointing to the deskt
 ## Without Docker
 
 ```bash
-pip install "schematrix[export] @ git+ssh://git@github.com/Instrix/instrtix-schematrix.git"
+pip install "schematrix[export] @ git+https://github.com/Instrix/Instrtix-Schematrix.git"
 SCHEMATRIX_TOKEN=… SCHEMATRIX_WORKSPACE=/srv/schematrix schematrix serve --host 0.0.0.0 --port 8000
 ```
 

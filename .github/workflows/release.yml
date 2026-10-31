@@ -1,3 +1,6 @@
+# Builds every download and, for a version tag, publishes them as a GitHub release.
+#   git tag v0.3.0 && git push --tags        (the tag must match the version in pyproject.toml)
+# Run it by hand from the Actions tab to get the builds as run artifacts without a release.
 name: build
 on:
   push:
@@ -12,11 +15,18 @@ jobs:
         with: { python-version: '3.12' }
       - run: pip install -e ".[dev]"
       - run: pytest -q
-  native:
+      - if: startsWith(github.ref, 'refs/tags/v')
+        name: tag matches the package version
+        run: |
+          v=$(python -c "import schematrix; print(schematrix.__version__)")
+          [ "v$v" = "$GITHUB_REF_NAME" ] || { echo "tag $GITHUB_REF_NAME but version $v"; exit 1; }
+
+  native:      # AppImage + .deb, setup .exe + .zip, .dmg
     needs: test
     strategy:
+      fail-fast: false
       matrix:
-        os: [windows-latest, ubuntu-22.04, macos-latest]
+        os: [ubuntu-22.04, windows-latest, macos-latest]     # 22.04: the oldest glibc the Linux builds support
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -24,12 +34,33 @@ jobs:
         with: { python-version: '3.12' }
       - if: runner.os == 'Linux'
         run: sudo apt-get update && sudo apt-get install -y libgirepository1.0-dev libcairo2-dev gir1.2-webkit2-4.1 python3-gi
+      - if: runner.os == 'Windows'
+        name: Inno Setup
+        shell: pwsh
+        run: if (-not (Test-Path "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe")) { choco install innosetup -y --no-progress }
       - run: pip install ".[desktop]" pyinstaller
       - run: pyinstaller packaging/schematrix.spec --noconfirm
+      - run: python packaging/package.py
       - uses: actions/upload-artifact@v4
         with:
           name: Schematrix-${{ runner.os }}
-          path: dist/Schematrix
+          path: dist/release/*
+          if-no-files-found: error
+
+  python:      # wheel and source archive
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: pip install build && python -m build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Schematrix-python
+          path: dist/*
+          if-no-files-found: error
+
   docker:
     needs: test
     runs-on: ubuntu-latest
@@ -46,3 +77,18 @@ jobs:
           tags: |
             ${{ steps.img.outputs.name }}:${{ github.ref_name }}
             ${{ steps.img.outputs.name }}:latest
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [native, python, docker]
+    runs-on: ubuntu-latest
+    permissions: { contents: write }
+    steps:
+      - uses: actions/download-artifact@v4
+        with: { path: files, merge-multiple: true }
+      - run: ls -l files
+      - uses: softprops/action-gh-release@v2
+        with:
+          name: Schematrix ${{ github.ref_name }}
+          generate_release_notes: true
+          files: files/*

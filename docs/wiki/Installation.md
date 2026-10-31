@@ -1,8 +1,21 @@
 # Installation
 
-Schematrix needs **Python 3.10 or newer**. It is not on PyPI; it installs straight from the (private) GitHub
-repository, so pip needs your GitHub access: an SSH key (`git+ssh://`, used below) or HTTPS with a personal access
-token (`git+https://<token>@github.com/...`).
+## Download the app
+
+| System | Download | |
+|---|---|---|
+| Windows 10 / 11 | [Schematrix-Setup.exe](https://github.com/Instrix/Instrtix-Schematrix/releases/latest/download/Schematrix-Setup.exe) | installer; or the portable [.zip](https://github.com/Instrix/Instrtix-Schematrix/releases/latest/download/Schematrix-windows.zip) |
+| Linux (any, x86-64) | [Schematrix-x86_64.AppImage](https://github.com/Instrix/Instrtix-Schematrix/releases/latest/download/Schematrix-x86_64.AppImage) | `chmod +x` and run |
+| Debian / Ubuntu | [schematrix_amd64.deb](https://github.com/Instrix/Instrtix-Schematrix/releases/latest/download/schematrix_amd64.deb) | `sudo apt install ./schematrix_amd64.deb` |
+| macOS (Apple silicon) | [Schematrix-macos.dmg](https://github.com/Instrix/Instrtix-Schematrix/releases/latest/download/Schematrix-macos.dmg) | drag to Applications; unsigned: first open with right-click > Open |
+
+Each includes its own Python, the editor, the `schematrix` command line and PDF / PNG export. Older versions and
+checksums: [Releases](https://github.com/Instrix/Instrtix-Schematrix/releases).
+
+## With Python
+
+Schematrix needs **Python 3.10 or newer**. It is not on PyPI; pip installs it straight from the GitHub repository
+(below), or from the wheel attached to each release.
 
 ## Which way?
 
@@ -12,7 +25,7 @@ token (`git+https://<token>@github.com/...`).
 | write Python scripts / notebooks that `import schematrix` | [a virtual environment](#pip-in-a-virtual-environment) |
 | change Schematrix itself | [a clone](#from-a-clone-development) |
 | run it on a server for a team or the public | [Docker](Deployment.md) |
-| a double-click app without Python | a [native build](#native-builds) |
+| a double-click app without Python | a [download](#download-the-app) |
 
 ## Extras
 
@@ -28,7 +41,7 @@ token (`git+https://<token>@github.com/...`).
 [pipx](https://pipx.pypa.io) installs the `schematrix` command in its own environment and puts it on your PATH.
 
 ```bash
-pipx install "schematrix[desktop] @ git+ssh://git@github.com/Instrix/instrtix-schematrix.git"
+pipx install "schematrix[desktop] @ git+https://github.com/Instrix/Instrtix-Schematrix.git"
 schematrix                      # opens the editor
 pipx upgrade schematrix         # update to the latest main (use pipx install --force if it says "up to date")
 ```
@@ -39,14 +52,14 @@ Pin a release with `...instrtix-schematrix.git@v0.2.0`.
 
 ```bash
 python3 -m venv .venv && source .venv/bin/activate          # Windows: py -m venv .venv; .venv\Scripts\Activate.ps1
-pip install "schematrix[export] @ git+ssh://git@github.com/Instrix/instrtix-schematrix.git"
+pip install "schematrix[export] @ git+https://github.com/Instrix/Instrtix-Schematrix.git"
 python -c "import schematrix; print(schematrix.__version__)"
 ```
 
 In a `requirements.txt`:
 
 ```
-schematrix[export] @ git+ssh://git@github.com/Instrix/instrtix-schematrix.git@v0.2.0
+schematrix[export] @ git+https://github.com/Instrix/Instrtix-Schematrix.git@v0.2.0
 ```
 
 ## From a clone (development)
@@ -89,10 +102,13 @@ window on the running instance. `schematrix serve --open` runs only the web serv
 
 ## Native builds
 
+The downloads are built by CI; to build one yourself on the target system:
+
 ```bash
 pip install ".[desktop]" pyinstaller
-pyinstaller packaging/schematrix.spec       # -> dist/Schematrix/Schematrix(.exe)
+pyinstaller packaging/schematrix.spec       # -> dist/Schematrix/Schematrix(.exe), dist/Schematrix.app on macOS
+python packaging/package.py                 # -> dist/release/: AppImage + .deb, setup .exe + .zip, or .dmg
 ```
 
-The release workflow builds the Windows, Linux and macOS bundles and the Docker image on every `v*` tag (or on demand
-from GitHub's Actions tab). See [Development](Development.md#releases).
+`package.py` needs `dpkg-deb` on Linux (appimagetool is downloaded), Inno Setup on Windows. See
+[Development](Development.md#releases).

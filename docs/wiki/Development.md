@@ -39,7 +39,7 @@ schematrix/
     js/app.js       entry point; state, view, tools, selection, inspector, palette, panes, files, ui, commands,
                     exporter, find, symedit, util modules
   examples/       bundled examples (seeded into workspaces)
-deploy/           Docker Compose templates;  packaging/  PyInstaller spec;  scripts/  generators
+deploy/           Docker Compose templates;  packaging/  PyInstaller spec, installers, icons;  scripts/  generators
 ```
 
 **Twins**: `geometry.py` / `geom.js` and `markup.py` / `markup.js` must stay in step (the server renders exports, the
@@ -85,8 +85,19 @@ the examples, the server (private and public mode) and the legacy importer (pixe
 
 1. Bump the version in `pyproject.toml` and `schematrix/__init__.py`.
 2. Tag: `git tag v0.2.0 && git push --tags`.
-3. The `build` workflow tests, builds the Windows / Linux / macOS bundles (artifacts on the run) and pushes the Docker
-   image as `ghcr.io/instrix/instrtix-schematrix:<tag>` and `:latest`. It can also be started by hand from the Actions
-   tab.
+3. `release.yml` tests (and checks the tag matches the version), then builds:
+   - Linux (Ubuntu 22.04, so glibc 2.35 and newer): `Schematrix-x86_64.AppImage`, `schematrix_amd64.deb`;
+   - Windows: `Schematrix-Setup.exe` (Inno Setup, per-user or all users), `Schematrix-windows.zip` (portable);
+   - macOS (Apple silicon): `Schematrix-macos.dmg` (unsigned);
+   - the wheel and source archive, and the Docker image `ghcr.io/instrix/instrtix-schematrix:<tag>` and `:latest`;
+
+   and publishes them as the GitHub release for the tag, with generated notes. The file names carry no version, so
+   `releases/latest/download/<name>` always points at the newest. Started by hand from the Actions tab, it builds
+   everything as run artifacts without releasing.
+
+Other workflows: `ci.yml` runs the tests on Python 3.10 and 3.12 for every push and pull request; `pages.yml`
+publishes `docs/` (this wiki) to GitHub Pages when it changes. Packaging lives in `packaging/`: `schematrix.spec`
+(PyInstaller), `package.py` (installers), `schematrix.iss` (Inno Setup), `launcher.py` and the icons (`icon.svg`
+is the source).
 
 Commit messages: plain, no co-author or tool trailers.
