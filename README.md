@@ -230,7 +230,7 @@ cat .env                                   # the token, for the link: http://loc
 name: schematrix
 services:
   schematrix:
-    image: ghcr.io/instrix/instrtix-schematrix:latest       # or a fixed release, e.g. :v0.2.1
+    image: ghcr.io/instrix/instrtix-schematrix:latest       # or a fixed release, e.g. :v0.2.2
     restart: unless-stopped
     ports:
       # "<address>:<port>:8000" - where the app appears on this computer (8000 at the end never changes)
@@ -280,7 +280,7 @@ docker compose up -d                       # http://<this-ip>:8000
 name: schematrix-public
 services:
   schematrix:
-    image: ghcr.io/instrix/instrtix-schematrix:latest       # or a fixed release, e.g. :v0.2.1
+    image: ghcr.io/instrix/instrtix-schematrix:latest       # or a fixed release, e.g. :v0.2.2
     restart: unless-stopped
     ports:
       # "<address>:<port>:8000": 0.0.0.0 = open to the network; with HTTPS (below) use "127.0.0.1:8000:8000"
