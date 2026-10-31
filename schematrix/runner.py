@@ -22,6 +22,9 @@ def child_main():
     req = json.loads(sys.stdin.read())
     from . import document as D
     from .compat import import_legacy
+    from .symbols import custom                       # custom symbols of the workspace (scripts run inside it)
+    for d in {os.environ.get('SCHEMATRIX_WORKSPACE') or '', os.getcwd()} - {''}:
+        custom.load_dir(os.path.join(d, 'symbols'))
     buf = io.StringIO()
     res = {'ok': True, 'docs': [], 'stdout': '', 'error': None}
     try:

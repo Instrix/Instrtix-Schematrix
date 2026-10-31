@@ -5,6 +5,7 @@ import { refreshScripts, showRun } from './panes.js';
 import { D, openTab, persist, persistSoon, renderTabs, S, switchTab, T, tabTitle } from './state.js';
 import { ask, closeModal, confirmBox, modal, toast } from './ui.js';
 import { $, api, svg } from './util.js';
+import { adoptEmbedded, embeddedSymbols } from './symedit.js';
 import { render } from './view.js';
 
 // ---------------------------------------------------------------- files
@@ -57,7 +58,8 @@ export async function save(as = false) {
     path = name.endsWith('.json') ? name : name + '.json';
   }
   try {
-    await api.put('/api/files/' + encodeURI(path), JSON.stringify(t.doc, null, 1));
+    const syms = embeddedSymbols(t.doc);
+    await api.put('/api/files/' + encodeURI(path), JSON.stringify(Object.keys(syms).length ? { ...t.doc, symbols: syms } : t.doc, null, 1));
     t.path = path; t.dirty = false; t.fromScript = null;
     renderTabs(); persist(); toast('Saved ' + path);
   } catch (err) { toast(err.message, true); }

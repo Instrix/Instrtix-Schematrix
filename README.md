@@ -139,16 +139,17 @@ docker compose up -d                   # http://localhost:8000, data in the sche
 Scripts are arbitrary Python running on the server (in a child process with a timeout and, on Linux, memory/CPU
 limits). On anything shared, set `SCHEMATRIX_TOKEN` or `SCHEMATRIX_SCRIPTS=0`.
 
-### Native builds (Windows / Linux)
+### Native builds (Windows / Linux / macOS)
 
 ```bash
 pip install ".[desktop]" pyinstaller
 pyinstaller packaging/schematrix.spec    # -> dist/Schematrix/Schematrix(.exe)
 ```
 
-The CI workflow (`.github/workflows/release.yml`) runs the tests, builds both native bundles and pushes the Docker
-image on a `v*` tag. Windows uses WebView2 (preinstalled on Windows 10/11); Linux needs GTK WebKit
-(`gir1.2-webkit2-4.1`) for the native window, otherwise it opens the browser.
+The CI workflow (`.github/workflows/release.yml`) runs the tests, builds the Windows, Linux and macOS bundles and
+pushes the Docker image on a `v*` tag (or on demand from the Actions tab). Windows uses WebView2 (preinstalled on
+Windows 10/11), macOS its built-in WebKit; on Linux the app opens a Chromium app window when Chrome / Chromium is
+installed, else GTK WebKit (`gir1.2-webkit2-4.1`), else the browser.
 
 ## Scripting
 
@@ -242,7 +243,8 @@ schematrix netlist examples/simulation/rc-step.py -o rc.cir && ngspice -b rc.cir
 scripts, each with ready-to-open `.json` documents beside it:
 
 - **analog**: inverting amplifier, Sallen-Key low-pass, bridge + instrumentation amp, photodiode TIA, common emitter
-- **digital**: SR latch, full adder, counter + decoder over a bus, shift register driving LEDs, debounce, accumulator
+- **digital**: SR latch, full adder, counter + decoder over a bus, shift register driving LEDs, debounce, accumulator,
+  bus breakout (bus labels and bus entries)
 - **power**: linear supply, buck converter, relay driver, high-side load switch
 - **simulation** (verified with ngspice, results printed by `.meas`): RC step, RLC resonance, rectifier, CMOS
   inverter, op-amp integrator, diode clipper
@@ -252,10 +254,36 @@ scripts, each with ready-to-open `.json` documents beside it:
 
 `python scripts/build_examples.py` regenerates the `.json` documents and sample netlists.
 
-## Mouse
+## Buses
 
-Left drag moves, stretches wires or box-selects; right or middle drag pans; right-click opens the context menu
-(z-order, rotate, export selection…); wheel zooms.
+Draw a bus with the thick wire style (a wire started on a bus pin, or on a bus, becomes one by itself). Label it
+`D[7:0]` (or `D[0..7]`) and its members are the nets `D0` … `D7`:
+
+- a component's bus pin (a register's `D[7:0]`, a mux's data inputs) connects bit by bit: pin bit *i* joins `D`*i*;
+- a single wire joins a bit by carrying that bit's label (`D3`); draw the 45° tap with the **Bus entry** symbol;
+- a plain wire that merely touches a bus is not connected to it, as in KiCad;
+- buses labelled with the same base name are one bus; an unlabelled bus between two bus pins still connects them
+  bit by bit. Width mismatches are reported in the netlist warnings.
+
+## Editing
+
+- **Mouse**: left drag moves, stretches wires or box-selects; right or middle drag pans; right-click opens the
+  context menu; wheel zooms. Drag a symbol from the palette onto the sheet, or click it to place several.
+- **Align and distribute** (Edit menu, right-click, or the inspector with several items selected): left / centre /
+  right / top / middle / bottom, and even spacing; attached wires stretch along.
+- **Find and replace** (Ctrl+F): references, values, net names, fields, texts; click a hit to jump to it.
+- **Wires**: moving a part drags its wires, and wires that tee into those wires follow too.
+- **Page frame**: Document inspector > Page frame: A5 … A1, Letter, Legal, Tabloid, portrait or landscape, with
+  zone markers and a title block (title, company, document no., revision, author, date, sheet). Python:
+  `s.frame('A4', title=…, rev=…)`.
+
+## Custom symbols
+
+File > New symbol…, right-click a palette tile, or "Customise symbol…" in the inspector opens the symbol editor:
+draw lines, shapes, rectangles, circles and text, place pins, set the label position, prefix, suggested fields and an
+optional SPICE line, then save to the library. Symbols are JSON files in the workspace's `symbols/` folder, appear in
+the palette under Custom (right-click to edit), are usable from scripts by name (`s.my_symbol(…)`), and travel inside
+every document that uses them, so the sheet opens anywhere. Python: `schematrix.symbols.custom.define(...)`.
 
 ## Layout
 
@@ -264,7 +292,8 @@ schematrix/
   symbols/      symbol library (single source of truth, served to the editor)
     core.py       Prop, Symbol, @symbol registry, primitives and drawing helpers
     passive.py semiconductor.py analog.py logic.py sources.py loads.py electromech.py tubes.py signal.py
-    generic.py nets.py      one module per palette category
+    generic.py nets.py      one module per palette category (logic_block.py: the logic-block engine)
+    custom.py     user-drawn symbols (JSON definitions, the workspace's symbols/ folder)
   geometry.py   placement maths, junctions, bounding boxes   (web/js/geom.js is its JS twin)
   render.py     document -> SVG (and PNG/PDF via cairosvg)
   document.py   the scripting API (Schematic, Comp, Pin)
@@ -272,6 +301,7 @@ schematrix/
   markup.py     text markup (~{x}, V_{CC}, \ohm …), shared with web/js/markup.js
   export.py     every export format, selection cropping and backgrounds
   tikz.py       TikZ export
+  frame.py      page frames and title blocks
   netio/        netlist files: model.py (neutral Netlist), spice.py, kicad.py, jsonfmt.py, layout.py (netlist -> sheet)
   units.py      engineering values ('1 kΩ' -> SPICE '1k')
   compat.py     legacy S-class importer

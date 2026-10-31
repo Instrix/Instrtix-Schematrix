@@ -8,6 +8,7 @@ from .core import (BODY, CATEGORIES, COMMON, ENUM, FLAG, FONT_SIZES, LEN, PRESET
                    preset_for, prim_bbox, resolve, symbol, text_width)
 from . import passive, semiconductor, analog, logic, digital, sources, loads, electromech, tubes, signal, generic, nets  # noqa: F401  (registration)
 from .generic import parse_pins
+from . import custom  # noqa: E402,F401  (user-drawn symbols)
 
 __all__ = ['BODY', 'CATEGORIES', 'COMMON', 'ENUM', 'FLAG', 'FONT_SIZES', 'LEN', 'PRESETS', 'REGISTRY', 'Prop', 'Symbol', 'by_alias', 'catalog',
            'get', 'parse_pins', 'preset_for', 'prim_bbox', 'resolve', 'symbol', 'text_width']

@@ -28,8 +28,8 @@ def spaced(pins):
 
 
 def _g(*args, **kw):
-    prims, pins, label = block(*args, **kw)
-    return G(prims, pins, label)
+    prims, pins, label, buses = block(*args, **kw)
+    return G(prims, pins, label, buses)
 
 
 @symbol('register', 'Register / latch array', 'Logic', 'U', None,

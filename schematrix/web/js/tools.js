@@ -41,21 +41,26 @@ export function placeAt(w) {
   });
 }
 
-// snapping for wire ends: pins and wire vertices first, then wire segments, then the grid
+const isBus = (e) => (e.style || '').split(/\s+/).includes('bus');
+// snapping for wire ends: pins and wire vertices first, then wire segments, then the grid; bus pins and bus wires
+// report bus: true so a wire drawn from or onto them becomes a bus
 export function snapPoint(w, excludeWire) {
   const k = T().view.k, R = 9 / k, g = D().page.grid || 5;
   let best = null, bd = R;
   for (const e of D().elements) {
-    if (e.type === 'comp') for (const p of Object.values(pinsOf(e))) { const dd = Math.hypot(p[0] - w[0], p[1] - w[1]); if (dd < bd) { bd = dd; best = [p, 'pin']; } }
-    if (e.type === 'wire' && e.id !== excludeWire) for (const p of e.points) { const dd = Math.hypot(p[0] - w[0], p[1] - w[1]); if (dd < bd) { bd = dd; best = [p, 'wire']; } }
+    if (e.type === 'comp') {
+      const buses = geoOf(e)?.buses || {};
+      for (const [n, p] of Object.entries(pinsOf(e))) { const dd = Math.hypot(p[0] - w[0], p[1] - w[1]); if (dd < bd) { bd = dd; best = [p, 'pin', n in buses]; } }
+    }
+    if (e.type === 'wire' && e.id !== excludeWire) for (const p of e.points) { const dd = Math.hypot(p[0] - w[0], p[1] - w[1]); if (dd < bd) { bd = dd; best = [p, 'wire', isBus(e)]; } }
   }
-  if (best) return { p: [...best[0]], kind: best[1] };
+  if (best) return { p: [...best[0]], kind: best[1], bus: best[2] };
   for (const e of D().elements) {
     if (e.type !== 'wire' || e.id === excludeWire) continue;
     for (let i = 0; i + 1 < e.points.length; i++) {
       const [a, b] = [e.points[i], e.points[i + 1]];
-      if (a[1] === b[1] && Math.abs(w[1] - a[1]) < 6 / k && w[0] > Math.min(a[0], b[0]) && w[0] < Math.max(a[0], b[0])) return { p: [snapTo(w[0], g), a[1]], kind: 'seg' };
-      if (a[0] === b[0] && Math.abs(w[0] - a[0]) < 6 / k && w[1] > Math.min(a[1], b[1]) && w[1] < Math.max(a[1], b[1])) return { p: [a[0], snapTo(w[1], g)], kind: 'seg' };
+      if (a[1] === b[1] && Math.abs(w[1] - a[1]) < 6 / k && w[0] > Math.min(a[0], b[0]) && w[0] < Math.max(a[0], b[0])) return { p: [snapTo(w[0], g), a[1]], kind: 'seg', bus: isBus(e) };
+      if (a[0] === b[0] && Math.abs(w[0] - a[0]) < 6 / k && w[1] > Math.min(a[1], b[1]) && w[1] < Math.max(a[1], b[1])) return { p: [a[0], snapTo(w[1], g)], kind: 'seg', bus: isBus(e) };
     }
   }
   return { p: [snapTo(w[0], g), snapTo(w[1], g)], kind: 'grid' };
@@ -84,9 +89,10 @@ export function simplify(P) {
 }
 export function draftClick(w, ev) {
   const sn = S.draft?.kind === 'arrow' || S.tool === 'arrow' ? { p: [snapTo(w[0], D().page.grid || 5), snapTo(w[1], D().page.grid || 5)], kind: 'grid' } : snapPoint(w);
-  if (!S.draft) { S.draft = { kind: S.tool, pts: [sn.p], cur: sn.p, snapKind: sn.kind }; renderOverlay(); renderStatus(); return; }
+  if (!S.draft) { S.draft = { kind: S.tool, pts: [sn.p], cur: sn.p, snapKind: sn.kind, bus: !!sn.bus }; renderOverlay(); renderStatus(); return; }
   const dr = S.draft;
   dr.cur = sn.p;
+  if (sn.bus && dr.pts.length === 1 && !dr.bus) dr.bus = sn.kind === 'pin';     // started on a plain point, ends on a bus pin
   const path = draftPath();
   const last = dr.pts[dr.pts.length - 1];
   if (G.key(last) === G.key(sn.p) && dr.pts.length >= 2) { finishDraft(); return; }
@@ -101,7 +107,7 @@ export function finishDraft() {
   const P = dr.kind === 'arrow' ? dr.pts : simplify(dr.pts);
   if (P.length >= 2) {
     edit((d) => {
-      const el = { id: nextId(d), type: dr.kind, points: P, style: dr.kind === 'arrow' ? S.style || 'acc' : S.style };
+      const el = { id: nextId(d), type: dr.kind, points: P, style: dr.kind === 'arrow' ? S.style || 'acc' : dr.bus ? 'bus' : S.style };
       d.elements.push(el);
     });
   } else render();
@@ -121,7 +127,18 @@ export function startMove(w) {
     const a0 = pinKeys.has(G.key(e.points[0])), a1 = pinKeys.has(G.key(e.points[n - 1]));
     if (a0 || a1) attached.push({ id: e.id, orig: clone(e.points), a0, a1 });
   }
-  S.drag = { kind: 'move', start: w, orig, attached, snap: snapshot(), moved: false };
+  // T junctions: other wires whose end sits on the middle of a wire that is about to stretch ride along with it
+  const hosts = new Set(attached.map((a) => a.id)), tees = [];
+  for (const e of D().elements) {
+    if (e.type !== 'wire' || ids.has(e.id) || hosts.has(e.id) || e.points.length < 2) continue;
+    const n = e.points.length;
+    for (const host of attached) {
+      const on = (p) => host.orig.some((q, i) => i + 1 < host.orig.length && G.onSegment(p, q, host.orig[i + 1]));
+      const t0 = on(e.points[0]), t1 = on(e.points[n - 1]);
+      if (t0 || t1) { tees.push({ id: e.id, orig: clone(e.points), a0: t0, a1: t1, host: host.id }); break; }
+    }
+  }
+  S.drag = { kind: 'move', start: w, orig, attached, tees, snap: snapshot(), moved: false };
 }
 export function applyMove(dx, dy) {
   const dr = S.drag;
@@ -132,6 +149,20 @@ export function applyMove(dx, dy) {
     if (o.points) e.points = o.points.map(([x, y]) => [x + dx, y + dy]);
   }
   for (const a of dr.attached) { const e = byId(a.id); if (e) e.points = rubber(a, dx, dy); }
+  for (const t of dr.tees || []) {                       // re-seat each T end on the host's new path
+    const e = byId(t.id), host = byId(t.host);
+    if (!e || !host) continue;
+    const end = t.a0 ? t.orig[0] : t.orig[t.orig.length - 1];
+    let best = end, bd = Infinity;
+    for (let i = 0; i + 1 < host.points.length; i++) {
+      const [a, b] = [host.points[i], host.points[i + 1]];
+      const q = a[1] === b[1] ? [Math.min(Math.max(end[0], Math.min(a[0], b[0])), Math.max(a[0], b[0])), a[1]]
+        : [a[0], Math.min(Math.max(end[1], Math.min(a[1], b[1])), Math.max(a[1], b[1]))];
+      const d = Math.hypot(q[0] - end[0], q[1] - end[1]);
+      if (d < bd) { bd = d; best = q; }
+    }
+    e.points = rubber({ orig: t.orig, a0: t.a0, a1: !t.a0 && t.a1 }, best[0] - end[0], best[1] - end[1]);
+  }
 }
 // a wire with one or both ends on something moving by (dx, dy): drag those ends and keep the wire orthogonal
 export function rubber(a, dx, dy) {
@@ -217,7 +248,7 @@ export function endDrag() {
   S.drag = null;
   if (!dr) return;
   if (['move', 'vertex', 'label', 'resize', 'wend', 'wseg'].includes(dr.kind)) {
-    for (const a of dr.attached || []) { const e = byId(a.id); if (e) e.points = simplify(e.points); }
+    for (const a of [...(dr.attached || []), ...(dr.tees || [])]) { const e = byId(a.id); if (e) e.points = simplify(e.points); }
     if (['vertex', 'wend', 'wseg'].includes(dr.kind)) {
       const e = byId(dr.id);
       if (e) e.points = simplify(e.points);
@@ -230,6 +261,7 @@ export function endDrag() {
     const crossing = b[0] < a[0];          // right-to-left drag: anything touched
     if (!dr.additive) T().sel.clear();
     for (const e of D().elements) {
+      if (e.locked) continue;
       const bb = bboxOf(e, false);
       if (!bb) continue;
       const inside = bb[0] >= box[0] && bb[1] >= box[1] && bb[2] <= box[2] && bb[3] <= box[3];
@@ -359,7 +391,9 @@ function showContextMenu(x, y, id) {
   if (S.tool !== 'select') return;
   const t = T();
   if (id && !t.sel.has(id)) { t.sel = new Set([id]); render(); renderInspector(); }
-  const items = t.sel.size ? [
+  const many = t.sel.size > 1 ? [['Align left', 'align-left'], ['Align centres', 'align-center'], ['Align top', 'align-top'],
+    ['Align middles', 'align-middle'], ['Distribute horizontally', 'distribute-h'], ['Distribute vertically', 'distribute-v'], null] : [];
+  const items = t.sel.size ? [...many,
     ['Bring to front', 'front', 'Ctrl ]'], ['Bring forward', 'forward', 'PgUp'], ['Send backward', 'backward', 'PgDn'],
     ['Send to back', 'back', 'Ctrl ['], null,
     ['Rotate', 'rotate', 'R'], ['Mirror', 'mirror', 'M'], ['Toggle accent', 'accent', 'E'], null,

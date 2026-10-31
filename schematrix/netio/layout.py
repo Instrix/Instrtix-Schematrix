@@ -6,7 +6,7 @@ import re
 
 from .. import geometry as GEO
 from .. import symbols as SYM
-from .model import Netlist, Part, is_ground
+from .model import Netlist, Part, is_ground, unbus
 
 STUB, GAP, ROW_GAP, MAX_W = 20, 40, 50, 1100
 SIDES = {'l': (-1, 0), 'r': (1, 0), 't': (0, -1), 'b': (0, 1)}
@@ -62,6 +62,7 @@ def to_schematic(nl: Netlist, title=None):
         if p.sym not in SYM.REGISTRY:
             p = _as_block(p)
         sym = SYM.get(p.sym)
+        p.props = unbus(sym, p.props, p.pins)
         known = sym.all_props()
         props = {k: v for k, v in p.props.items() if k in known and k not in ('ref', 'value', 'part')}
         c = s.add(p.sym, (0, 0), ref=p.ref, value=p.value or None, part=p.part or None, fields=p.fields or None, **props)

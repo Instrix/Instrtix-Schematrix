@@ -1,11 +1,13 @@
 // Commands, menus, keyboard shortcuts and resizable panels.
 import { exportDialog, quickExport } from './exporter.js';
+import { findDialog } from './find.js';
+import { openSymbolEditor } from './symedit.js';
 import { exportAs, exportNetlist, filesDialog, importFile, save } from './files.js';
 import { renderInspector } from './inspector.js';
 import { buildPalette } from './palette.js';
 import { refreshNetlist, refreshScripts, runScript } from './panes.js';
-import { copySel, del, nudge, paste, reorder, step, toggleAccent, transformSel } from './selection.js';
-import { D, edit, newDoc, openTab, persist, redo, S, T, undo } from './state.js';
+import { align, copySel, del, distribute, nudge, paste, reorder, step, toggleAccent, transformSel } from './selection.js';
+import { D, edit, newDoc, openTab, persist, redo, S, selected, T, undo } from './state.js';
 import { finishDraft, setTool } from './tools.js';
 import { ask, closeModal, helpDialog, markupHelp, modal, toast } from './ui.js';
 import { $, $$, api, svg } from './util.js';
@@ -25,9 +27,13 @@ export const COMMANDS = {
   'import-legacy': () => { $('#fileinput').dataset.legacy = '1'; $('#fileinput').click(); },
   save: () => save(false), saveas: () => save(true), undo, redo,
   cut: () => { if (copySel()) del(); }, copy: copySel, paste, duplicate: () => { if (copySel()) paste(); }, delete: del,
-  selectall: () => { T().sel = new Set(D().elements.map((e) => e.id)); render(); renderInspector(); },
+  selectall: () => { T().sel = new Set(D().elements.filter((e) => !e.locked).map((e) => e.id)); render(); renderInspector(); },
   rotate: () => transformSel('rot'), mirror: () => transformSel('mir'), accent: toggleAccent, front: () => reorder(true), back: () => reorder(false),
-  forward: () => step(1), backward: () => step(-1),
+  forward: () => step(1), backward: () => step(-1), find: findDialog,
+  'symbol-new': () => openSymbolEditor(), 'symbol-edit': () => { const e = selected()[0]; if (e?.type === 'comp') openSymbolEditor(S.cat[e.sym]?.custom ? { edit: e.sym } : { copy: e.sym, props: e.props, comp: e.id }); },
+  'align-left': () => align('left'), 'align-center': () => align('center'), 'align-right': () => align('right'),
+  'align-top': () => align('top'), 'align-middle': () => align('middle'), 'align-bottom': () => align('bottom'),
+  'distribute-h': () => distribute('h'), 'distribute-v': () => distribute('v'),
   fit, zoomin: () => zoomAt(1.25), zoomout: () => zoomAt(0.8), zoom100: () => zoomAt(1 / T().view.k),
   grid: () => { S.grid = !S.grid; render(); }, help: helpDialog, markup: markupHelp,
   junctions: () => edit((d) => { d.page.junctions = d.page.junctions === false; }),
@@ -94,7 +100,7 @@ document.addEventListener('keydown', (ev) => {
   if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
   const mod = ev.ctrlKey || ev.metaKey, k = ev.key;
   if (mod) {
-    const map = { z: ev.shiftKey ? 'redo' : 'undo', y: 'redo', c: 'copy', x: 'cut', v: 'paste', d: 'duplicate', a: 'selectall', s: ev.shiftKey ? 'saveas' : 'save', e: 'export', o: 'open', n: 'new', ']': 'front', '[': 'back' };
+    const map = { z: ev.shiftKey ? 'redo' : 'undo', y: 'redo', c: 'copy', x: 'cut', v: 'paste', d: 'duplicate', a: 'selectall', s: ev.shiftKey ? 'saveas' : 'save', e: 'export', f: 'find', o: 'open', n: 'new', ']': 'front', '[': 'back' };
     const c = map[k.toLowerCase()];
     if (c) { ev.preventDefault(); cmd(c); }
     return;

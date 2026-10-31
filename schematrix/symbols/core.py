@@ -68,10 +68,10 @@ def text_width(s: str, cls: str = 'lbl') -> float:
     return width_chars(s) * fs * (0.55 if cls in ('note', 'title') else 0.6)
 
 
-def G(prims, pins, label=None):
-    """assemble a symbol's geometry"""
+def G(prims, pins, label=None, buses=None):
+    """assemble a symbol's geometry; buses: {pin: width} for pins that carry a bus (width 0 = any)"""
     return {'prims': prims, 'pins': {k: [r1(v[0]), r1(v[1])] for k, v in pins.items()},
-            **({'label': label} if label else {})}
+            **({'label': label} if label else {}), **({'buses': buses} if buses else {})}
 
 
 def above(y):
@@ -241,6 +241,7 @@ class Symbol:
     aliases: tuple = ()             # other names this symbol answers to on netlist import (KiCad lib parts, ...)
     is_part: bool | None = None     # a real component (BOM / netlist); default: it has a reference
     presets: tuple = ()             # named variants: (key, title, props[, aliases]) — own palette tile and method
+    custom: dict | None = None      # the JSON definition of a user-drawn symbol (custom.py), None for built-ins
 
     def __post_init__(self):
         if self.is_part is None:
@@ -263,6 +264,7 @@ class Symbol:
             p.update({k: v for k, v in props.items() if v is not None})
         g = self.fn(p)
         g.setdefault('label', above(-14))
+        g.setdefault('buses', {})
         g['lines'] = [list(x) for x in self.lines]
         g['bbox'] = prim_bbox(g['prims'], g['pins'])
         return g
@@ -289,7 +291,8 @@ class Symbol:
                 'net_prop': self.net_prop, 'help': self.help, 'fields': list(self.fields), 'is_part': self.is_part,
                 'props': {k: p.spec(k) for k, p in self.all_props().items()},
                 'geom_keys': self.geom_keys(), 'geometry': self.geometry(),
-                'presets': [{'name': p[0], 'title': p[1], 'props': p[2], 'geometry': self.geometry(p[2])} for p in self.presets]}
+                'presets': [{'name': p[0], 'title': p[1], 'props': p[2], 'geometry': self.geometry(p[2])} for p in self.presets],
+                'custom': self.custom}
 
 
 REGISTRY: dict[str, Symbol] = {}

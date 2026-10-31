@@ -132,7 +132,7 @@ def connection_points(doc):
     wires = [e for e in doc['elements'] if e['type'] == 'wire' and len(e.get('points', [])) >= 2]
     pts = []
     for e in doc['elements']:
-        if e['type'] == 'comp' and e['sym'] != 'dot':
+        if e['type'] == 'comp' and e['sym'] not in ('dot', 'busentry'):
             for name, p in pins(e).items():
                 pts.append((p, ('pin', e['id'], name)))
     for w in wires:

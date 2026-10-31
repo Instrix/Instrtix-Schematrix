@@ -107,7 +107,10 @@ export function render() {
   const d = D();
   let html = '';
   const hops = d.page.hops ? G.hops(d, geoOf) : {};
-  for (const e of d.elements) html += `<g class="el" data-id="${e.id}">${hitShape(e)}${G.elementSvg(e, S.cat, geoOf, hops[e.id])}</g>`;
+  for (const e of d.elements) {
+    html += e.locked ? `<g class="el locked">${G.elementSvg(e, S.cat, geoOf, hops[e.id])}</g>`
+      : `<g class="el" data-id="${e.id}">${hitShape(e)}${G.elementSvg(e, S.cat, geoOf, hops[e.id])}</g>`;
+  }
   if (d.page.junctions !== false) {
     const manual = new Set(d.elements.filter((e) => e.type === 'comp' && e.sym === 'dot').map((e) => G.key([e.x, e.y])));
     for (const p of G.junctions(d, geoOf)) if (!manual.has(G.key(p))) html += `<circle class="dot jn" cx="${p[0]}" cy="${p[1]}" r="3"/>`;

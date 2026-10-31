@@ -156,7 +156,10 @@ class Schematic:
         return copy.deepcopy(self.doc)
 
     def to_json(self, indent=1):
-        return json.dumps(self.doc, indent=indent, ensure_ascii=False)
+        from .symbols import custom as CUSTOM
+        used = CUSTOM.used_in(self.doc)                 # carry user-drawn symbols so the file opens anywhere
+        doc = {**self.doc, 'symbols': used} if used else {k: v for k, v in self.doc.items() if k != 'symbols'}
+        return json.dumps(doc, indent=indent, ensure_ascii=False)
 
     def save(self, path):
         with open(path, 'w', encoding='utf-8') as f:
@@ -258,6 +261,13 @@ class Schematic:
             self.doc['theme'] = theme
         if description is not None:
             self.doc['meta']['description'] = description
+        return self
+
+    def frame(self, size='A4', orientation='landscape', **fields):
+        """a drawing border with zones and a title block; fields: title, subtitle, company, doc, rev, author, date,
+        sheet. The page takes the paper size; size=None removes the frame."""
+        from . import frame as FR
+        FR.apply(self.doc, size, orientation, fields)
         return self
 
     def fit(self, margin=20):
@@ -451,6 +461,13 @@ def normalize(d: dict) -> dict:
     pg.setdefault('grid', 5); pg.setdefault('margin', 20); pg.setdefault('junctions', True); pg.setdefault('hops', False)
     pg.setdefault('auto', not pg.get('width'))
     d.setdefault('theme', 'instrix')
+    from .symbols import custom as CUSTOM
+    for name, defn in (d.get('symbols') or {}).items():       # custom symbols travel inside the document
+        if name not in SYM.REGISTRY:
+            try:
+                CUSTOM.register(defn)
+            except ValueError:
+                pass
     seen = set()
     for i, e in enumerate(d['elements']):
         if 'type' not in e:

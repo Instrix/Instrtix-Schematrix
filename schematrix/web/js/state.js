@@ -3,6 +3,7 @@ import * as G from './geom.js';
 import { cmd } from './commands.js';
 import { renderInspector } from './inspector.js';
 import { confirmBox, toast } from './ui.js';
+import { adoptEmbedded } from './symedit.js';
 import { $, api } from './util.js';
 import { applyView, fit, render } from './view.js';
 
@@ -56,6 +57,7 @@ export const pinsOf = (e) => G.compPins(e, geoOf(e));
 // ---------------------------------------------------------------- tabs & history
 export let tabSeq = 0;
 export function openTab(doc, path = null, focus = true) {
+  if (doc?.symbols) adoptEmbedded(doc);             // custom symbols the sheet brought with it
   const t = { id: ++tabSeq, doc, path, undo: [], redo: [], dirty: false, sel: new Set(), view: null };
   // replace the blank start-up tab instead of piling up "Untitled"s
   const blank = S.tabs.find((o) => !o.path && !o.dirty && !o.doc.elements.length && !o.undo.length);

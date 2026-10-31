@@ -28,6 +28,7 @@ from . import netlist as NET
 from . import render as R
 from . import runner
 from . import symbols as SYM
+from .symbols import custom as CUSTOM
 from . import theme as TH
 
 WEB = Path(__file__).parent / 'web'
@@ -129,11 +130,56 @@ def create_app() -> FastAPI:
         return {'version': __version__, 'pdf': pdf_available(), 'scripts': _truthy(os.environ.get('SCHEMATRIX_SCRIPTS')),
                 'workspace': str(workspace()), 'themes': {k: v for k, v in TH.THEMES.items()},
                 'text_classes': TH.TEXT_CLASSES, 'css': {k: TH.css(k) for k in TH.THEMES},
-                'netlist_formats': netio.info(), 'pillow': _has('PIL')}
+                'netlist_formats': netio.info(), 'pillow': _has('PIL'),
+                'frame_sizes': list(__import__('schematrix.frame', fromlist=['SIZES']).SIZES)}
+
+    def _symdir():
+        return workspace() / 'symbols'
 
     @app.get('/api/symbols')
     def symbols():
+        CUSTOM.load_dir(_symdir())                    # pick up symbols added or edited on disk
         return SYM.catalog()
+
+    @app.put('/api/symbols/custom/{name}')
+    def save_symbol(name: str, body: dict = Body(...)):
+        """create or replace a user-drawn symbol (saved to the workspace's symbols/ folder)"""
+        try:
+            sym = CUSTOM.save(_symdir(), {**body, 'name': name})
+        except CUSTOM.SymbolError as e:
+            raise HTTPException(400, str(e))
+        return sym.catalog_entry()
+
+    @app.delete('/api/symbols/custom/{name}')
+    def delete_symbol(name: str):
+        if name not in SYM.REGISTRY or not SYM.REGISTRY[name].custom:
+            raise HTTPException(404, 'no such custom symbol')
+        f = _symdir() / f'{name}.json'
+        if f.exists():
+            f.unlink()
+        CUSTOM.unregister(name)
+        return {'ok': True}
+
+    @app.post('/api/symbols/embedded')
+    def embedded_symbols(body: dict = Body(...)):
+        """register symbols carried inside a document for this session (not saved to the library)"""
+        added = []
+        for name, defn in (body.get('symbols') or {}).items():
+            if name in SYM.REGISTRY:
+                continue
+            try:
+                added.append(CUSTOM.register({**defn, 'name': name}).name)
+            except CUSTOM.SymbolError:
+                continue
+        return {'added': added}
+
+    @app.get('/api/symbols/copy/{name}')
+    def copy_symbol(name: str, props: str = '{}'):
+        """a custom-symbol definition that starts as a copy of a built-in symbol's drawing"""
+        import json as _json
+        if name not in SYM.REGISTRY:
+            raise HTTPException(404, 'no such symbol')
+        return CUSTOM.from_builtin(name, _json.loads(props or '{}'))
 
     @app.post('/api/geometry')
     def geometry(body: dict = Body(...)):
@@ -181,6 +227,15 @@ def create_app() -> FastAPI:
             raise HTTPException(501 if 'needs' in str(e) else 400, str(e))
         name = re.sub(r'[^\w\-]+', '-', body.get('name') or doc.get('meta', {}).get('title') or 'schematic').strip('-') or 'schematic'
         return Response(data, media_type=mime, headers={'Content-Disposition': f'attachment; filename="{name}.{ext}"'})
+
+    @app.post('/api/frame')
+    def frame(body: dict = Body(...)):
+        """page frame elements: body {size: A4|A3|A2|A1|A5|Letter|Legal|Tabloid, orientation, fields: {...}}"""
+        from . import frame as FR
+        if body.get('size') not in FR.SIZES:
+            raise HTTPException(400, f'size must be one of {", ".join(FR.SIZES)}')
+        els, (w, h) = FR.frame_elements(body['size'], body.get('orientation') or 'landscape', body.get('fields') or {})
+        return {'elements': els, 'width': w, 'height': h, 'fields': FR.FIELDS}
 
     @app.post('/api/netlist')
     def netlist(body: dict = Body(...)):

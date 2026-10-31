@@ -194,7 +194,7 @@ export function connectionPoints(doc, geoOf) {
   const wires = doc.elements.filter((e) => e.type === 'wire' && (e.points || []).length >= 2);
   const pts = [];
   for (const e of doc.elements) {
-    if (e.type === 'comp' && e.sym !== 'dot') {
+    if (e.type === 'comp' && e.sym !== 'dot' && e.sym !== 'busentry') {
       for (const [n, p] of Object.entries(compPins(e, geoOf(e)))) pts.push([p, 'pin', e.id, n]);
     }
   }

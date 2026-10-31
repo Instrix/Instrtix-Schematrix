@@ -66,3 +66,10 @@ def testpoint(p):
     if p['kind'] == 'pad':
         return G([pl([(0, 0), (0, -8)]), ci(0, -12, 4, 'pad')], {'p': (0, 0)}, right(8, -12))
     return G([pl([(0, 0), (0, -10)]), ci(0, -15, 5, 'term')], {'p': (0, 0)}, right(9, -15))
+
+
+@symbol('busentry', 'Bus entry', 'Nets', '', None, {'direction': ENUM('up', ['up', 'down'], 'Direction')}, lines=(),
+        help='the 45° tap from a bus wire to a signal wire; label the bus D[7:0] and the signal D3')
+def busentry(p):
+    dy = -10 if p['direction'] == 'up' else 10
+    return G([pl([(0, 0), (10, dy)])], {'bus': (0, 0), 'bit': (10, dy)}, buses={'bus': 0})

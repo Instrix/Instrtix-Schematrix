@@ -233,3 +233,53 @@ pre.code { margin: 0; padding: 10px; background: var(--paper); border: 1px solid
 .markup .tryout .mkpv { width: 100%; height: 30px; margin-top: 6px; }
 .mkhint { margin: 6px 0; }
 .linkbtn { background: none; border: 0; color: var(--accent); padding: 0; cursor: pointer; font-size: 12px; text-decoration: underline; }
+
+#content .el.locked { pointer-events: none; }
+
+/* ---------------------------------------------------------------- find and replace */
+.finddlg { display: grid; gap: 10px; min-width: 440px; font-size: 13px; }
+.finddlg .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.finddlg label { display: grid; gap: 4px; }
+.finddlg .opts { display: flex; gap: 14px; }
+.finddlg .opts label { display: flex; gap: 6px; align-items: center; }
+.finddlg .hits { max-height: 260px; overflow: auto; border: 1px solid var(--rule); border-radius: 6px; }
+.finddlg .hit { display: grid; grid-template-columns: 180px 1fr; gap: 8px; padding: 4px 8px; cursor: pointer; border-bottom: 1px solid var(--rule); }
+.finddlg .hit:hover, .finddlg .hit.on { background: var(--accent-bg); }
+.finddlg .hit span { font-family: var(--mono, monospace); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.finddlg .sub { padding: 8px; }
+.finddlg .btns { justify-content: flex-end; }
+.finddlg .btns .primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+/* ---------------------------------------------------------------- symbol editor */
+#symedit { position: fixed; inset: 0; z-index: 90; background: var(--bg, #f6f7f9); display: grid;
+  grid-template-columns: 150px 1fr 290px; grid-template-rows: auto 1fr; font-size: 13px; }
+#symedit header { grid-column: 1 / -1; display: flex; gap: 10px; align-items: center; padding: 8px 12px; background: var(--paper);
+  border-bottom: 1px solid var(--rule); }
+#symedit header .grow { flex: 1; }
+#symedit header button, #symedit .props button { background: var(--paper); border: 1px solid var(--rule); border-radius: 5px; padding: 4px 10px; }
+#symedit header .primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+#symedit header .danger { color: var(--danger); }
+#symedit .tools { display: flex; flex-direction: column; gap: 4px; padding: 10px; border-right: 1px solid var(--rule); background: var(--paper); }
+#symedit .tools button { display: flex; justify-content: space-between; background: none; border: 1px solid transparent; border-radius: 5px; padding: 6px 8px; text-align: left; }
+#symedit .tools button.on { background: var(--accent-bg); border-color: var(--accent); }
+#symedit .tools small { color: var(--faint); }
+#symedit .tools hr { border: 0; border-top: 1px solid var(--rule); width: 100%; }
+#symedit .canvas { width: 100%; height: 100%; background: var(--pagefill, #fff); outline: none; }
+#symedit .canvas[data-tool="select"] { cursor: default; } #symedit .canvas:not([data-tool="select"]) { cursor: crosshair; }
+#symedit .axis { stroke: var(--rule); stroke-width: 0.3; }
+#symedit .props { padding: 10px 12px; overflow: auto; border-left: 1px solid var(--rule); background: var(--paper); }
+#symedit .props h4 { margin: 12px 0 6px; font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--faint); }
+#symedit .props .f { display: grid; gap: 3px; margin: 6px 0; }
+#symedit .props .btns { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; margin: 8px 0; }
+#symedit .sehit { fill: none; stroke: transparent; stroke-width: 4; pointer-events: stroke; }
+#symedit .sehitr { fill: transparent; pointer-events: all; }
+#symedit .sepin { fill: none; stroke: #c0563f; stroke-width: 1; vector-effect: non-scaling-stroke; cursor: move; }
+#symedit .sepin.on { fill: #c0563f55; }
+#symedit .sepinname { fill: #c0563f; font-family: var(--mono, monospace); }
+#symedit .selabel { fill: var(--accent); font-family: var(--mono, monospace); cursor: move; }
+#symedit .selabel.on { text-decoration: underline; }
+#symedit .sedraft { fill: none; stroke: var(--accent); stroke-width: 1; stroke-dasharray: 3 2; vector-effect: non-scaling-stroke; }
+.sym.custom::after { content: '✎'; position: absolute; top: 2px; right: 4px; font-size: 10px; color: var(--accent); }
+.sym { position: relative; }
+#symedit .props input, #symedit .props select, #symedit .props textarea { width: 100%; min-width: 0; box-sizing: border-box; }
+#symedit .props .f { grid-template-columns: 1fr; }

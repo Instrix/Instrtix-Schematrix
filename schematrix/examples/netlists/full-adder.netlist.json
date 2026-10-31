@@ -29,7 +29,7 @@
    "fields": {},
    "pins": {
     "in1": "N001",
-    "in2": "C_{in}",
+    "in2": "Cin",
     "out": "S"
    }
   },
@@ -55,7 +55,7 @@
    "fields": {},
    "pins": {
     "in1": "N001",
-    "in2": "C_{in}",
+    "in2": "Cin",
     "out": "N003"
    }
   },
@@ -71,7 +71,7 @@
    "pins": {
     "in1": "N002",
     "in2": "N003",
-    "out": "C_{out}"
+    "out": "Cout"
    }
   }
  ],
@@ -120,7 +120,7 @@
    ]
   },
   {
-   "name": "C_{in}",
+   "name": "Cin",
    "nodes": [
     [
      "U2",
@@ -168,7 +168,7 @@
    ]
   },
   {
-   "name": "C_{out}",
+   "name": "Cout",
    "nodes": [
     [
      "U5",

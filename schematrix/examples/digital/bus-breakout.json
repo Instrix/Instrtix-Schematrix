@@ -1,0 +1,539 @@
+{
+ "version": 1,
+ "meta": {
+  "title": "Bus breakout",
+  "description": "Bus labels, bus entries and bit-by-bit connectivity"
+ },
+ "page": {
+  "width": null,
+  "height": null,
+  "auto": true,
+  "margin": 20,
+  "grid": 5,
+  "junctions": true,
+  "hops": false
+ },
+ "theme": "instrix",
+ "elements": [
+  {
+   "type": "comp",
+   "sym": "register",
+   "x": 100,
+   "y": 60,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "bus": true,
+    "oe": false,
+    "ref": "U1",
+    "part": "74HC574"
+   },
+   "style": "",
+   "id": "e1"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     90,
+     80
+    ],
+    [
+     50,
+     80
+    ]
+   ],
+   "style": "bus",
+   "id": "e2"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 50,
+   "y": 80,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "DATA[7:0]",
+    "side": "left"
+   },
+   "style": "",
+   "id": "e3"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     90,
+     100
+    ],
+    [
+     50,
+     100
+    ]
+   ],
+   "style": "",
+   "id": "e4"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 50,
+   "y": 100,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "CLK",
+    "side": "left"
+   },
+   "style": "",
+   "id": "e5"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     210,
+     80
+    ],
+    [
+     470,
+     80
+    ]
+   ],
+   "style": "bus",
+   "id": "e6"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 470,
+   "y": 80,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "Q[7:0]",
+    "side": "right"
+   },
+   "style": "",
+   "id": "e7"
+  },
+  {
+   "type": "comp",
+   "sym": "busentry",
+   "x": 260,
+   "y": 80,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "direction": "down"
+   },
+   "style": "",
+   "id": "e8"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     270,
+     90
+    ],
+    [
+     270,
+     130
+    ]
+   ],
+   "style": "",
+   "id": "e9"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 270,
+   "y": 130,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "Q0",
+    "side": "right"
+   },
+   "style": "",
+   "id": "e10"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 270,
+   "y": 190,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "length": 40,
+    "body": 24,
+    "ref": "R1",
+    "value": "330"
+   },
+   "style": "",
+   "hide_labels": true,
+   "id": "e11"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 270,
+   "y": 170,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "Q0",
+    "side": "left"
+   },
+   "style": "",
+   "id": "e12"
+  },
+  {
+   "type": "comp",
+   "sym": "diode",
+   "x": 270,
+   "y": 230,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "kind": "led",
+    "length": 40,
+    "ref": "D1"
+   },
+   "style": "",
+   "hide_labels": true,
+   "id": "e13"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 270,
+   "y": 250,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "earth"
+   },
+   "style": "",
+   "id": "e14"
+  },
+  {
+   "type": "comp",
+   "sym": "busentry",
+   "x": 310,
+   "y": 80,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "direction": "down"
+   },
+   "style": "",
+   "id": "e15"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     320,
+     90
+    ],
+    [
+     320,
+     130
+    ]
+   ],
+   "style": "",
+   "id": "e16"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 320,
+   "y": 130,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "Q1",
+    "side": "right"
+   },
+   "style": "",
+   "id": "e17"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 320,
+   "y": 190,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "length": 40,
+    "body": 24,
+    "ref": "R2",
+    "value": "330"
+   },
+   "style": "",
+   "hide_labels": true,
+   "id": "e18"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 320,
+   "y": 170,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "Q1",
+    "side": "left"
+   },
+   "style": "",
+   "id": "e19"
+  },
+  {
+   "type": "comp",
+   "sym": "diode",
+   "x": 320,
+   "y": 230,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "kind": "led",
+    "length": 40,
+    "ref": "D2"
+   },
+   "style": "",
+   "hide_labels": true,
+   "id": "e20"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 320,
+   "y": 250,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "earth"
+   },
+   "style": "",
+   "id": "e21"
+  },
+  {
+   "type": "comp",
+   "sym": "busentry",
+   "x": 360,
+   "y": 80,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "direction": "down"
+   },
+   "style": "",
+   "id": "e22"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     370,
+     90
+    ],
+    [
+     370,
+     130
+    ]
+   ],
+   "style": "",
+   "id": "e23"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 370,
+   "y": 130,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "Q2",
+    "side": "right"
+   },
+   "style": "",
+   "id": "e24"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 370,
+   "y": 190,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "length": 40,
+    "body": 24,
+    "ref": "R3",
+    "value": "330"
+   },
+   "style": "",
+   "hide_labels": true,
+   "id": "e25"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 370,
+   "y": 170,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "Q2",
+    "side": "left"
+   },
+   "style": "",
+   "id": "e26"
+  },
+  {
+   "type": "comp",
+   "sym": "diode",
+   "x": 370,
+   "y": 230,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "kind": "led",
+    "length": 40,
+    "ref": "D3"
+   },
+   "style": "",
+   "hide_labels": true,
+   "id": "e27"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 370,
+   "y": 250,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "earth"
+   },
+   "style": "",
+   "id": "e28"
+  },
+  {
+   "type": "comp",
+   "sym": "busentry",
+   "x": 410,
+   "y": 80,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "direction": "down"
+   },
+   "style": "",
+   "id": "e29"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     420,
+     90
+    ],
+    [
+     420,
+     130
+    ]
+   ],
+   "style": "",
+   "id": "e30"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 420,
+   "y": 130,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "Q3",
+    "side": "right"
+   },
+   "style": "",
+   "id": "e31"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 420,
+   "y": 190,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "length": 40,
+    "body": 24,
+    "ref": "R4",
+    "value": "330"
+   },
+   "style": "",
+   "hide_labels": true,
+   "id": "e32"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 420,
+   "y": 170,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "Q3",
+    "side": "left"
+   },
+   "style": "",
+   "id": "e33"
+  },
+  {
+   "type": "comp",
+   "sym": "diode",
+   "x": 420,
+   "y": 230,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "kind": "led",
+    "length": 40,
+    "ref": "D4"
+   },
+   "style": "",
+   "hide_labels": true,
+   "id": "e34"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 420,
+   "y": 250,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "earth"
+   },
+   "style": "",
+   "id": "e35"
+  },
+  {
+   "type": "text",
+   "x": 40,
+   "y": 300,
+   "text": "Q[7:0] names the bus; a wire labelled Q3 (net label on the bus-entry tap) is bit 3 of it",
+   "cls": "note",
+   "anchor": "start",
+   "id": "e36"
+  }
+ ]
+}

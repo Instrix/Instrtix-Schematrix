@@ -133,4 +133,5 @@ def block(title, left, right, top=(), bottom=(), min_w=40):
                 prims.append(tx(x, 10 if side == 't' else h - 4, p['label'], 'valsm', 'middle'))
             pins[p['name']] = end
     label = {'x': w / 2, 'y': -6 - (LEAD if top else 0), 'nx': 0, 'ny': -1}
-    return prims, pins, label
+    buses = {p['name']: p['width'] for lst in (left, right, top, bottom) for p in lst if p and p['width'] > 1}
+    return prims, pins, label, buses

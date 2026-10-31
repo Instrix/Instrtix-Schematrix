@@ -4,7 +4,6 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 
-from .. import geometry as GEO
 from .. import netlist as NET
 from .. import symbols as SYM
 
@@ -74,7 +73,7 @@ def from_doc(doc) -> Netlist:
         defaults = sym.defaults()
         props = e.get('props', {})
         allp = {**defaults, **props}
-        pins = {pin: nx['pins'].get((e['id'], pin), '?') for pin in GEO.pins(e)}
+        pins = {pin: net for (cid, pin), net in nx['pins'].items() if cid == e['id']}
         parts.append(Part(ref=str(allp.get('ref') or e['id']), sym=e['sym'], value=str(allp.get('value') or ''),
                           part=str(allp.get('part') or ''),
                           props={k: v for k, v in props.items() if k not in STD and v != defaults.get(k)},
@@ -85,6 +84,16 @@ def from_doc(doc) -> Netlist:
 
 def _natural(s):
     return [int(t) if t.isdigit() else t for t in re.split(r'(\d+)', str(s))]
+
+
+def unbus(sym, props: dict, wanted) -> dict:
+    """netlists list a bus pin bit by bit (D0..D7): give symbols with a 'Bus pins' option one pin per bit
+    when the wanted pin names are not all pins of the bus-mode geometry"""
+    if sym and 'bus' in sym.all_props() and props.get('bus', sym.all_props()['bus'].default):
+        names = set(sym.pin_names(props))
+        if not set(wanted) <= names:
+            return {**props, 'bus': False}
+    return props
 
 
 GROUND_NAMES = {'0', 'GND', 'GND0', 'AGND', 'DGND', 'PGND', 'VSS', 'GNDA', 'GNDD', 'EARTH', 'CHASSIS'}

@@ -1,9 +1,10 @@
 // The properties inspector.
 import * as G from './geom.js';
-import { del, reorder, step, transformSel } from './selection.js';
+import { align, del, distribute, reorder, step, transformSel } from './selection.js';
 import { D, edit, pinsOf, S, selected } from './state.js';
-import { markupHelp } from './ui.js';
-import { $ } from './util.js';
+import { symbolButton } from './symedit.js';
+import { markupHelp, toast } from './ui.js';
+import { $, api } from './util.js';
 import { docBBox, pageBox } from './view.js';
 
 // ---------------------------------------------------------------- inspector
@@ -99,6 +100,20 @@ function markupHint() {
   b.onclick = markupHelp; d.append(b);
   return d;
 }
+// regenerate the frame elements on the server (one implementation, in schematrix/frame.py) and swap them in
+async function applyFrame(cfg) {
+  try {
+    const r = cfg.size ? await api.post('/api/frame', cfg) : null;
+    edit((d) => {
+      d.elements = d.elements.filter((e) => !e.frame);
+      if (!r) { delete d.page.frame; return; }
+      d.elements = [...r.elements.map((e, i) => ({ ...e, id: `frame${i + 1}` })), ...d.elements];
+      Object.assign(d.page, { auto: false, x: 0, y: 0, width: r.width, height: r.height });
+      d.page.frame = { size: cfg.size, orientation: cfg.orientation, fields: Object.fromEntries(Object.entries(cfg.fields).filter(([, v]) => v)) };
+    });
+  } catch (err) { toast(err.message, true); }
+}
+
 const ZORDER = () => [['To front', () => reorder(true)], ['Forward', () => step(1)], ['Backward', () => step(-1)], ['To back', () => reorder(false)]];
 export const sect = (t) => { const d = document.createElement('div'); d.className = 'sect'; d.textContent = t; return d; };
 
@@ -133,6 +148,19 @@ function buildInspector() {
     sp.onkeydown = (ev) => ev.stopPropagation();
     const spf = field('SPICE lines', sp); spf.title = 'Analyses, models and options appended to the SPICE netlist';
     p.append(spf);
+    p.append(sect('Page frame'));
+    const fr = pg.frame || {}, ff = fr.fields || {};
+    const setFrame = (patch) => applyFrame({ size: fr.size || '', orientation: fr.orientation || 'landscape', fields: { ...ff }, ...patch });
+    p.append(field('Paper', sel_(fr.size || '', [['', 'None'], ...(S.info.frame_sizes || ['A4', 'A3', 'Letter'])], (v) => setFrame({ size: v }))));
+    if (fr.size) {
+      p.append(field('Orientation', seg(fr.orientation || 'landscape', [['landscape', 'Landscape'], ['portrait', 'Portrait']], (v) => setFrame({ orientation: v }))));
+      for (const [k, label] of [['title', 'Title'], ['subtitle', 'Subtitle'], ['company', 'Company'], ['doc', 'Document no.'],
+        ['rev', 'Revision'], ['author', 'Drawn by'], ['date', 'Date'], ['sheet', 'Sheet']]) {
+        const i = inp(ff[k] || '', (v) => setFrame({ fields: { ...ff, [k]: v } }));
+        i.dataset.k = 'frame:' + k;
+        p.append(field(label, i));
+      }
+    }
     p.append(field('Theme', sel_(typeof d.theme === 'string' ? d.theme : 'custom', [...Object.keys(S.info.themes || {}), ...(typeof d.theme === 'object' ? ['custom'] : [])], (v) => edit(() => { d.theme = v; }))));
     p.append(btns([['Fit page to drawing', () => edit(() => {
       const bb = docBBox(), m = pg.margin ?? 20;
@@ -146,6 +174,10 @@ function buildInspector() {
     const styled = sel.filter((e) => e.type === 'comp' || e.type === 'wire' || e.type === 'arrow');
     if (styled.length) p.append(field('Style', seg(styled[0].style || '', STYLES, (v) => edit(() => { for (const e of styled) e.style = v; }))));
     p.append(btns([['Rotate', () => transformSel('rot')], ['Mirror', () => transformSel('mir')], ...ZORDER(), ['Delete', del, 'danger']]));
+    p.append(sect('Align'));
+    p.append(btns([['⇤ Left', () => align('left')], ['↔ Centre', () => align('center')], ['⇥ Right', () => align('right')],
+      ['⤒ Top', () => align('top')], ['↕ Middle', () => align('middle')], ['⤓ Bottom', () => align('bottom')],
+      ['Distribute ↔', () => distribute('h')], ['Distribute ↕', () => distribute('v')]]));
     return;
   }
   const e = sel[0];
@@ -179,6 +211,8 @@ function buildInspector() {
     const pins = pinsOf(e);
     p.insertAdjacentHTML('beforeend', `<div class="sect">Pins</div><div class="pinlist">${Object.entries(pins).map(([n, q]) => `<b>${G.esc(n)}</b> ${q[0]}, ${q[1]}`).join('<br>')}</div>`);
     const b = [['Rotate', () => transformSel('rot')], ['Mirror', () => transformSel('mir')]];
+    const sb = symbolButton(e);
+    if (sb) b.push(sb);
     if (e.label_offset) b.push(['Reset label', () => edit(() => { delete e.label_offset; })]);
     b.push(...ZORDER(), ['Delete', del, 'danger']);
     p.append(btns(b));

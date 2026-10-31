@@ -1,7 +1,10 @@
 // The symbol palette.
 import * as G from './geom.js';
 import { S } from './state.js';
-import { startPlacing } from './tools.js';
+import { renderInspector } from './inspector.js';
+import { openSymbolEditor } from './symedit.js';
+import { placeAt, setTool, startPlacing } from './tools.js';
+import { toWorld } from './view.js';
 import { $, svg } from './util.js';
 
 // ---------------------------------------------------------------- palette
@@ -40,8 +43,32 @@ export function buildPalette(filter = '') {
       b.className = 'sym' + (S.placing?.sym === e.name && same(S.placing.props, t.props) ? ' on' : '');
       b.title = `${t.title}${e.help ? ' — ' + e.help : ''}\npins: ${Object.keys(t.geometry.pins).join(', ')}`;
       b.innerHTML = symThumb(e, t.props, t.geometry) + `<span>${G.esc(t.title)}</span>`;
-      b.onclick = () => startPlacing(e.name, { ...t.props });
+      // press and drag onto the sheet drops one part; a plain click enters click-to-place mode (repeatable)
+      b.oncontextmenu = (ev) => {                   // right-click: edit a custom symbol, or start a custom copy
+        ev.preventDefault();
+        openSymbolEditor(e.custom ? { edit: e.name } : { copy: e.name, props: t.props });
+      };
+      if (e.custom) b.classList.add('custom');
+      b.onpointerdown = (ev) => {
+        if (ev.button !== 0) return;
+        ev.preventDefault();
+        startPlacing(e.name, { ...t.props });
+        S.dragPlace = { x: ev.clientX, y: ev.clientY };
+      };
       grid.append(b);
     }
   }
 }
+
+// the end of a palette drag: dropped on the sheet -> place one part there and go back to selecting
+document.addEventListener('pointerup', (ev) => {
+  const dp = S.dragPlace;
+  if (!dp) return;
+  S.dragPlace = null;
+  if (Math.hypot(ev.clientX - dp.x, ev.clientY - dp.y) < 6 || !S.placing) return;     // a click: stay in place mode
+  const r = svg.getBoundingClientRect();
+  if (ev.clientX < r.left || ev.clientX > r.right || ev.clientY < r.top || ev.clientY > r.bottom) { setTool('select'); return; }
+  placeAt(toWorld(ev));
+  setTool('select');
+  renderInspector();
+}, true);

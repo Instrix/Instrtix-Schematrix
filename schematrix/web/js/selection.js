@@ -1,8 +1,10 @@
 // Operations on the selection: transform, delete, nudge, z-order, clipboard.
+import * as G from './geom.js';
 import { setStyle } from './commands.js';
 import { renderInspector } from './inspector.js';
-import { D, edit, nextId, nextRef, S, selected, T } from './state.js';
-import { updateGhost } from './tools.js';
+import { byId, D, edit, nextId, nextRef, pinsOf, S, selected, T } from './state.js';
+import { rubber, simplify, updateGhost } from './tools.js';
+import { toast } from './ui.js';
 import { $, clone, snapTo } from './util.js';
 import { bboxOf, union } from './view.js';
 
@@ -108,4 +110,63 @@ export async function paste() {
     }
     T().sel = sel;
   });
+}
+
+// ---------------------------------------------------------------- align and distribute
+// parts, texts and boxes move by their own deltas; wires attached to moved parts stretch, like when dragging
+export function moveEach(deltas) {
+  edit((d) => {
+    const pins = new Map();
+    for (const [id, dd] of deltas) { const e = byId(id); if (e?.type === 'comp') for (const p of Object.values(pinsOf(e))) pins.set(G.key(p), dd); }
+    for (const w of d.elements) {
+      if (w.type !== 'wire' || deltas.has(w.id) || w.points.length < 2) continue;
+      const n = w.points.length, d0 = pins.get(G.key(w.points[0])), d1 = pins.get(G.key(w.points[n - 1]));
+      if (!d0 && !d1) continue;
+      if (d0 && d1 && d0[0] === d1[0] && d0[1] === d1[1]) w.points = rubber({ orig: w.points, a0: true, a1: true }, d0[0], d0[1]);
+      else {
+        if (d0) w.points = rubber({ orig: clone(w.points), a0: true, a1: false }, d0[0], d0[1]);
+        if (d1) w.points = rubber({ orig: clone(w.points), a0: false, a1: true }, d1[0], d1[1]);
+      }
+      w.points = simplify(w.points);
+    }
+    for (const [id, [dx, dy]] of deltas) {
+      const e = byId(id);
+      if (!e) continue;
+      if ('x' in e) { e.x += dx; e.y += dy; }
+      if (e.points) e.points = e.points.map(([x, y]) => [x + dx, y + dy]);
+    }
+  });
+}
+
+const alignable = () => selected().filter((e) => e.type !== 'wire' && e.type !== 'arrow' && !e.locked);
+
+export function align(mode) {
+  const items = alignable();
+  if (items.length < 2) { toast('Select two or more parts, texts or boxes to align'); return; }
+  const g = D().page.grid || 5, bb = new Map(items.map((e) => [e.id, bboxOf(e, false)]));
+  const all = [...bb.values()];
+  const minx = Math.min(...all.map((b) => b[0])), maxx = Math.max(...all.map((b) => b[2]));
+  const miny = Math.min(...all.map((b) => b[1])), maxy = Math.max(...all.map((b) => b[3]));
+  const deltas = new Map();
+  for (const [id, b] of bb) {
+    const dx = { left: minx - b[0], right: maxx - b[2], center: (minx + maxx) / 2 - (b[0] + b[2]) / 2 }[mode] ?? 0;
+    const dy = { top: miny - b[1], bottom: maxy - b[3], middle: (miny + maxy) / 2 - (b[1] + b[3]) / 2 }[mode] ?? 0;
+    if (dx || dy) deltas.set(id, [snapTo(dx, g), snapTo(dy, g)]);
+  }
+  moveEach(deltas);
+}
+
+export function distribute(axis) {
+  const items = alignable();
+  if (items.length < 3) { toast('Select three or more parts, texts or boxes to distribute'); return; }
+  const g = D().page.grid || 5, i0 = axis === 'h' ? 0 : 1;
+  const c = (e) => { const b = bboxOf(e, false); return (b[i0] + b[i0 + 2]) / 2; };
+  const sorted = [...items].sort((a, b) => c(a) - c(b));
+  const first = c(sorted[0]), step = (c(sorted.at(-1)) - first) / (sorted.length - 1);
+  const deltas = new Map();
+  sorted.forEach((e, i) => {
+    const d = snapTo(first + step * i - c(e), g);
+    if (d) deltas.set(e.id, axis === 'h' ? [d, 0] : [0, d]);
+  });
+  moveEach(deltas);
 }

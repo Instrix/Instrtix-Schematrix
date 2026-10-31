@@ -223,4 +223,5 @@ def mux(p):
         ytop = -H + slope / 2
         prims += [ci(0, ytop - 3, 3, 'pad'), pl([(0, ytop - 6), (0, -H - 10)])]
         pins['EN'] = (0, -H - 10)
-    return G(prims, pins, above(-H - (16 if p.get('enable') else 6)))
+    buses = {k: width for k in pins if k.startswith('I') or k == 'Y'} if width > 1 else None
+    return G(prims, pins, above(-H - (16 if p.get('enable') else 6)), buses)

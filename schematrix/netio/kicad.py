@@ -11,7 +11,7 @@ import json
 import re
 
 from .. import symbols as SYM
-from .model import Netlist, Part
+from .model import Netlist, Part, unbus
 
 # ---------------------------------------------------------------- s-expressions
 _TOK = re.compile(r'\s*(?:(\()|(\))|"((?:\\.|[^"\\])*)"|([^\s()"]+))', re.S)
@@ -202,6 +202,8 @@ def parse(text: str) -> Netlist:
         if symname == 'connector':
             nums = [int(n) for n, _, _ in pins_in if n.isdigit()]
             props['pins'] = max(nums or [2])
+        if symname:
+            props = unbus(SYM.get(symname), props, [f or n for n, f, _ in pins_in])
         pins = _pin_map(SYM.get(symname), props, libpart, pins_in) if symname else None
         if pins is None:
             if symname:
