@@ -162,8 +162,25 @@ Public mode (`SCHEMATRIX_PUBLIC=1`) is safe because of what the server will not 
 - **hardened output**: raw SVG in documents is stripped of scripts, exports are served sandboxed, the app page gets
   a strict content security policy.
 
-Behind the `https` profile's Caddy proxy set `SCHEMATRIX_TRUST_PROXY=1` (rate limits then use the visitor's address)
-and `SCHEMATRIX_BIND=127.0.0.1` (so the app is only reachable through the proxy).
+Before going public, check:
+
+1. **Image access.** The image on ghcr.io is private: the host needs `docker login ghcr.io` (a GitHub token with
+   `read:packages`), or uncomment `build: ..` in the compose file to build from a checkout.
+2. **HTTPS.** Point a DNS name at the host, open ports 80 and 443, and start with the `https` profile:
+   ```bash
+   SCHEMATRIX_DOMAIN=schematrix.example.org SCHEMATRIX_TRUST_PROXY=1 SCHEMATRIX_BIND=127.0.0.1 \
+     docker compose -f deploy/docker-compose.public.yml --profile https up -d
+   ```
+   - `SCHEMATRIX_BIND=127.0.0.1` makes the app reachable only through the proxy.
+   - `SCHEMATRIX_TRUST_PROXY=1` makes the rate limits use each visitor's address instead of the proxy's.
+3. **Never trust the proxy header without the proxy.** With `SCHEMATRIX_TRUST_PROXY=1` and the app port reachable
+   directly, visitors can fake their address in `X-Forwarded-For` and get around the rate limits. Turn it on only
+   together with `SCHEMATRIX_BIND=127.0.0.1` behind the proxy.
+4. **One container.** Rate limits and the export queue are counted inside each container. Run a single container;
+   with several behind a load balancer, each keeps its own counts, so the effective limits multiply (rate-limit at
+   the load balancer instead).
+5. **Tune the limits** for your hardware and audience if needed (`SCHEMATRIX_PUBLIC_*` above; memory and CPU with
+   `SCHEMATRIX_MEMORY`, `SCHEMATRIX_CPUS`).
 
 | Variable | Default | |
 |---|---|---|
@@ -171,6 +188,8 @@ and `SCHEMATRIX_BIND=127.0.0.1` (so the app is only reachable through the proxy)
 | `SCHEMATRIX_SCRIPTS` | `1` | allow the editor to run Python on the server |
 | `SCHEMATRIX_TOKEN` | unset | if set, every request needs it: open `/?token=…` once (sets a cookie) or send `Authorization: Bearer …` |
 | `SCHEMATRIX_SCRIPT_TIMEOUT` | `30` | seconds per script |
+| `SCHEMATRIX_PUBLIC` | `0` | anonymous public instance: no scripts, nothing stored on the server, limits (see above) |
+| `SCHEMATRIX_TRUST_PROXY` | `0` | rate-limit by the `X-Forwarded-For` address a reverse proxy appends; only behind one |
 
 Scripts are arbitrary Python running on the server (in a child process with a timeout and, on Linux, memory/CPU
 limits). On anything shared, set `SCHEMATRIX_TOKEN` or `SCHEMATRIX_SCRIPTS=0`.
