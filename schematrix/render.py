@@ -160,14 +160,16 @@ def render_svg(doc, embed_fonts=False, font_urls=False, background=True) -> str:
             f'xmlns="http://www.w3.org/2000/svg"><style>{style}</style>{bg}' + ''.join(body) + '</svg>')
 
 
-def to_png(svg: str, scale=2.0) -> bytes:
+def to_png(svg: str, scale=2.0, theme=None) -> bytes:
     import cairosvg  # optional dependency
-    return cairosvg.svg2png(bytestring=svg.encode(), scale=scale)
+    from .export import cairo_svg
+    return cairosvg.svg2png(bytestring=cairo_svg(svg, theme).encode(), scale=scale)
 
 
-def to_pdf(svg: str) -> bytes:
+def to_pdf(svg: str, theme=None) -> bytes:
     import cairosvg
-    return cairosvg.svg2pdf(bytestring=svg.encode())
+    from .export import cairo_svg
+    return cairosvg.svg2pdf(bytestring=cairo_svg(svg, theme).encode())
 
 
 def symbol_preview(name, props=None, size=48) -> str:

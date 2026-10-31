@@ -75,8 +75,8 @@ from the wheel attached to each release.
 | Extra | Adds | When you need it |
 |---|---|---|
 | *(none)* | editor, server, scripting, SVG and SPICE export | always enough to work |
-| `export` | `cairosvg` | PNG and PDF export from the server and the CLI |
-| `desktop` | `pywebview`, `cairosvg` | the native window (`schematrix` with no arguments) |
+| `export` | `cairosvg`, `pillow`, `fonttools`, `brotli` | PNG and PDF export from the server and the CLI |
+| `desktop` | `pywebview`, `cairosvg`, `fonttools`, `brotli` | the native window (`schematrix` with no arguments) |
 | `dev` | `pytest`, `httpx`, `pillow`, `numpy` | running the tests |
 
 Without `desktop`, `schematrix` opens the editor in your default browser instead. In the editor, PNG export
@@ -140,8 +140,9 @@ pytest -q
   `sudo apt install python3-gi gir1.2-webkit2-4.1` (Fedora: `python3-gobject webkit2gtk4.1`; Arch:
   `python-gobject webkit2gtk-4.1`). Schematrix finds them even from a pipx or venv install, as long as that uses
   the system Python. Alternatively use Qt: `pipx inject schematrix qtpy pyqt6 pyqt6-webengine`. With neither,
-  `schematrix` says so and opens the editor in your browser. Cairo is usually already installed (`libcairo2`). For PNG/PDF that match the editor, install the fonts
-  too: `sudo apt install fonts-jetbrains-mono fonts-inter`.
+  `schematrix` says so and opens the editor in your browser. Cairo is usually already installed (`libcairo2`).
+- **Fonts**: nothing to install anywhere. PDF, EPS and PNG made outside the browser draw their text from the fonts
+  bundled with Schematrix (as vector outlines), so they match the editor on every computer.
 - **macOS**: nothing to install: the download carries Cairo and the window uses the system WebKit. With pip, PDF / PNG
   export uses the installed app's Cairo, or Homebrew's (`brew install cairo`).
 

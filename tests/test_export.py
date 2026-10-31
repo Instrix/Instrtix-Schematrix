@@ -147,3 +147,18 @@ def test_workspace_seeding_adds_new_examples_once(tmp_path, monkeypatch):
     server.workspace()
     assert not f.exists()                                  # deleted on purpose: not brought back
     assert netio.detect(open(ws / 'examples' / 'netlists' / 'linear-supply.net').read()) == 'kicad'
+
+
+def test_cairo_text_is_drawn_from_the_bundled_fonts():
+    """PDF / PNG must not depend on the computer's fonts: bundled-font text becomes outlines, other text stays"""
+    pytest.importorskip('fontTools')
+    pytest.importorskip('brotli')
+    from schematrix import Schematic
+    from schematrix.outline import outline
+    s = Schematic('t')
+    s.text(0, 20, 'I− e₍ₙ₎ √ → ~{RST} V_{OUT}', 'lbl'); s.text(0, 40, 'note eₙ', 'note')
+    out = outline(s.to_svg())
+    assert '<text' not in out and out.count('class="txt"') == 2
+    assert 'stroke-width' in out.split('class="txt"')[1]                        # the overbar
+    formal = Schematic('f', theme='formal'); formal.text(0, 20, 'Times', 'lbl')
+    assert '<text' in outline(formal.to_svg())                                    # system fonts: left as text

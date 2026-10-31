@@ -13,7 +13,8 @@ sys.path.insert(0, root)
 from schematrix import __version__      # noqa: E402
 
 datas = collect_data_files('schematrix', includes=['web/**/*', 'examples/**/*']) + [(os.path.join(root, 'LICENSE'), '.')]
-hidden = collect_submodules('uvicorn') + collect_submodules('schematrix') + ['webview']
+hidden = (collect_submodules('uvicorn') + collect_submodules('schematrix') + ['webview', 'brotli']
+          + collect_submodules('fontTools.ttLib') + collect_submodules('fontTools.pens'))   # text outlines; tables load lazily
 icon = os.path.join(root, 'packaging', 'schematrix.icns' if sys.platform == 'darwin' else 'schematrix.ico')
 
 

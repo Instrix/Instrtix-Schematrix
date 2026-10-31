@@ -296,7 +296,7 @@ def create_app() -> FastAPI:
                     raise HTTPException(400, str(e))
             svg = R.render_svg(doc)
             with _slot():
-                data = R.to_png(svg, scale) if format == 'png' else R.to_pdf(svg)
+                data = R.to_png(svg, scale, doc.get('theme')) if format == 'png' else R.to_pdf(svg, doc.get('theme'))
             return Response(data, media_type='image/png' if format == 'png' else 'application/pdf',
                             headers={'Content-Disposition': f'attachment; filename="{name}.{format}"'})
         raise HTTPException(400, 'format must be svg, png, pdf or spice')

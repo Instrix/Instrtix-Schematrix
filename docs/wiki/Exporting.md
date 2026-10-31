@@ -48,9 +48,11 @@ the whole sheet with them. *SVG (plain, like the originals)* is SVG without embe
 - **SVG** and **TikZ** are produced by the server in pure Python; they always work.
 - **PNG, JPEG, WebP** from the editor are drawn **in your browser** from the server's SVG, so they work everywhere and
   use exactly the fonts you see.
-- **PDF and EPS** (and bitmaps from the CLI / Python / API) use `cairosvg` on the server (the `export` extra). They
-  use the fonts installed on the server: install JetBrains Mono and Inter for the default theme
-  (`fonts-jetbrains-mono fonts-inter`; the Docker image has them), Times New Roman or Liberation Serif for `formal`.
+- **PDF and EPS** (and bitmaps from the CLI / Python / API) use `cairosvg` on the server (the `export` extra). Text in
+  JetBrains Mono and Inter (the default themes) is drawn as vector outlines from the fonts bundled with Schematrix,
+  so it looks the same on every computer, with no fonts to install; characters like `−`, `√`, `→` and `eₙ` included.
+  The text is then not selectable in the PDF. Themes that use system fonts (`formal`: Times, `technical`: Helvetica,
+  `kicad`) keep real text and need those fonts on the machine (Liberation Serif / Sans are good stand-ins).
 
 ## From the command line
 

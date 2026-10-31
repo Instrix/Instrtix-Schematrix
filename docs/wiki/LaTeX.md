@@ -131,7 +131,7 @@ Useful for Beamer slides, journals that want separate figure files, or checking 
 \includegraphics[width=0.8\linewidth]{figures/amplifier.pdf}
 ```
 
-Export *PDF*. The text keeps the theme's font (install the theme's fonts on the machine that exports; see
+Export *PDF*. The text keeps the theme's font, drawn as outlines from the bundled fonts (see
 [Exporting](Exporting.md#how-exports-are-made)). Fine when the figure's font need not match the document, or for
 editors that don't take TikZ.
 

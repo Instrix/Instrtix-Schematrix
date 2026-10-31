@@ -177,7 +177,7 @@ class Schematic:
 
     def save_png(self, path, scale=2.0):
         with open(path, 'wb') as f:
-            f.write(R.to_png(self.to_svg(), scale))
+            f.write(R.to_png(self.to_svg(), scale, self.doc.get('theme')))
         return path
 
     def export(self, path, fmt=None, **options):
@@ -196,7 +196,7 @@ class Schematic:
 
     def save_pdf(self, path):
         with open(path, 'wb') as f:
-            f.write(R.to_pdf(self.to_svg()))
+            f.write(R.to_pdf(self.to_svg(), self.doc.get('theme')))
         return path
 
     def _repr_svg_(self):  # Jupyter

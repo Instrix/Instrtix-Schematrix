@@ -45,6 +45,13 @@ def svg_of(doc, background=True, fonts=True, ids=None, margin=None) -> str:
     return R.render_svg(subset(doc, ids, margin), embed_fonts=fonts, background=background)
 
 
+def cairo_svg(svg: str, theme=None) -> str:
+    """an SVG ready for cairosvg: text in the bundled fonts as outlines (the same on every computer, whatever fonts
+    it has), overbars and anchors fixed on the text that remains"""
+    from .outline import outline
+    return for_cairo(outline(svg), theme)
+
+
 def for_cairo(svg: str, theme=None) -> str:
     """cairosvg ignores text-decoration and anchors every tspan on its own: measure the runs of each marked-up text
     with cairo itself (same engine, same first font family), left-anchor the text at its true start and draw each
@@ -120,7 +127,7 @@ def export(doc, fmt='svg', *, ids=None, background=True, scale=2.0, margin=None,
     svg = svg_of(doc, background, fonts and fmt == 'svg', ids, margin)
     if fmt == 'svg':
         return svg.encode(), mime, ext
-    svg = for_cairo(svg, doc.get('theme'))
+    svg = cairo_svg(svg, doc.get('theme'))
     try:
         import cairosvg
     except Exception as e:  # noqa: BLE001

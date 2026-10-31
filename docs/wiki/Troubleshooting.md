@@ -26,9 +26,10 @@ WebP from the editor work without any of it.
 
 ### Exported PNG / PDF text looks different from the editor, or shows boxes
 
-Server-side exports use the server's fonts. Install the theme's fonts (`fonts-jetbrains-mono fonts-inter` for the
-default theme; Times New Roman or Liberation Serif for `formal`), or export the PNG from the editor (drawn by the
-browser), or use SVG with embedded fonts.
+The default themes draw PDF / PNG text from the bundled fonts, so this should not happen; if it does, the install
+lacks `fonttools` and `brotli` (part of the `export` and `desktop` extras: `pip install fonttools brotli`). The
+`formal`, `technical` and `kicad` themes use system fonts: install Times New Roman / Helvetica or their Liberation
+stand-ins. SVG viewers need *Embed fonts* (or `--fonts`).
 
 ### A wire looks connected but the netlist says the pin is unconnected
 

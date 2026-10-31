@@ -32,8 +32,8 @@ Schematrix needs **Python 3.10 or newer**. It is not on PyPI; pip installs it st
 | Extra | Adds | Needed for |
 |---|---|---|
 | *(none)* | editor, server, scripting, SVG / SPICE / TikZ export | always enough to work |
-| `export` | `cairosvg`, `pillow` | PDF, EPS and server-side PNG / JPEG / WebP (the editor can make bitmaps in the browser without it) |
-| `desktop` | `pywebview`, `cairosvg` | the app window when no Chromium-family browser is installed |
+| `export` | `cairosvg`, `pillow`, `fonttools`, `brotli` | PDF, EPS and server-side PNG / JPEG / WebP (the editor can make bitmaps in the browser without it) |
+| `desktop` | `pywebview`, `cairosvg`, `fonttools`, `brotli` | the app window when no Chromium-family browser is installed |
 | `dev` | `pytest`, `httpx`, `pillow`, `numpy` | running the tests |
 
 ## pipx (recommended for the app)
@@ -91,8 +91,7 @@ window on the running instance. `schematrix serve --open` runs only the web serv
   Fedora `python3-gobject webkit2gtk4.1`, Arch `python-gobject webkit2gtk-4.1`. Schematrix finds them even from a
   pipx or venv install, as long as that uses the system Python. Or use Qt:
   `pipx inject schematrix qtpy pyqt6 pyqt6-webengine`.
-- **PNG / PDF that match the editor**: server-side exports use system fonts. Install the editor's fonts for an exact
-  match: `sudo apt install fonts-jetbrains-mono fonts-inter` (the Docker image has them).
+- **Fonts**: nothing to install. PDF / PNG exports draw their text from the fonts bundled with Schematrix.
 - **Windows**: the download needs nothing else. It carries Cairo (PDF / PNG export), and the window uses WebView2,
   which is part of Windows 10 and 11; the installer adds it on the rare machine without it. A pip-installed
   Schematrix borrows the installed app's Cairo, so for PDF / PNG from Python install the app too.
