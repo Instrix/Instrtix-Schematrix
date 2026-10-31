@@ -43,4 +43,6 @@ jobs:
       - uses: docker/build-push-action@v6
         with:
           push: true
-          tags: ${{ steps.img.outputs.name }}:${{ github.ref_name }}
+          tags: |
+            ${{ steps.img.outputs.name }}:${{ github.ref_name }}
+            ${{ steps.img.outputs.name }}:latest

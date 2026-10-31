@@ -126,8 +126,22 @@ run it is seeded with `examples/`: the twelve TR-0002 figures and a sample scrip
 ### Docker
 
 ```bash
-docker compose up -d                   # http://localhost:8000, data in the schematrix-data volume
+docker compose up -d                   # development: builds this checkout, http://localhost:8000
 ```
+
+For a server, use the deployment template in `deploy/`: the published image, a required access token, a hardened
+container (read-only filesystem, no capabilities, memory / CPU limits, log rotation), the port bound to localhost,
+and an optional Caddy front end with automatic HTTPS:
+
+```bash
+cp deploy/.env.example deploy/.env     # set SCHEMATRIX_TOKEN (openssl rand -hex 24), image version, limits
+docker login ghcr.io                   # the image is private
+docker compose -f deploy/docker-compose.yml up -d                    # http://localhost:8000/?token=...
+docker compose -f deploy/docker-compose.yml --profile https up -d    # + HTTPS for SCHEMATRIX_DOMAIN
+```
+
+Documents, scripts and custom symbols live in the `schematrix_data` volume; the header of
+`deploy/docker-compose.yml` shows how to update and back up.
 
 | Variable | Default | |
 |---|---|---|

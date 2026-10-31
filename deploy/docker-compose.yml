@@ -1,0 +1,71 @@
+# Schematrix server deployment (template).
+#
+#   cp deploy/.env.example deploy/.env      # then edit it: at least SCHEMATRIX_TOKEN
+#   docker login ghcr.io                     # the image is private: a GitHub token with read:packages
+#   docker compose -f deploy/docker-compose.yml up -d
+#   open http://localhost:8000/?token=<your token>   (once per browser: it sets a cookie)
+#
+# HTTPS on your own domain (Caddy fetches and renews the certificate; ports 80/443 must reach this host):
+#   set SCHEMATRIX_DOMAIN in .env, then
+#   docker compose -f deploy/docker-compose.yml --profile https up -d
+#
+# Update:  docker compose -f deploy/docker-compose.yml pull && docker compose -f deploy/docker-compose.yml up -d
+# Backup:  everything lives in the data volume (documents, scripts, custom symbols):
+#   docker run --rm -v schematrix_data:/data -v "$PWD":/backup alpine tar czf /backup/schematrix-data.tgz -C /data .
+
+name: schematrix
+
+services:
+  schematrix:
+    image: ${SCHEMATRIX_IMAGE:-ghcr.io/instrix/instrtix-schematrix}:${SCHEMATRIX_VERSION:-latest}
+    # build: ..                           # or build from this checkout instead of pulling
+    restart: unless-stopped
+    ports:
+      # localhost only by default: put a reverse proxy in front (the https profile below), or set
+      # SCHEMATRIX_BIND=0.0.0.0 to expose it directly on the network
+      - "${SCHEMATRIX_BIND:-127.0.0.1}:${SCHEMATRIX_PORT:-8000}:8000"
+    environment:
+      SCHEMATRIX_WORKSPACE: /data
+      # every request needs the token (cookie set by /?token=..., or "Authorization: Bearer ...")
+      SCHEMATRIX_TOKEN: ${SCHEMATRIX_TOKEN:?set SCHEMATRIX_TOKEN in deploy/.env}
+      # the editor's Script pane runs Python on the server: keep it only for trusted users
+      SCHEMATRIX_SCRIPTS: ${SCHEMATRIX_SCRIPTS:-1}
+      SCHEMATRIX_SCRIPT_TIMEOUT: ${SCHEMATRIX_SCRIPT_TIMEOUT:-30}
+    volumes:
+      - data:/data
+    # hardening: nothing but /data (and scratch space) is writable, no extra privileges
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /home/schematrix/.cache          # fontconfig cache for PNG / PDF export
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: ${SCHEMATRIX_MEMORY:-1g}
+    cpus: ${SCHEMATRIX_CPUS:-2}
+    pids_limit: 256
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "3" }
+
+  # optional HTTPS front end: docker compose --profile https up -d
+  caddy:
+    image: caddy:2
+    profiles: [https]
+    restart: unless-stopped
+    depends_on: [schematrix]
+    command: caddy reverse-proxy --from ${SCHEMATRIX_DOMAIN:-schematrix.example.com} --to schematrix:8000
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - caddy-data:/data                  # certificates
+      - caddy-config:/config
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "3" }
+
+volumes:
+  data:
+  caddy-data:
+  caddy-config:
