@@ -5,7 +5,7 @@ import { svgInner, widthChars } from './markup.js';
 export const LINE_H = 14;
 export const FONT_SIZES = { lbl: 12, ref: 12, val: 11.5, valsm: 10.5, node: 12, net: 11, pin: 13, termlbl: 12.5,
   accl: 12, grplbl: 10, note: 12, title: 15 };
-const CTR = { pin: 4, net: 4 };
+const CTR = { pin: 4, net: 4, lbl: 4 };       // whole pixels, as the original figures centred them
 
 export function xf(px, py, rot = 0, mirror = false) {
   if (mirror) px = -px;

@@ -36,7 +36,7 @@ def text_anchor(a, rot, mirror):
     return a
 
 
-CTR = {'pin': 4, 'net': 4}
+CTR = {'pin': 4, 'net': 4, 'lbl': 4}       # whole pixels, as the original figures centred them
 
 
 def ctr_offset(cls):
