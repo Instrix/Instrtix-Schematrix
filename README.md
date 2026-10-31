@@ -156,49 +156,52 @@ docker compose up -d                   # development: builds this checkout, http
 ```
 
 For a server, no checkout is needed: make an empty folder, save one of the files below in it as
-`docker-compose.yml`, and start it. Both pull the published image, run it hardened (read-only filesystem, no
-capabilities, memory / CPU limits, log rotation) and include an optional Caddy front end with automatic HTTPS. The
-same files, with more comments, are in `deploy/`.
+`docker-compose.yml`, change the lines marked `# <- change`, and start it. Both pull the published image, run it
+hardened (read-only filesystem, no capabilities, memory / CPU limits, log rotation) and include an optional Caddy
+front end with automatic HTTPS. (`deploy/` has the same files driven by a `.env`, for scripted setups.)
 
 #### Private server (your team, with a token)
 
 ```bash
 mkdir schematrix && cd schematrix
-echo "SCHEMATRIX_TOKEN=$(openssl rand -hex 24)" > .env      # the access token
+echo "SCHEMATRIX_TOKEN=$(openssl rand -hex 24)" > .env && chmod 600 .env    # creates the access token
 # save the file below as docker-compose.yml, then:
-docker compose up -d                                        # http://localhost:8000/?token=<token in .env>
-SCHEMATRIX_DOMAIN=schematrix.example.org docker compose --profile https up -d    # HTTPS on your domain
+docker compose up -d                       # start;  docker compose logs -f  to watch it
+cat .env                                   # the token, for the link: http://localhost:8000/?token=<token>
 ```
 
 ```yaml
 name: schematrix
 services:
   schematrix:
-    image: ghcr.io/instrix/instrtix-schematrix:${SCHEMATRIX_VERSION:-latest}
+    image: ghcr.io/instrix/instrtix-schematrix:latest       # or a fixed release, e.g. :v0.2.1
     restart: unless-stopped
     ports:
-      - "${SCHEMATRIX_BIND:-127.0.0.1}:${SCHEMATRIX_PORT:-8000}:8000"   # 0.0.0.0 to expose it without the proxy
+      # "<address>:<port>:8000" - where the app appears on this computer (8000 at the end never changes)
+      #   127.0.0.1 = only this computer, or through the HTTPS proxy below (safest)
+      #   0.0.0.0   = every network interface: other computers reach it at http://<this-ip>:<port>
+      # e.g. "0.0.0.0:8080:8000" serves it to your network on port 8080
+      - "127.0.0.1:8000:8000"                               # <- change
     environment:
-      SCHEMATRIX_TOKEN: ${SCHEMATRIX_TOKEN:?set SCHEMATRIX_TOKEN in .env}
-      SCHEMATRIX_SCRIPTS: ${SCHEMATRIX_SCRIPTS:-1}          # the Script pane runs Python on the server
-      SCHEMATRIX_SCRIPT_TIMEOUT: ${SCHEMATRIX_SCRIPT_TIMEOUT:-30}
+      SCHEMATRIX_TOKEN: ${SCHEMATRIX_TOKEN:?missing in .env}  # read from the .env file next to this one
+      SCHEMATRIX_SCRIPTS: "1"                               # "0": nobody can run Python on the server
     volumes:
       - data:/data                                          # documents, scripts, custom symbols
     read_only: true
     tmpfs: [/tmp, /home/schematrix/.cache]
     cap_drop: [ALL]
     security_opt: ["no-new-privileges:true"]
-    mem_limit: ${SCHEMATRIX_MEMORY:-1g}
-    cpus: ${SCHEMATRIX_CPUS:-2}
+    mem_limit: 1g
+    cpus: 2
     pids_limit: 256
     logging: { driver: json-file, options: { max-size: "10m", max-file: "3" } }
 
-  caddy:                                                    # optional HTTPS: --profile https
+  caddy:                                                    # HTTPS, only with: docker compose --profile https up -d
     image: caddy:2
     profiles: [https]
     restart: unless-stopped
     depends_on: [schematrix]
-    command: caddy reverse-proxy --from ${SCHEMATRIX_DOMAIN:-schematrix.example.com} --to schematrix:8000
+    command: caddy reverse-proxy --from schematrix.example.org --to schematrix:8000    # <- your domain
     ports: ["80:80", "443:443", "443:443/udp"]
     volumes: [caddy-data:/data, caddy-config:/config]
     logging: { driver: json-file, options: { max-size: "10m", max-file: "3" } }
@@ -209,47 +212,43 @@ volumes:
   caddy-config:
 ```
 
-Update with `docker compose pull && docker compose up -d`; back up the data volume with
-`docker run --rm -v schematrix_data:/data -v "$PWD":/backup alpine tar czf /backup/schematrix-data.tgz -C /data .`
-
 #### Public server (anyone, no token)
 
 ```bash
 mkdir schematrix-public && cd schematrix-public
 # save the file below as docker-compose.yml, then:
-docker compose up -d                                        # http://<host>:8000
-SCHEMATRIX_DOMAIN=schematrix.example.org SCHEMATRIX_TRUST_PROXY=1 SCHEMATRIX_BIND=127.0.0.1 \
-  docker compose --profile https up -d                      # HTTPS, app reachable only through the proxy
+docker compose up -d                       # http://<this-ip>:8000
 ```
 
 ```yaml
 name: schematrix-public
 services:
   schematrix:
-    image: ghcr.io/instrix/instrtix-schematrix:${SCHEMATRIX_VERSION:-latest}
+    image: ghcr.io/instrix/instrtix-schematrix:latest       # or a fixed release, e.g. :v0.2.1
     restart: unless-stopped
     ports:
-      - "${SCHEMATRIX_BIND:-0.0.0.0}:${SCHEMATRIX_PORT:-8000}:8000"
+      # "<address>:<port>:8000": 0.0.0.0 = open to the network; with HTTPS (below) use "127.0.0.1:8000:8000"
+      - "0.0.0.0:8000:8000"                                 # <- change
     environment:
       SCHEMATRIX_PUBLIC: "1"                                # no scripts, nothing stored, rate limits
       SCHEMATRIX_SCRIPTS: "0"
       SCHEMATRIX_WORKSPACE: /tmp/workspace
-      SCHEMATRIX_TRUST_PROXY: ${SCHEMATRIX_TRUST_PROXY:-0}  # 1 only behind the https proxy
+      SCHEMATRIX_TRUST_PROXY: "0"                           # <- "1" with HTTPS (below), never without it
     read_only: true
     tmpfs: [/tmp, /home/schematrix/.cache]
     cap_drop: [ALL]
     security_opt: ["no-new-privileges:true"]
-    mem_limit: ${SCHEMATRIX_MEMORY:-1g}
-    cpus: ${SCHEMATRIX_CPUS:-2}
+    mem_limit: 1g
+    cpus: 2
     pids_limit: 128
     logging: { driver: json-file, options: { max-size: "10m", max-file: "3" } }
 
-  caddy:                                                    # optional HTTPS: --profile https
+  caddy:                                                    # HTTPS, only with: docker compose --profile https up -d
     image: caddy:2
     profiles: [https]
     restart: unless-stopped
     depends_on: [schematrix]
-    command: caddy reverse-proxy --from ${SCHEMATRIX_DOMAIN:-schematrix.example.org} --to schematrix:8000
+    command: caddy reverse-proxy --from schematrix.example.org --to schematrix:8000    # <- your domain
     ports: ["80:80", "443:443", "443:443/udp"]
     volumes: [caddy-data:/data, caddy-config:/config]
     logging: { driver: json-file, options: { max-size: "10m", max-file: "3" } }
@@ -259,50 +258,39 @@ volumes:
   caddy-config:
 ```
 
-#### Configuring: ports, token, domain, version
+#### Setting it up
 
-Settings go in a `.env` file next to `docker-compose.yml` (Compose reads it by itself), one `NAME=value` per line.
-After changing it, run `docker compose up -d` again to apply. A complete `.env` for the private server:
+After any change to the file, run `docker compose up -d` again to apply it.
 
-```bash
-SCHEMATRIX_TOKEN=3f9c…          # access token: openssl rand -hex 24 (private server only)
-SCHEMATRIX_BIND=127.0.0.1       # which host address listens: 127.0.0.1 = this machine only, 0.0.0.0 = the network
-SCHEMATRIX_PORT=8000            # port on the host (inside the container it is always 8000)
-SCHEMATRIX_DOMAIN=schematrix.example.org    # for --profile https
-SCHEMATRIX_VERSION=latest       # image tag: latest, or a release such as v0.2.1
-SCHEMATRIX_SCRIPTS=1            # 0 = nobody can run Python on the server, not even with the token
-SCHEMATRIX_MEMORY=1g            # container limits
-SCHEMATRIX_CPUS=2
-```
+**Ports.** The line under `ports:` reads `"<address>:<port>:8000"`. Only the first two parts are yours to change:
 
-**Ports.** The container always listens on 8000; `SCHEMATRIX_BIND` and `SCHEMATRIX_PORT` choose where that appears
-on the host:
-
-| You want | Set | Open |
+| You want | Ports line | Open in the browser |
 |---|---|---|
-| only this machine (the private default) | `SCHEMATRIX_BIND=127.0.0.1` | `http://localhost:8000` |
-| another port, e.g. 8000 is taken | `SCHEMATRIX_PORT=8080` | `http://localhost:8080` |
-| other computers on your network | `SCHEMATRIX_BIND=0.0.0.0` (allow the port in the host firewall) | `http://<server-ip>:8000` |
-| a remote server, without exposing it | keep `127.0.0.1`; tunnel: `ssh -L 8000:localhost:8000 user@server` | `http://localhost:8000` |
-| HTTPS on a domain (recommended) | `SCHEMATRIX_DOMAIN=…`, start with `--profile https`, keep `127.0.0.1` | `https://<domain>` |
+| only this computer (private default) | `"127.0.0.1:8000:8000"` | `http://localhost:8000` |
+| another port (8000 is taken) | `"127.0.0.1:8080:8000"` | `http://localhost:8080` |
+| other computers on your network | `"0.0.0.0:8000:8000"`, and allow port 8000 in the firewall | `http://<server-ip>:8000` |
+| a remote server, without exposing it | `"127.0.0.1:8000:8000"`, then on your PC `ssh -L 8000:localhost:8000 user@server` | `http://localhost:8000` |
+| HTTPS on your domain (recommended online) | `"127.0.0.1:8000:8000"` + the steps below | `https://your.domain` |
 
-For HTTPS, point the domain's DNS (A / AAAA record) at the server and open ports 80 and 443; Caddy gets and renews
-the certificate by itself and reaches the app inside Docker, so the app's own port can stay on `127.0.0.1`. With your
-own reverse proxy instead (nginx, Traefik, …), skip the profile and proxy to `127.0.0.1:<SCHEMATRIX_PORT>`.
+**HTTPS.** Point your domain's DNS (an A record) at the server and open ports 80 and 443. Put the domain on the
+`caddy` line, then start with `docker compose --profile https up -d`: Caddy gets and renews the certificate by itself
+and talks to the app inside Docker, so the app's own port stays on `127.0.0.1`. On the public server also set
+`SCHEMATRIX_TRUST_PROXY: "1"` so the rate limits see each visitor rather than the proxy. Already have nginx or
+Traefik? Skip the profile and proxy your domain to `127.0.0.1:8000`.
 
-**Token (private server).** Generate one with `openssl rand -hex 24` and put it in `.env`; the server refuses to start
-without it. Each person opens `https://<domain>/?token=<token>`: it sets a cookie, so the address without the token
-works until the browser is closed (bookmark the link with the token to come back). Scripts and API clients send `Authorization: Bearer <token>` instead. To revoke access,
-change the token and run `docker compose up -d`: every existing cookie stops working. Treat `.env` like a password
-(`chmod 600 .env`), and serve over HTTPS so the token never travels in clear text.
+**Token (private server).** The `echo` line above writes a random token into `.env`; the server refuses to start
+without one. To let someone in, send them `https://your.domain/?token=<token>`: opening it sets a cookie, so the
+plain address works until the browser is closed (bookmark the link to come back). Scripts and API clients send
+`Authorization: Bearer <token>` instead. To lock everyone out, put a new token in `.env` and run
+`docker compose up -d`. Keep `.env` private, and use HTTPS so the token never travels in clear text.
 
-**Public server.** No token. Behind the https profile (or your own proxy) also set `SCHEMATRIX_TRUST_PROXY=1` and
-`SCHEMATRIX_BIND=127.0.0.1`, so the rate limits see each visitor and the app can only be reached through the proxy.
-To change a public limit, add it under `environment:` in the compose file, e.g. `SCHEMATRIX_PUBLIC_RATE: "120"`
-(names below; defaults on the [Deployment](docs/wiki/Deployment.md#public-server) wiki page).
+**Updating and backups.** `docker compose pull && docker compose up -d` gets the newest release (with `:latest`).
+Everything the private server keeps is in the `schematrix_data` volume; back it up with
+`docker run --rm -v schematrix_data:/data -v "$PWD":/backup alpine tar czf /backup/schematrix-data.tgz -C /data .`
 
-**Version.** `latest` follows each release on `docker compose pull && docker compose up -d`; pin a release
-(`SCHEMATRIX_VERSION=v0.2.1`) to update only when you change it.
+**Limits.** `mem_limit` and `cpus` cap the container. The public server's rate and size limits can be changed by
+adding lines under `environment:`, e.g. `SCHEMATRIX_PUBLIC_RATE: "120"` (all of them, with defaults, on the
+[Deployment](docs/wiki/Deployment.md#public-server) wiki page).
 
 Public mode (`SCHEMATRIX_PUBLIC=1`) is safe because of what the server will not do, not because of a password (the
 editor keeps showing those features, with a banner pointing to the desktop app and self-hosted servers):
