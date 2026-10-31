@@ -92,8 +92,9 @@ the examples, the server (private and public mode) and the legacy importer (pixe
    - the wheel and source archive, and the Docker image `ghcr.io/instrix/instrtix-schematrix:<tag>` and `:latest`;
 
    and publishes them as the GitHub release for the tag, with generated notes. The file names carry no version, so
-   `releases/latest/download/<name>` always points at the newest. Started by hand from the Actions tab, it builds
-   everything as run artifacts without releasing.
+   `releases/latest/download/<name>` always points at the newest. Started by hand from the Actions tab, or by pushing
+   a `build/<anything>` branch, it builds everything as run artifacts without releasing. Every native build first
+   exports a PDF and a PNG with the packaged app itself (the Windows and macOS apps carry their own Cairo).
 
 Other workflows: `ci.yml` runs the tests on Python 3.10 and 3.12 for every push and pull request; `pages.yml`
 publishes `docs/` (this wiki) to GitHub Pages when it changes. Packaging lives in `packaging/`: `schematrix.spec`

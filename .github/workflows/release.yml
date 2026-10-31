@@ -1,10 +1,12 @@
 # Builds every download and, for a version tag, publishes them as a GitHub release.
 #   git tag v0.3.0 && git push --tags        (the tag must match the version in pyproject.toml)
-# Run it by hand from the Actions tab to get the builds as run artifacts without a release.
+# Run it by hand from the Actions tab, or push a build/<anything> branch, to get the builds as run artifacts without
+# a release.
 name: build
 on:
   push:
     tags: ['v*']
+    branches: ['build/**']
   workflow_dispatch:
 jobs:
   test:
@@ -38,8 +40,32 @@ jobs:
         name: Inno Setup
         shell: pwsh
         run: if (-not (Test-Path "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe")) { choco install innosetup -y --no-progress }
+      # Cairo for PDF / PNG export, bundled into the Windows and macOS apps so users install nothing
+      - if: runner.os == 'Windows'
+        id: msys
+        uses: msys2/setup-msys2@v2
+        with: { msystem: UCRT64, install: mingw-w64-ucrt-x86_64-cairo, update: false }
+      - if: runner.os == 'macOS'
+        run: brew install cairo
       - run: pip install ".[desktop]" pyinstaller
-      - run: pyinstaller packaging/schematrix.spec --noconfirm
+      - name: pyinstaller
+        shell: bash
+        env: { SCHEMATRIX_REQUIRE_CAIRO: '${{ runner.os != ''Linux'' && ''1'' || '''' }}' }
+        run: |
+          if [ "$RUNNER_OS" = Windows ]; then export PATH="$(cygpath -u '${{ steps.msys.outputs.msys2-location }}')/ucrt64/bin:$PATH"; fi
+          pyinstaller packaging/schematrix.spec --noconfirm
+      # the packaged app itself must export PDF and PNG (Cairo's build folders are not on PATH here)
+      - name: smoke test
+        shell: bash
+        run: |
+          case "$RUNNER_OS" in
+            Windows) exe=dist/Schematrix/Schematrix.exe ;;
+            macOS) exe=dist/Schematrix.app/Contents/MacOS/Schematrix; ls dist/Schematrix.app/Contents/Frameworks/libcairo.2.dylib ;;
+            *) exe=dist/Schematrix/Schematrix ;;
+          esac
+          "$exe" render schematrix/examples/analog/inverting-amplifier.json -o smoke -f pdf,png
+          ls -l smoke
+          ls smoke/*.pdf smoke/*.png
       - run: python packaging/package.py
       - uses: actions/upload-artifact@v4
         with:
@@ -63,6 +89,7 @@ jobs:
 
   docker:
     needs: test
+    if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     permissions: { packages: write, contents: read }
     steps:

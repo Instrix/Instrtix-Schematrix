@@ -6,6 +6,7 @@
 Linux: Schematrix-x86_64.AppImage and schematrix_amd64.deb (needs dpkg-deb; appimagetool is downloaded if missing).
 Windows: Schematrix-Setup.exe (needs Inno Setup's ISCC) and Schematrix-windows.zip.
 macOS: Schematrix-macos.dmg (hdiutil).
+Windows and macOS bundles carry Cairo (see schematrix.spec); the installer adds WebView2 where Windows lacks it.
 The names carry no version so that .../releases/latest/download/<name> always points at the newest release.
 """
 import os
@@ -37,6 +38,7 @@ Categories=Development;Electronics;Engineering;
 Keywords=schematic;circuit;electronics;spice;netlist;tikz;
 StartupWMClass=Schematrix
 """
+WEBVIEW2 = 'https://go.microsoft.com/fwlink/p/?LinkId=2124703'       # Microsoft's WebView2 bootstrapper
 APPIMAGETOOL = 'https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage'
 
 
@@ -98,7 +100,7 @@ Version: {VERSION}
 Architecture: amd64
 Maintainer: Instrix <https://github.com/Instrix/Instrtix-Schematrix>
 Installed-Size: {size}
-Depends: libc6 (>= 2.35)
+Depends: libc6 (>= 2.35), libcairo2
 Recommends: chromium | chromium-browser | google-chrome-stable
 Suggests: python3-gi, gir1.2-webkit2-4.1, ngspice
 Section: electronics
@@ -122,7 +124,11 @@ def windows():
     iscc = shutil.which('iscc') or r'C:\Program Files (x86)\Inno Setup 6\ISCC.exe'
     if not os.path.exists(iscc) and not shutil.which('iscc'):
         sys.exit('Inno Setup (ISCC) not found: install it to build Schematrix-Setup.exe')
-    run(iscc, f'/DVersion={VERSION}', f'/DSource={BUNDLE}', f'/DOutDir={OUT}', os.path.join(PKG, 'schematrix.iss'))
+    webview2 = os.path.join(DIST, 'MicrosoftEdgeWebview2Setup.exe')
+    if not os.path.exists(webview2):
+        urllib.request.urlretrieve(WEBVIEW2, webview2)
+    run(iscc, f'/DVersion={VERSION}', f'/DSource={BUNDLE}', f'/DOutDir={OUT}', f'/DWebView2={webview2}',
+        os.path.join(PKG, 'schematrix.iss'))
 
 
 # ---------------------------------------------------------------- macOS

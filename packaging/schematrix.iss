@@ -1,5 +1,6 @@
-; Inno Setup script for the Windows installer; packaging/package.py passes Version, Source and OutDir.
-;   ISCC /DVersion=0.2.1 /DSource=dist\Schematrix /DOutDir=dist\release packaging\schematrix.iss
+; Inno Setup script for the Windows installer; packaging/package.py passes Version, Source, OutDir and WebView2
+; (Microsoft's WebView2 bootstrapper, run only on the rare Windows 10 without the WebView2 runtime).
+;   ISCC /DVersion=0.2.1 /DSource=dist\Schematrix /DOutDir=dist\release /DWebView2=dist\MicrosoftEdgeWebview2Setup.exe packaging\schematrix.iss
 #ifndef Version
   #define Version "0.0.0"
 #endif
@@ -32,10 +33,28 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 Source: "{#Source}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#WebView2}"; DestDir: "{tmp}"; Flags: deleteafterinstall; Check: not WebView2Installed
 
 [Icons]
 Name: "{autoprograms}\Schematrix"; Filename: "{app}\Schematrix.exe"
 Name: "{autodesktop}\Schematrix"; Filename: "{app}\Schematrix.exe"; Tasks: desktopicon
 
 [Run]
+Filename: "{tmp}\MicrosoftEdgeWebview2Setup.exe"; Parameters: "/silent /install"; StatusMsg: "Installing Microsoft Edge WebView2 (the app window)..."; Flags: waituntilterminated; Check: not WebView2Installed
 Filename: "{app}\Schematrix.exe"; Description: "{cm:LaunchProgram,Schematrix}"; Flags: nowait postinstall skipifsilent
+
+[Code]
+const WebView2Key = 'Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}';
+
+function HasVersion(Root: Integer; Key: String): Boolean;
+var V: String;
+begin
+  Result := RegQueryStringValue(Root, Key, 'pv', V) and (V <> '') and (V <> '0.0.0.0');
+end;
+
+// WebView2 ships with Windows 11 and updated Windows 10; install it only where it is missing
+function WebView2Installed: Boolean;
+begin
+  Result := HasVersion(HKLM, 'SOFTWARE\WOW6432Node\' + WebView2Key) or HasVersion(HKLM, 'SOFTWARE\' + WebView2Key)
+    or HasVersion(HKCU, 'Software\' + WebView2Key);
+end;

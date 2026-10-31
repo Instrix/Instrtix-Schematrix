@@ -19,9 +19,10 @@ visible. Save to the workspace (`Ctrl S`) for anything you want to keep.
 
 ### PDF / EPS export says it needs cairosvg
 
-Install the `export` extra: `pipx inject schematrix cairosvg pillow` (pipx) or `pip install cairosvg pillow`. PNG,
-JPEG and WebP from the editor work without it. On Windows also see the Cairo DLL note in
-[Installation](Installation.md#platform-notes).
+Only pip installs can hit this; the downloads include it. Install the `export` extra:
+`pipx inject schematrix cairosvg pillow` (pipx) or `pip install cairosvg pillow`. On Windows and macOS, if it then
+reports a missing Cairo library, install the Schematrix app as well: a pip install uses the app's Cairo. PNG, JPEG and
+WebP from the editor work without any of it.
 
 ### Exported PNG / PDF text looks different from the editor, or shows boxes
 

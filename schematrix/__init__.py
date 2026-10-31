@@ -1,4 +1,6 @@
 """Schematrix: electrical schematics in the Instrix house style, scriptable from Python and editable in a GUI."""
+from ._cairo import borrow_app_cairo
+borrow_app_cairo()                       # before anything loads cairosvg
 from .document import Schematic, Comp, Pin, load
 from . import netio, symbols, theme
 from .render import render_svg

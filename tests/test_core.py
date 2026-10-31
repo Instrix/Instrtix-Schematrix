@@ -122,3 +122,18 @@ def test_hop_svg():
     assert GEO.wire_path([(0, 50), (100, 50)], {0: [(50, 50)]}) == 'M0 50L46 50A4 4 0 0 1 54 50L100 50'
     assert GEO.wire_path([(100, 50), (0, 50)], {0: [(50, 50)]}) == 'M100 50L54 50A4 4 0 0 0 46 50L0 50'
     assert 'A4 4' in hop_doc().to_svg() and 'A4 4' not in hop_doc(False).to_svg()
+
+
+def test_borrows_the_apps_cairo_when_the_system_has_none(tmp_path, monkeypatch):
+    import ctypes.util
+    import sys
+    from schematrix import _cairo
+    lib = tmp_path / 'Schematrix.app' / 'Contents' / 'Frameworks' / 'libcairo.2.dylib'
+    lib.parent.mkdir(parents=True); lib.write_bytes(b'')
+    monkeypatch.setattr(sys, 'platform', 'darwin')
+    monkeypatch.delitem(sys.modules, 'cairocffi', raising=False)
+    monkeypatch.setattr(ctypes.util, 'find_library', lambda name: None)
+    monkeypatch.setattr(_cairo, '_app_cairo', lambda: str(lib))
+    _cairo.borrow_app_cairo()
+    assert ctypes.util.find_library('cairo-2') == str(lib)
+    assert ctypes.util.find_library('png') is None

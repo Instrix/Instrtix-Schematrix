@@ -126,16 +126,17 @@ pytest -q
 
 ### Platform notes
 
-- **Windows**: the native window uses WebView2, preinstalled on Windows 10 and 11. `cairosvg` needs the Cairo DLL;
-  if PNG/PDF export reports a missing `libcairo-2.dll`, install GTK3 for Windows (or use MSYS2's `mingw-w64-x86_64-cairo`)
-  and put its `bin` folder on PATH. If you skip it, you can still export SVG, and PNG from the editor.
+- **Windows**: nothing to install. The download carries everything, including Cairo for PDF / PNG export; the window
+  uses WebView2, part of Windows 10 and 11 (the installer adds it on the rare machine without it). With pip,
+  PDF / PNG export uses the Cairo of the installed app, so install the app as well.
 - **Linux**: for the native window, install your distribution's WebKitGTK bindings, e.g. on Debian/Ubuntu
   `sudo apt install python3-gi gir1.2-webkit2-4.1` (Fedora: `python3-gobject webkit2gtk4.1`; Arch:
   `python-gobject webkit2gtk-4.1`). Schematrix finds them even from a pipx or venv install, as long as that uses
   the system Python. Alternatively use Qt: `pipx inject schematrix qtpy pyqt6 pyqt6-webengine`. With neither,
   `schematrix` says so and opens the editor in your browser. Cairo is usually already installed (`libcairo2`). For PNG/PDF that match the editor, install the fonts
   too: `sudo apt install fonts-jetbrains-mono fonts-inter`.
-- **macOS**: works too (`brew install cairo` for PNG/PDF); the native window uses the system WebKit.
+- **macOS**: nothing to install: the download carries Cairo and the window uses the system WebKit. With pip, PDF / PNG
+  export uses the installed app's Cairo, or Homebrew's (`brew install cairo`).
 
 ## Quick start
 

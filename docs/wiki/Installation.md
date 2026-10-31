@@ -93,10 +93,12 @@ window on the running instance. `schematrix serve --open` runs only the web serv
   `pipx inject schematrix qtpy pyqt6 pyqt6-webengine`.
 - **PNG / PDF that match the editor**: server-side exports use system fonts. Install the editor's fonts for an exact
   match: `sudo apt install fonts-jetbrains-mono fonts-inter` (the Docker image has them).
-- **Windows, PDF export**: `cairosvg` needs the Cairo DLL. If PDF export reports a missing `libcairo-2.dll`, install
-  GTK3 for Windows (or MSYS2's `mingw-w64-x86_64-cairo`) and put its `bin` folder on PATH. PNG still works from the
-  editor without it.
-- **macOS**: `brew install cairo` for PDF export.
+- **Windows**: the download needs nothing else. It carries Cairo (PDF / PNG export), and the window uses WebView2,
+  which is part of Windows 10 and 11; the installer adds it on the rare machine without it. A pip-installed
+  Schematrix borrows the installed app's Cairo, so for PDF / PNG from Python install the app too.
+- **macOS**: the download needs nothing else (it carries Cairo; the window is the system WebKit). With pip, PDF / PNG
+  export uses the installed app's Cairo, or Homebrew's (`brew install cairo`).
+- **Linux downloads** use the system's Cairo (`libcairo2`), which every desktop has; the .deb installs it if missing.
 - **Simulation**: install [ngspice](https://ngspice.sourceforge.io/) to run the SPICE netlists (`sudo apt install ngspice`).
 - **LaTeX**: any TeX distribution with TikZ (TeX Live, MiKTeX, Overleaf) compiles the TikZ exports.
 
