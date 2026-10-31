@@ -9,30 +9,14 @@ one built by a script are the same kind of document.
 **Documentation: the [Schematrix wiki](docs/wiki/Home.md)** — every feature, how to draw, export, use the figures in
 LaTeX, simulate, script and deploy.
 
-- **GUI**: browser-based editor — symbol palette, wires that snap to pins and follow parts when moved, KiCad-style
-  wire dragging (grab an end to stretch it, a segment to slide it), junction dots and optional wire hops, net labels,
-  group boxes, notes, undo/redo, tabs, themes, netlist view, and a Python script pane.
-- **Symbols**: ~95 parts and ~50 named variants, each its own palette tile and Python method — resistors (variable,
-  thermistor, varistor, LDR, Kelvin shunt), capacitors (polarized, electrolytic), inductors, transformers, diodes
-  (rectifier, Zener, Schottky, LED, TVS uni/bidirectional, avalanche, photodiode, varactor, tunnel, PIN, laser,
-  step-recovery, Shockley), bridges, SCR / triac / diac, BJTs, MOSFETs (enhancement / depletion, 4-terminal), JFETs,
-  IGBTs, optocouplers, op-amps, comparators, in-amps, regulators, independent and dependent sources, batteries,
-  current sinks, loads, motors, lamps, meters, switches, relays, connectors, antennas, vacuum tubes, signal-flow
-  blocks, Thévenin / Norton equivalents, two-ports.
-- **Logic**: AND / NAND / OR / NOR / XOR / XNOR (2–16 inputs, ANSI or IEC shapes, any inputs inverted), buffers,
-  NOT and Schmitt inverters, tri-state buffers, D / JK / T flip-flops, SR and D latches, registers and latch arrays,
-  shift registers (SIPO / PISO / universal), counters, decoders, priority encoders, multiplexers and
-  demultiplexers, adders, magnitude comparators — all with configurable widths, as bus pins or one pin per bit —
-  plus a custom logic IC whose pins you type (`D[8], >CLK, ~OE`). Wires have a thick bus style.
-- **Fields**: any part can carry extra fields (tolerance, voltage rating, footprint, …); each can be shown on the
-  sheet, and they travel with the netlist.
-- **Netlists**: export and import SPICE, KiCad `.net` and a JSON netlist — from the editor, the API, the CLI or Python.
-  An imported netlist becomes a new sheet with every net labelled.
-- **Scripting**: `from schematrix import Schematic` — place parts, reach pins as `part['pin']`, route wires,
-  save JSON / SVG / PNG / PDF / SPICE. Scripts run from the editor, the CLI, or plain Python / Jupyter.
-- **Legacy import**: figure scripts written against the old hand-rolled `S` class (like `schematics.py`) run
-  unchanged and come out as editable documents, pixel-identical to the originals.
-- **Runs** as a Docker web app, or natively on Windows and Linux (own window via pywebview).
+- **Editor**: KiCad-style wiring (snap, stretch, junction dots, hops), buses, net labels, undo, tabs, find/replace,
+  page frames, a symbol editor and a Python script pane — in the browser or its own desktop window.
+- **Symbols**: ~150 parts and variants, from passives, diodes and transistors to op-amps, sources and tubes, plus
+  configurable logic: gates, flip-flops, registers, counters, muxes and custom ICs, any width.
+- **Output**: SVG, PNG, PDF, EPS and TikZ for LaTeX, in seven themes (including a Times/LaTeX one); SPICE, KiCad and
+  JSON netlists in and out, ready for ngspice.
+- **Scripting**: `from schematrix import Schematic` — the same documents from Python, the CLI or the HTTP API.
+- **Runs** natively on Windows, Linux and macOS, or as a Docker web app (private or public).
 
 ## Gallery
 
