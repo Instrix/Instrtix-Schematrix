@@ -1,8 +1,8 @@
 # Schematrix
 
-An electrical schematic editor in the Instrix house style (the look of the TR-0002 figures), with a Python
-scripting library behind it. The same core renders, netlists and serves the GUI, so a schematic drawn by hand and
-one built by a script are the same kind of document.
+An electrical schematic editor in the Instrix house style, with a Python scripting library behind it. The same core
+renders, netlists and serves the GUI, so a schematic drawn by hand and one built by a script are the same kind of
+document.
 
 ![Editor](docs/wiki/img/editor.png)
 
