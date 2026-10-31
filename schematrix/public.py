@@ -99,7 +99,7 @@ def check_doc(doc: dict):
     if len(els) > LIMITS['max_elements']:
         raise ValueError(f'documents on this public server are limited to {LIMITS["max_elements"]} elements')
     if doc.get('symbols'):
-        raise ValueError('custom symbols are not available on this public server')
+        raise ValueError('custom symbols are not available on this public server; use the desktop app or a self-hosted server')
     for e in els:
         if e.get('type') == 'raw':
             e['svg'] = clean_svg(e.get('svg', ''))

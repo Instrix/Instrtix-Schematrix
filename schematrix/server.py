@@ -172,7 +172,7 @@ def create_app() -> FastAPI:
 
     def _no_public(what):
         if public:
-            raise HTTPException(403, f'{what} is not available on this public server')
+            raise HTTPException(403, f'{what} is not available on this public server; use the desktop app or a self-hosted server')
 
     @app.get('/api/symbols')
     def symbols():

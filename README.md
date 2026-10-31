@@ -174,7 +174,8 @@ To let anyone use it anonymously, run it in public mode with `deploy/docker-comp
 docker compose -f deploy/docker-compose.public.yml up -d             # http://<host>:8000, no token, no volume
 ```
 
-Public mode (`SCHEMATRIX_PUBLIC=1`) is safe because of what the server will not do, not because of a password:
+Public mode (`SCHEMATRIX_PUBLIC=1`) is safe because of what the server will not do, not because of a password (the
+editor keeps showing those features, with a banner pointing to the desktop app and self-hosted servers):
 
 - **no code execution**: scripts and legacy-script import are off, whatever `SCHEMATRIX_SCRIPTS` says;
 - **nothing stored on the server**: visitors keep their sheets in their own browser and File > Save downloads a

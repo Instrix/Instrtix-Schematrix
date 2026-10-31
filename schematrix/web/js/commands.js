@@ -9,7 +9,7 @@ import { refreshNetlist, refreshScripts, runScript } from './panes.js';
 import { align, copySel, del, distribute, nudge, paste, reorder, step, toggleAccent, transformSel } from './selection.js';
 import { D, edit, newDoc, openTab, persist, redo, S, selected, T, undo } from './state.js';
 import { finishDraft, setTool } from './tools.js';
-import { ask, closeModal, helpDialog, markupHelp, modal, toast } from './ui.js';
+import { ask, closeModal, fullOnly, helpDialog, markupHelp, modal, toast } from './ui.js';
 import { $, $$, api, svg } from './util.js';
 import { fit, render, renderOverlay, zoomAt } from './view.js';
 
@@ -24,13 +24,13 @@ export function closeMenus() { $$('.menu').forEach((m) => m.classList.remove('op
 
 export const COMMANDS = {
   new: () => openTab(newDoc()), open: filesDialog, upload: () => { $('#fileinput').dataset.legacy = ''; $('#fileinput').click(); },
-  'import-legacy': () => { $('#fileinput').dataset.legacy = '1'; $('#fileinput').click(); },
+  'import-legacy': () => { if (S.info.public) return fullOnly('Legacy figure import'); $('#fileinput').dataset.legacy = '1'; $('#fileinput').click(); },
   save: () => save(false), saveas: () => save(true), undo, redo,
   cut: () => { if (copySel()) del(); }, copy: copySel, paste, duplicate: () => { if (copySel()) paste(); }, delete: del,
   selectall: () => { T().sel = new Set(D().elements.filter((e) => !e.locked).map((e) => e.id)); render(); renderInspector(); },
   rotate: () => transformSel('rot'), mirror: () => transformSel('mir'), accent: toggleAccent, front: () => reorder(true), back: () => reorder(false),
   forward: () => step(1), backward: () => step(-1), find: findDialog,
-  'symbol-new': () => { if (!S.info.public) openSymbolEditor(); }, 'symbol-edit': () => { const e = selected()[0]; if (e?.type === 'comp') openSymbolEditor(S.cat[e.sym]?.custom ? { edit: e.sym } : { copy: e.sym, props: e.props, comp: e.id }); },
+  'symbol-new': () => { if (S.info.public) fullOnly('The symbol editor'); else openSymbolEditor(); }, 'symbol-edit': () => { if (S.info.public) return fullOnly('The symbol editor'); const e = selected()[0]; if (e?.type === 'comp') openSymbolEditor(S.cat[e.sym]?.custom ? { edit: e.sym } : { copy: e.sym, props: e.props, comp: e.id }); },
   'align-left': () => align('left'), 'align-center': () => align('center'), 'align-right': () => align('right'),
   'align-top': () => align('top'), 'align-middle': () => align('middle'), 'align-bottom': () => align('bottom'),
   'distribute-h': () => distribute('h'), 'distribute-v': () => distribute('v'),

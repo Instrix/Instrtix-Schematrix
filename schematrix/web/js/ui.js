@@ -50,6 +50,18 @@ export function confirmBox(text, ok = 'OK') {
     setTimeout(() => o.focus(), 0);
   });
 }
+// ---------------------------------------------------------------- public server: features it does not offer
+// the features stay in the menus; using one explains where it is available instead
+export const FULL_ONLY = 'Python scripts, custom symbols and legacy figure import';
+export const FULL_URL = 'https://github.com/Instrix/Instrtix-Schematrix#install';
+export function fullOnlyHtml(what = FULL_ONLY) {
+  return `${G.esc(what)} ${what === FULL_ONLY ? 'are' : 'is'} available in the <b>desktop app</b> and on a <b>self-hosted</b> Schematrix server, not on this public one. <a href="${FULL_URL}" target="_blank" rel="noopener">Get Schematrix</a>`;
+}
+export function fullOnly(what) {
+  const d = document.createElement('div');
+  d.innerHTML = `<p style="margin:0">${fullOnlyHtml(what)}</p>`;
+  modal('Not on the public server', d);
+}
 export let toastTimer = 0;
 export function toast(msg, err = false) {
   const t = $('#toast');

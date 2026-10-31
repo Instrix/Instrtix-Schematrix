@@ -3,7 +3,7 @@
 import * as G from './geom.js';
 import { buildPalette } from './palette.js';
 import { D, edit, geoKey, S } from './state.js';
-import { confirmBox, toast } from './ui.js';
+import { confirmBox, fullOnly, toast } from './ui.js';
 import { $, api, clone } from './util.js';
 import { render } from './view.js';
 
@@ -416,7 +416,8 @@ export async function refreshCatalog(changed) {
 // the inspector's button for a selected part: edit it (custom) or start a custom copy of it (built-in)
 export function symbolButton(e) {
   const c = S.cat[e.sym];
-  if (!c || S.info.public) return null;
+  if (!c) return null;
+  if (S.info.public) return ['Customise symbol…', () => fullOnly('The symbol editor')];
   return c.custom ? ['Edit symbol…', () => openSymbolEditor({ edit: e.sym })]
     : ['Customise symbol…', () => openSymbolEditor({ copy: e.sym, props: e.props, comp: e.id })];
 }

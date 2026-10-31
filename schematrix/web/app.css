@@ -284,6 +284,12 @@ pre.code { margin: 0; padding: 10px; background: var(--paper); border: 1px solid
 #symedit .props input, #symedit .props select, #symedit .props textarea { width: 100%; min-width: 0; box-sizing: border-box; }
 #symedit .props .f { grid-template-columns: 1fr; }
 
-/* public server: no scripts, no symbol library, no server-side saving */
-body.public [data-pane="script"], body.public [data-cmd="import-legacy"], body.public [data-cmd="symbol-new"],
-body.public [data-cmd="saveas"] { display: none !important; }
+/* public server: the features it lacks stay visible and explain where they are available */
+body.public [data-cmd="saveas"] { display: none !important; }      /* Save already downloads */
+body.banner { grid-template-rows: auto 44px 32px 1fr 26px; }
+#banner { display: flex; align-items: center; gap: 10px; padding: 6px 12px; background: var(--accent-bg); color: var(--ink);
+  border-bottom: 1px solid var(--rule); font-size: 12px; }
+#banner span { flex: 1; }
+#banner a, .fullonly a { color: var(--accent); font-weight: 500; }
+#banner .x { background: none; border: 0; font-size: 16px; line-height: 1; color: var(--faint); cursor: pointer; }
+.fullonly { margin: 0 0 10px; padding: 8px 10px; background: var(--accent-bg); border-radius: var(--r); font-size: 12px; }

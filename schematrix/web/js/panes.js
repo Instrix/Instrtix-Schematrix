@@ -62,6 +62,7 @@ for k, (r, tap) in enumerate([('10 mΩ', 't1'), ('90 mΩ', 't2'), ('900 mΩ', 't
 print(lad.spice())
 `;
 export async function runScript() {
+  if ($('#runscript').disabled) return;     // scripts are off on this server (the pane says why)
   const out = $('#runout');
   out.innerHTML = '<pre>running…</pre>';
   try {

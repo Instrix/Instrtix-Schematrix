@@ -65,6 +65,9 @@ Public mode (`SCHEMATRIX_PUBLIC=1`) is safe because of what the server will not 
 - **hardened output**: raw SVG is stripped of scripts, exports are served sandboxed, the page has a strict content
   security policy.
 
+The editor still shows these features: a dismissible banner at the top, a note in the Script pane, and a short message
+when someone opens the symbol editor or legacy import, all pointing to the desktop app or a self-hosted server.
+
 | Limit | Default | Variable |
 |---|---|---|
 | requests per minute per visitor | 240 | `SCHEMATRIX_PUBLIC_RATE` |

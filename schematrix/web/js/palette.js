@@ -4,6 +4,7 @@ import { S } from './state.js';
 import { renderInspector } from './inspector.js';
 import { openSymbolEditor } from './symedit.js';
 import { placeAt, setTool, startPlacing } from './tools.js';
+import { fullOnly } from './ui.js';
 import { toWorld } from './view.js';
 import { $, svg } from './util.js';
 
@@ -46,7 +47,7 @@ export function buildPalette(filter = '') {
       // press and drag onto the sheet drops one part; a plain click enters click-to-place mode (repeatable)
       b.oncontextmenu = (ev) => {                   // right-click: edit a custom symbol, or start a custom copy
         ev.preventDefault();
-        if (S.info.public) return;
+        if (S.info.public) return fullOnly('The symbol editor');
         openSymbolEditor(e.custom ? { edit: e.name } : { copy: e.name, props: t.props });
       };
       if (e.custom) b.classList.add('custom');

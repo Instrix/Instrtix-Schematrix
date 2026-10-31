@@ -6,7 +6,7 @@ import { buildPalette } from './palette.js';
 import { refreshScripts, SAMPLE } from './panes.js';
 import { geoKey, newDoc, openTab, restore, S } from './state.js';
 import { setTool } from './tools.js';
-import { toast } from './ui.js';
+import { FULL_ONLY, fullOnlyHtml, toast } from './ui.js';
 import { $, api } from './util.js';
 import { render, scopeCss } from './view.js';
 
@@ -28,8 +28,22 @@ export async function boot() {
   buildPalette();
   $('#code').value = localStorage.getItem('schematrix-script') || SAMPLE;
   if (!S.info.scripts) { $('#runscript').disabled = true; $('#runscript').title = 'Script execution is disabled on this server'; }
-  if (S.info.public) {                       // anonymous public server: hide what it does not offer
+  if (S.info.public) {                       // anonymous public server: say what it does not offer
     document.body.classList.add('public');
+    $('#pane-script').insertAdjacentHTML('afterbegin', `<div class="fullonly">${fullOnlyHtml('Running Python scripts')}</div>`);
+    $('#runscript').disabled = $('#savescript').disabled = true;
+    let seen = false;
+    try { seen = localStorage.getItem('schematrix-public-banner') === '1'; } catch { /* storage blocked */ }
+    if (!seen) {
+      const b = document.createElement('div');
+      b.id = 'banner';
+      b.innerHTML = `<span>Public demo: ${fullOnlyHtml(FULL_ONLY)}</span><button class="x" title="Dismiss">×</button>`;
+      b.querySelector('button').onclick = () => {
+        b.remove(); document.body.classList.remove('banner');
+        try { localStorage.setItem('schematrix-public-banner', '1'); } catch { /* storage blocked */ }
+      };
+      document.body.prepend(b); document.body.classList.add('banner');
+    }
     try {
       if (!localStorage.getItem('schematrix-public-notice')) {
         toast('Public server: nothing is stored here. Your sheets are kept in this browser; File > Save downloads them.');
