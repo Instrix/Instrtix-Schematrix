@@ -1,6 +1,6 @@
 """Run figure scripts written against the original hand-rolled `S` drawing class and get editable documents.
 
-The original scripts (schematics.py for TR-0002) define a class `S` with methods wire/res/cap/opamp/nmos/flag/...
+The original scripts (e.g. examples/tr-0002/schematics.py) define a class `S` with methods wire/res/cap/opamp/nmos/flag/...
 and figure functions that build an `S` and return `s.svg(...)`. `CompatS` has the same methods but records
 editable elements (components, wires, texts) into a `Schematic`; raw `s.add(...)` markup is kept as raw elements.
 

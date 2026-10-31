@@ -1,6 +1,6 @@
 """Themes: colour tokens, fonts and the drawing CSS shared by the Python renderer and the web editor.
 
-The default theme is the Instrix brand palette from the original TR-0002 figures. A document can name a theme
+The default theme is the Instrix brand palette, the Instrix documentation look. A document can name a theme
 ("instrix", "instrix-dark", "blueprint", "print-mono", "formal", "technical", "kicad") or carry a dict that
 overrides any token of the default.
 """

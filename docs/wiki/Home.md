@@ -49,7 +49,7 @@ no locked features.
 | [HTTP API](HTTP-API.md) | every server endpoint |
 | [Document format](Document-Format.md) | the `.json` file, element by element |
 | [Examples](Examples.md) | the bundled example sheets |
-| [Legacy figure scripts](Legacy-Figure-Scripts.md) | importing the old TR-0002 `S`-class scripts |
+| [Legacy figure scripts](Legacy-Figure-Scripts.md) | importing the old Instrix documentation `S`-class scripts |
 
 ## Running it for others
 

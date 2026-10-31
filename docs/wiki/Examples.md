@@ -65,7 +65,7 @@ SPICE and KiCad files to try *File > Import netlist* on, including `foreign-kica
 
 ## tr-0002
 
-`schematics.py` is the original TR-0002 figure script, written against a hand-rolled `S` class. Run it in the Script
+`schematics.py` is an original Instrix documentation figure script, written against a hand-rolled `S` class. Run it in the Script
 pane and its 12 figures open as editable tabs; or run it with Python to write the SVGs it always wrote. See
 [Legacy figure scripts](Legacy-Figure-Scripts.md).
 

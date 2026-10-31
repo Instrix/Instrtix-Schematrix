@@ -147,7 +147,7 @@ python -m schematrix --help                  # same as the schematrix command
 ```
 
 The workspace (default `~/Schematrix`, `/data` in Docker) holds saved `.json` schematics and `.py` scripts. On first
-run it is seeded with `examples/`: the twelve TR-0002 figures and a sample script.
+run it is seeded with `examples/`: twelve figures in the Instrix documentation look and a sample script.
 
 ### Docker
 
@@ -333,7 +333,7 @@ scripts, each with ready-to-open `.json` documents beside it:
   inverter, op-amp integrator, diode clipper
 - **misc**: triode preamp, signal-chain block diagram, a LaTeX paper figure, the same circuit in every style
 - **netlists**: SPICE and KiCad files to try File > Import netlist on
-- **tr-0002**: the original figure script (runs as-is, or imports as 12 editable figures)
+- **tr-0002**: an original Instrix documentation figure script (runs as-is, or imports as 12 editable figures)
 
 `python scripts/build_examples.py` regenerates the `.json` documents and sample netlists.
 

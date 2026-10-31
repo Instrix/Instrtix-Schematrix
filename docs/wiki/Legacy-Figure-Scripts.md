@@ -1,6 +1,6 @@
 # Legacy figure scripts
 
-Before Schematrix, the TR-0002 figures were drawn by Python scripts built on a hand-rolled `S` class that wrote SVG
+Before Schematrix, the figures in the Instrix documentation were drawn by Python scripts built on a hand-rolled `S` class that wrote SVG
 directly (`examples/tr-0002/schematics.py`). Schematrix reads those scripts and turns every figure into an editable
 document, pixel-identical to the original SVG (a test checks this).
 
