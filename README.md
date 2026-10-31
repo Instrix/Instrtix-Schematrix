@@ -18,6 +18,12 @@ LaTeX, simulate, script and deploy.
 - **Scripting**: `from schematrix import Schematic` — the same documents from Python, the CLI or the HTTP API.
 - **Runs** natively on Windows, Linux and macOS, or as a Docker web app (private or public).
 
+## Free and open source, forever
+
+Schematrix is free software under the [GNU GPL v3](LICENSE) (or any later version). It is free forever: no payments,
+no subscriptions, no accounts, no "pro" edition and no locked features. Everything described here is in the download
+and in this repository, for anyone to use, study, change and share.
+
 ## Gallery
 
 The same sheet in each built-in theme (`scripts/build_docs_images.py`):
@@ -425,3 +431,10 @@ KiCad), so a netlist written here imports back without loss. API: `POST /api/net
 Element types: `comp`, `wire`, `arrow`, `text`, `rect`, `raw`. Element order is drawing order.
 
 Fonts: JetBrains Mono and Inter (SIL OFL 1.1, licences in `web/fonts/`).
+
+## License
+
+Copyright (C) 2026 Instrix. Schematrix is free software: you can redistribute it and/or modify it under the terms of
+the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at
+your option) any later version. It is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See [LICENSE](LICENSE).

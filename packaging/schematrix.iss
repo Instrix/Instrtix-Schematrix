@@ -19,6 +19,7 @@ PrivilegesRequiredOverridesAllowed=dialog
 OutputDir={#OutDir}
 OutputBaseFilename=Schematrix-Setup
 SetupIconFile=schematrix.ico
+LicenseFile=..\LICENSE
 UninstallDisplayIcon={app}\Schematrix.exe
 Compression=lzma2/max
 SolidCompression=yes

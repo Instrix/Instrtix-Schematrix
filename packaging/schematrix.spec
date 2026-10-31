@@ -12,7 +12,7 @@ root = os.path.abspath(os.path.join(SPECPATH, '..'))
 sys.path.insert(0, root)
 from schematrix import __version__      # noqa: E402
 
-datas = collect_data_files('schematrix', includes=['web/**/*', 'examples/**/*'])
+datas = collect_data_files('schematrix', includes=['web/**/*', 'examples/**/*']) + [(os.path.join(root, 'LICENSE'), '.')]
 hidden = collect_submodules('uvicorn') + collect_submodules('schematrix') + ['webview']
 icon = os.path.join(root, 'packaging', 'schematrix.icns' if sys.platform == 'darwin' else 'schematrix.ico')
 

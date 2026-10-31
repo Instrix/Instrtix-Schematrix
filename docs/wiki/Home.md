@@ -5,6 +5,9 @@ The same core draws, netlists and serves the editor, so a schematic drawn by han
 same kind of document. Drawings export to SVG, PNG, JPEG, WebP, PDF, EPS and TikZ, and netlists to SPICE, KiCad and
 JSON.
 
+Schematrix is free and open source under the GNU GPL v3 or later, and free forever: no payments, no subscriptions,
+no locked features.
+
 ![The editor](img/editor.png)
 
 ## Start here
