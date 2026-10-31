@@ -6,7 +6,7 @@ from . import netio, symbols, theme
 from .render import render_svg
 from .netlist import to_spice, extract as extract_netlist
 
-__version__ = '0.2.5'
+__version__ = '0.2.6'
 __all__ = ['Schematic', 'Comp', 'Pin', 'load', 'netio', 'symbols', 'theme', 'render_svg', 'to_spice', 'extract_netlist', 'show']
 
 

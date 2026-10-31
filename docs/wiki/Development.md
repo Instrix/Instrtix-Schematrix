@@ -84,7 +84,7 @@ the examples, the server (private and public mode) and the legacy importer (pixe
 ## Releases
 
 1. Bump the version in `pyproject.toml` and `schematrix/__init__.py`.
-2. Tag: `git tag v0.2.5 && git push --tags`.
+2. Tag: `git tag v0.2.6 && git push --tags`.
 3. `release.yml` tests (and checks the tag matches the version), then builds:
    - Linux (Ubuntu 22.04, so glibc 2.35 and newer): `Schematrix-x86_64.AppImage`, `schematrix_amd64.deb`;
    - Windows: `Schematrix-Setup.exe` (Inno Setup, per-user or all users), `Schematrix-windows.zip` (portable);
