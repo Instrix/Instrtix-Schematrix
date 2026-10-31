@@ -160,6 +160,61 @@ For a server, no checkout is needed: make an empty folder, save one of the files
 hardened (read-only filesystem, no capabilities, memory / CPU limits, log rotation) and include an optional Caddy
 front end with automatic HTTPS. (`deploy/` has the same files driven by a `.env`, for scripted setups.)
 
+#### Which one: desktop, private or public — and the risks
+
+| | Desktop app | Private server | Public server |
+|---|---|---|---|
+| For | you, on your computer | your team | anyone on the internet |
+| Access | only your computer | a shared token | open, no login |
+| Python scripts | yes | yes (can be switched off) | no |
+| Custom symbols, legacy import | yes | yes | no |
+| Your sheets are kept | on your disk | on the server (Docker volume) | in each visitor's browser and downloads |
+| Main danger | low | **the token is the key to the server** | load and abuse, nothing to steal |
+
+Everything else (drawing, export, TikZ, netlists, simulation decks) is the same in all three.
+
+**Private server: the token is as powerful as a login to the machine.** The Script pane runs any Python on the
+server. Whoever has the token can read, change or delete every document, read whatever the container can read, use
+its CPU, and reach other machines on the server's network. The Docker setup limits the damage (read-only system,
+no privileges, memory / CPU / process caps), but it does not stop code from running. So:
+
+- share the token only with people you would trust with an account on that machine; replace it if it leaks;
+- reach it through HTTPS (the token is otherwise readable on the way), a VPN or an SSH tunnel, and keep the ports line
+  on `127.0.0.1` unless you mean to open it;
+- if your team only needs to draw, set `SCHEMATRIX_SCRIPTS: "0"`: token holders can then only edit documents;
+- don't host it next to things that matter (databases, other services' secrets) on the same machine or network, and
+  back up the data volume.
+
+**Never make a private server "public" by removing the token.** Without a token *and* without public mode, a server
+runs code for anyone who reaches it. To let strangers in, use the public file: it turns on `SCHEMATRIX_PUBLIC=1`.
+(A server without a token refuses requests that don't come from `localhost`, as a safety net.)
+
+**Public server: safe because of what it will not do.** No password protects it, so it is built to have nothing
+worth taking. The editor still shows the missing features, with a banner pointing to the desktop app and self-hosted
+servers.
+
+- **no code execution**: scripts and legacy import are off, whatever else is set;
+- **nothing stored**: visitors keep sheets in their own browser and File > Save downloads a `.json`; the examples are
+  read-only; custom symbols are off;
+- **bounded work**: per-visitor request rates, request and document sizes, export sizes and parallel exports are
+  capped;
+- **hardened output**: SVG in documents is stripped of scripts, exports are served sandboxed, the page has a strict
+  content security policy.
+
+What remains:
+
+- **load**: anyone can make it work; the limits cap each visitor, but many addresses together can still slow it down.
+  For a big audience put it behind a CDN or a proxy with its own rate limiting;
+- **faked addresses**: with `SCHEMATRIX_TRUST_PROXY: "1"` but the app port reachable directly, visitors can fake their
+  address and dodge the limits. Turn it on only behind the HTTPS proxy, with the ports line on `127.0.0.1`;
+- **several containers multiply the limits** (each counts on its own): run one, or rate-limit at the load balancer;
+- **visitors' work lives in their browser**: clearing site data loses unsaved sheets, so they should save (download)
+  often. Sheets sent for export pass through the server but are not kept.
+
+**Desktop app.** It runs the same server on `127.0.0.1` for its own window only. It answers only to `localhost` and to
+its own pages, so web sites open in your browser cannot use it, but other programs and users on the same computer
+can reach it: on a shared machine, prefer a private server with a token.
+
 #### Private server (your team, with a token)
 
 ```bash
@@ -292,49 +347,20 @@ Everything the private server keeps is in the `schematrix_data` volume; back it 
 adding lines under `environment:`, e.g. `SCHEMATRIX_PUBLIC_RATE: "120"` (all of them, with defaults, on the
 [Deployment](docs/wiki/Deployment.md#public-server) wiki page).
 
-Public mode (`SCHEMATRIX_PUBLIC=1`) is safe because of what the server will not do, not because of a password (the
-editor keeps showing those features, with a banner pointing to the desktop app and self-hosted servers):
+#### All server settings
 
-- **no code execution**: scripts and legacy-script import are off, whatever `SCHEMATRIX_SCRIPTS` says;
-- **nothing stored on the server**: visitors keep their sheets in their own browser and File > Save downloads a
-  `.json` (File > Open file brings it back); the bundled examples are served read-only; custom symbols are off;
-- **bounded work**: per-visitor request rates, request and document sizes, bitmap export size and the number of
-  exports running at once are capped (`SCHEMATRIX_PUBLIC_RATE`, `_HEAVY_RATE`, `_MAX_BODY`, `_MAX_ELEMENTS`,
-  `_MAX_SCALE`, `_MAX_PIXELS`, `_PARALLEL`);
-- **hardened output**: raw SVG in documents is stripped of scripts, exports are served sandboxed, the app page gets
-  a strict content security policy.
-
-Before going public, check:
-
-1. **Image access.** The image is `ghcr.io/instrix/instrtix-schematrix`; if its package is private the host needs
-   `docker login ghcr.io`, or uncomment `build: ..` in the compose file to build from a checkout.
-2. **HTTPS.** Point a DNS name at the host, open ports 80 and 443, and start with the `https` profile:
-   ```bash
-   SCHEMATRIX_DOMAIN=schematrix.example.org SCHEMATRIX_TRUST_PROXY=1 SCHEMATRIX_BIND=127.0.0.1 \
-     docker compose --profile https up -d
-   ```
-   - `SCHEMATRIX_BIND=127.0.0.1` makes the app reachable only through the proxy.
-   - `SCHEMATRIX_TRUST_PROXY=1` makes the rate limits use each visitor's address instead of the proxy's.
-3. **Never trust the proxy header without the proxy.** With `SCHEMATRIX_TRUST_PROXY=1` and the app port reachable
-   directly, visitors can fake their address in `X-Forwarded-For` and get around the rate limits. Turn it on only
-   together with `SCHEMATRIX_BIND=127.0.0.1` behind the proxy.
-4. **One container.** Rate limits and the export queue are counted inside each container. Run a single container;
-   with several behind a load balancer, each keeps its own counts, so the effective limits multiply (rate-limit at
-   the load balancer instead).
-5. **Tune the limits** for your hardware and audience if needed (`SCHEMATRIX_PUBLIC_*` above; memory and CPU with
-   `SCHEMATRIX_MEMORY`, `SCHEMATRIX_CPUS`).
+For `schematrix serve` or your own container setup:
 
 | Variable | Default | |
 |---|---|---|
-| `SCHEMATRIX_WORKSPACE` | `~/Schematrix` (`/data` in Docker) | documents and scripts |
+| `SCHEMATRIX_WORKSPACE` | `~/Schematrix` (`/data` in Docker) | documents, scripts, custom symbols |
+| `SCHEMATRIX_TOKEN` | unset | every request needs it: `/?token=…` sets a cookie, or send `Authorization: Bearer …` |
 | `SCHEMATRIX_SCRIPTS` | `1` | allow the editor to run Python on the server |
-| `SCHEMATRIX_TOKEN` | unset | if set, every request needs it: open `/?token=…` once (sets a cookie) or send `Authorization: Bearer …` |
 | `SCHEMATRIX_SCRIPT_TIMEOUT` | `30` | seconds per script |
-| `SCHEMATRIX_PUBLIC` | `0` | anonymous public instance: no scripts, nothing stored on the server, limits (see above) |
+| `SCHEMATRIX_PUBLIC` | `0` | anonymous public server (see above) |
 | `SCHEMATRIX_TRUST_PROXY` | `0` | rate-limit by the `X-Forwarded-For` address a reverse proxy appends; only behind one |
-
-Scripts are arbitrary Python running on the server (in a child process with a timeout and, on Linux, memory/CPU
-limits). On anything shared, set `SCHEMATRIX_TOKEN` or `SCHEMATRIX_SCRIPTS=0`.
+| `SCHEMATRIX_ALLOWED_HOSTS` | unset | without a token, host names besides `localhost` the server answers to (`*` = any) |
+| `SCHEMATRIX_PUBLIC_*` | | public limits: `RATE`, `HEAVY_RATE`, `MAX_BODY`, `MAX_ELEMENTS`, `MAX_SCALE`, `MAX_PIXELS`, `PARALLEL` |
 
 ### Native builds (Windows / Linux / macOS)
 

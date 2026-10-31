@@ -8,7 +8,7 @@ from fastapi.testclient import TestClient
 def client(tmp_path, monkeypatch):
     monkeypatch.setenv('SCHEMATRIX_WORKSPACE', str(tmp_path / 'ws'))
     from schematrix.server import create_app
-    return TestClient(create_app())
+    return TestClient(create_app(), base_url='http://localhost')
 
 
 def doc():
@@ -53,7 +53,7 @@ def test_token(tmp_path, monkeypatch):
     monkeypatch.setenv('SCHEMATRIX_WORKSPACE', str(tmp_path))
     monkeypatch.setenv('SCHEMATRIX_TOKEN', 'sekrit')
     from schematrix.server import create_app
-    c = TestClient(create_app())
+    c = TestClient(create_app(), base_url='http://localhost')
     assert c.get('/api/symbols').status_code == 401
     assert c.get('/api/symbols', headers={'Authorization': 'Bearer sekrit'}).status_code == 200
     assert c.get('/?token=sekrit').status_code == 200
@@ -69,3 +69,30 @@ def test_netlist_export_import(client, fmt):
     assert any(e.get('sym') == 'resistor' and e['props']['ref'] == 'R1' for e in back['doc']['elements'])
     assert client.post('/api/netlist/import', json={'text': ''}).status_code == 400
     assert {f['name'] for f in client.get('/api/info').json()['netlist_formats']} == {'spice', 'kicad', 'json'}
+
+
+def test_open_server_answers_only_to_its_own_pages(tmp_path, monkeypatch):
+    """no token: other web sites must not reach it (DNS rebinding, cross-site POSTs to /api/run)"""
+    monkeypatch.setenv('SCHEMATRIX_WORKSPACE', str(tmp_path))
+    from schematrix.server import create_app
+    app = create_app()
+    code = {'code': 'print(1)'}
+    assert TestClient(app, base_url='http://127.0.0.1:47815').get('/api/info').status_code == 200
+    assert TestClient(app, base_url='http://[::1]:47815').get('/api/info').status_code == 200
+    evil = TestClient(app, base_url='http://attacker.example')            # a rebound name pointing at 127.0.0.1
+    assert evil.get('/').status_code == 403
+    assert evil.post('/api/run', json=code).status_code == 403
+    c = TestClient(app, base_url='http://localhost:47815')
+    assert c.post('/api/run', json=code, headers={'Origin': 'https://attacker.example'}).status_code == 403
+    assert c.post('/api/run', json=code, headers={'Origin': 'null'}).status_code == 403
+    assert c.post('/api/run', json=code, headers={'Origin': 'http://localhost:47815'}).status_code == 200
+    monkeypatch.setenv('SCHEMATRIX_ALLOWED_HOSTS', 'schematrix.lan')
+    assert TestClient(create_app(), base_url='http://schematrix.lan:8000').get('/api/info').status_code == 200
+
+
+def test_token_server_answers_to_any_name(tmp_path, monkeypatch):
+    monkeypatch.setenv('SCHEMATRIX_WORKSPACE', str(tmp_path))
+    monkeypatch.setenv('SCHEMATRIX_TOKEN', 'sekrit')
+    from schematrix.server import create_app
+    c = TestClient(create_app(), base_url='https://schematrix.example.org')
+    assert c.get('/api/info', headers={'Authorization': 'Bearer sekrit'}).status_code == 200

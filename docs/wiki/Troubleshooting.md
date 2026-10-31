@@ -54,6 +54,13 @@ disappeared are no longer connected. Re-route them.
 The traceback appears under the script. Common: forgetting to double a backslash in markup (`'10 k\\ohm'`), unknown
 settings (the error lists the valid ones), or the 30-second time limit (`SCHEMATRIX_SCRIPT_TIMEOUT`).
 
+### "this server has no token, so it only answers to localhost"
+
+A server with neither a token nor public mode runs scripts for whoever reaches it, so it refuses requests addressed to
+any name but `localhost` / `127.0.0.1` (this keeps web sites from reaching the desktop app through DNS rebinding).
+To use it from other computers, set `SCHEMATRIX_TOKEN` (recommended), or list the names it is reached by in
+`SCHEMATRIX_ALLOWED_HOSTS` (e.g. `schematrix.lan,192.168.1.20`) if everyone on that network is trusted.
+
 ### "custom symbols are not available on this public server"
 
 The sheet uses [custom symbols](Custom-Symbols.md); public servers don't accept them. Use a private server or the

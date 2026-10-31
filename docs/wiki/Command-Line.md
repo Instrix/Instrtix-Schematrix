@@ -26,7 +26,8 @@ Starts a local server and opens a window (see [Installation](Installation.md#ope
 
 ```bash
 schematrix serve                            # http://127.0.0.1:8000
-schematrix serve --host 0.0.0.0 --port 8000 --workspace /srv/schematrix --open
+SCHEMATRIX_TOKEN=$(openssl rand -hex 24) schematrix serve --host 0.0.0.0 --port 8000 --workspace /srv/schematrix
+                                            # on the network: needs a token (it runs scripts for whoever reaches it)
 ```
 
 Environment variables configure it (`SCHEMATRIX_TOKEN`, `SCHEMATRIX_SCRIPTS`, `SCHEMATRIX_PUBLIC`, …); see

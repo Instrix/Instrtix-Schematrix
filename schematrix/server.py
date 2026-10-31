@@ -9,6 +9,8 @@ Environment:
     SCHEMATRIX_TOKEN       if set, every API call needs it (header "Authorization: Bearer <token>" or the cookie
                          set by visiting /?token=<token>)
     SCHEMATRIX_SCRIPT_TIMEOUT  seconds per script run (default 30)
+    SCHEMATRIX_ALLOWED_HOSTS   without a token, the host names besides localhost the server answers to (comma
+                           separated, '*' = any): keeps web pages from reaching it through DNS rebinding
 """
 from __future__ import annotations
 
@@ -18,6 +20,7 @@ import os
 import re
 import shutil
 from pathlib import Path
+from urllib.parse import urlsplit
 
 from fastapi import Body, FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, PlainTextResponse, Response
@@ -105,12 +108,40 @@ def pdf_available():
         return False
 
 
+LOOPBACK = {'localhost', '127.0.0.1', '::1'}
+
+
+def _hostname(netloc):
+    """'host:port', '[::1]:port' -> the host name, lower case"""
+    v = netloc.strip().lower()
+    if v.startswith('['):
+        return v[1:v.find(']')] if ']' in v else v
+    return v.rsplit(':', 1)[0] if v.count(':') == 1 else v
+
+
 def create_app() -> FastAPI:
     app = FastAPI(title='Schematrix', version=__version__, docs_url='/api/docs', redoc_url=None)
     token = os.environ.get('SCHEMATRIX_TOKEN') or None
     public = PUB.enabled()
     scripts_on = lambda: not public and _truthy(os.environ.get('SCHEMATRIX_SCRIPTS'))
     limiter = PUB.RateLimiter()
+    # a server with neither a token nor public mode (the desktop app, a local `schematrix serve`) runs scripts for
+    # whoever reaches it: answer only to its own names and to pages it served itself, so other web sites open in
+    # the same browser cannot use it (DNS rebinding, cross-site requests)
+    open_server = not token and not public
+    hosts = LOOPBACK | {h.strip().lower() for h in os.environ.get('SCHEMATRIX_ALLOWED_HOSTS', '').split(',') if h.strip()}
+
+    @app.middleware('http')
+    async def same_site(request: Request, call_next):
+        if open_server:
+            host = request.headers.get('host', '')
+            if '*' not in hosts and _hostname(host) not in hosts:
+                return JSONResponse({'detail': 'this server has no token, so it only answers to localhost; '
+                                               'set SCHEMATRIX_TOKEN, or SCHEMATRIX_ALLOWED_HOSTS to its name'}, 403)
+            origin = request.headers.get('origin')
+            if origin and request.method not in ('GET', 'HEAD', 'OPTIONS') and urlsplit(origin).netloc.lower() != host.lower():
+                return JSONResponse({'detail': 'request from another web site refused'}, 403)
+        return await call_next(request)
 
     @app.middleware('http')
     async def guard(request: Request, call_next):

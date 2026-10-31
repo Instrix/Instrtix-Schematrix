@@ -81,7 +81,7 @@ def test_frame():
 def client(tmp_path, monkeypatch):
     monkeypatch.setenv('SCHEMATRIX_WORKSPACE', str(tmp_path / 'ws'))
     from schematrix.server import create_app
-    return TestClient(create_app())
+    return TestClient(create_app(), base_url='http://localhost')
 
 
 def test_symbol_endpoints(client, tmp_path):

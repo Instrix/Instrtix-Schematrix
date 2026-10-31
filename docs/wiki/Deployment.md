@@ -113,5 +113,6 @@ Run it under systemd or a process manager, behind a reverse proxy for HTTPS.
 | `SCHEMATRIX_SCRIPT_TIMEOUT` | `30` | seconds per script |
 | `SCHEMATRIX_PUBLIC` | `0` | anonymous public mode (above) |
 | `SCHEMATRIX_TRUST_PROXY` | `0` | rate-limit by the address a reverse proxy appends to `X-Forwarded-For` |
+| `SCHEMATRIX_ALLOWED_HOSTS` | unset | without a token (and not public), the names besides `localhost` the server answers to; `*` = any |
 | `SCHEMATRIX_HOST`, `SCHEMATRIX_PORT` | `127.0.0.1`, `8000` | for `schematrix serve` |
 | `SCHEMATRIX_ENGINE` | `auto` | app window engine (desktop) |

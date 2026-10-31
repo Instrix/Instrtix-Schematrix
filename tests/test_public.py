@@ -18,7 +18,7 @@ def client(tmp_path, monkeypatch):
     monkeypatch.setitem(PUB.LIMITS, 'rate', 10_000)
     monkeypatch.setitem(PUB.LIMITS, 'heavy_rate', 10_000)
     from schematrix.server import create_app
-    c = TestClient(create_app())
+    c = TestClient(create_app(), base_url='http://localhost')
     c.ws = tmp_path / 'ws'
     return c
 
@@ -100,6 +100,6 @@ def test_private_mode_unchanged(tmp_path, monkeypatch):
     monkeypatch.delenv('SCHEMATRIX_PUBLIC', raising=False)
     monkeypatch.setenv('SCHEMATRIX_WORKSPACE', str(tmp_path / 'ws'))
     from schematrix.server import create_app
-    c = TestClient(create_app())
+    c = TestClient(create_app(), base_url='http://localhost')
     assert c.get('/api/info').json()['public'] is False
     assert c.put('/api/files/x.json', content=json.dumps(doc())).status_code == 200
