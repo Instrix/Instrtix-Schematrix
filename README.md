@@ -155,25 +155,108 @@ run it is seeded with `examples/`: twelve figures in the Instrix documentation l
 docker compose up -d                   # development: builds this checkout, http://localhost:8000
 ```
 
-For a server, use the deployment template in `deploy/`: the published image, a required access token, a hardened
-container (read-only filesystem, no capabilities, memory / CPU limits, log rotation), the port bound to localhost,
-and an optional Caddy front end with automatic HTTPS:
+For a server, no checkout is needed: make an empty folder, save one of the files below in it as
+`docker-compose.yml`, and start it. Both pull the published image, run it hardened (read-only filesystem, no
+capabilities, memory / CPU limits, log rotation) and include an optional Caddy front end with automatic HTTPS. The
+same files, with more comments, are in `deploy/`.
+
+#### Private server (your team, with a token)
 
 ```bash
-cp deploy/.env.example deploy/.env     # set SCHEMATRIX_TOKEN (openssl rand -hex 24), image version, limits
-docker compose -f deploy/docker-compose.yml up -d                    # http://localhost:8000/?token=...
-docker compose -f deploy/docker-compose.yml --profile https up -d    # + HTTPS for SCHEMATRIX_DOMAIN
+mkdir schematrix && cd schematrix
+echo "SCHEMATRIX_TOKEN=$(openssl rand -hex 24)" > .env      # the access token
+# save the file below as docker-compose.yml, then:
+docker compose up -d                                        # http://localhost:8000/?token=<token in .env>
+SCHEMATRIX_DOMAIN=schematrix.example.org docker compose --profile https up -d    # HTTPS on your domain
 ```
 
-Documents, scripts and custom symbols live in the `schematrix_data` volume; the header of
-`deploy/docker-compose.yml` shows how to update and back up.
+```yaml
+name: schematrix
+services:
+  schematrix:
+    image: ghcr.io/instrix/instrtix-schematrix:${SCHEMATRIX_VERSION:-latest}
+    restart: unless-stopped
+    ports:
+      - "${SCHEMATRIX_BIND:-127.0.0.1}:${SCHEMATRIX_PORT:-8000}:8000"   # 0.0.0.0 to expose it without the proxy
+    environment:
+      SCHEMATRIX_TOKEN: ${SCHEMATRIX_TOKEN:?set SCHEMATRIX_TOKEN in .env}
+      SCHEMATRIX_SCRIPTS: ${SCHEMATRIX_SCRIPTS:-1}          # the Script pane runs Python on the server
+      SCHEMATRIX_SCRIPT_TIMEOUT: ${SCHEMATRIX_SCRIPT_TIMEOUT:-30}
+    volumes:
+      - data:/data                                          # documents, scripts, custom symbols
+    read_only: true
+    tmpfs: [/tmp, /home/schematrix/.cache]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: ${SCHEMATRIX_MEMORY:-1g}
+    cpus: ${SCHEMATRIX_CPUS:-2}
+    pids_limit: 256
+    logging: { driver: json-file, options: { max-size: "10m", max-file: "3" } }
 
-### Public instance (no token)
+  caddy:                                                    # optional HTTPS: --profile https
+    image: caddy:2
+    profiles: [https]
+    restart: unless-stopped
+    depends_on: [schematrix]
+    command: caddy reverse-proxy --from ${SCHEMATRIX_DOMAIN:-schematrix.example.com} --to schematrix:8000
+    ports: ["80:80", "443:443", "443:443/udp"]
+    volumes: [caddy-data:/data, caddy-config:/config]
+    logging: { driver: json-file, options: { max-size: "10m", max-file: "3" } }
 
-To let anyone use it anonymously, run it in public mode with `deploy/docker-compose.public.yml`:
+volumes:
+  data:
+  caddy-data:
+  caddy-config:
+```
+
+Update with `docker compose pull && docker compose up -d`; back up the data volume with
+`docker run --rm -v schematrix_data:/data -v "$PWD":/backup alpine tar czf /backup/schematrix-data.tgz -C /data .`
+
+#### Public server (anyone, no token)
 
 ```bash
-docker compose -f deploy/docker-compose.public.yml up -d             # http://<host>:8000, no token, no volume
+mkdir schematrix-public && cd schematrix-public
+# save the file below as docker-compose.yml, then:
+docker compose up -d                                        # http://<host>:8000
+SCHEMATRIX_DOMAIN=schematrix.example.org SCHEMATRIX_TRUST_PROXY=1 SCHEMATRIX_BIND=127.0.0.1 \
+  docker compose --profile https up -d                      # HTTPS, app reachable only through the proxy
+```
+
+```yaml
+name: schematrix-public
+services:
+  schematrix:
+    image: ghcr.io/instrix/instrtix-schematrix:${SCHEMATRIX_VERSION:-latest}
+    restart: unless-stopped
+    ports:
+      - "${SCHEMATRIX_BIND:-0.0.0.0}:${SCHEMATRIX_PORT:-8000}:8000"
+    environment:
+      SCHEMATRIX_PUBLIC: "1"                                # no scripts, nothing stored, rate limits
+      SCHEMATRIX_SCRIPTS: "0"
+      SCHEMATRIX_WORKSPACE: /tmp/workspace
+      SCHEMATRIX_TRUST_PROXY: ${SCHEMATRIX_TRUST_PROXY:-0}  # 1 only behind the https proxy
+    read_only: true
+    tmpfs: [/tmp, /home/schematrix/.cache]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: ${SCHEMATRIX_MEMORY:-1g}
+    cpus: ${SCHEMATRIX_CPUS:-2}
+    pids_limit: 128
+    logging: { driver: json-file, options: { max-size: "10m", max-file: "3" } }
+
+  caddy:                                                    # optional HTTPS: --profile https
+    image: caddy:2
+    profiles: [https]
+    restart: unless-stopped
+    depends_on: [schematrix]
+    command: caddy reverse-proxy --from ${SCHEMATRIX_DOMAIN:-schematrix.example.org} --to schematrix:8000
+    ports: ["80:80", "443:443", "443:443/udp"]
+    volumes: [caddy-data:/data, caddy-config:/config]
+    logging: { driver: json-file, options: { max-size: "10m", max-file: "3" } }
+
+volumes:
+  caddy-data:
+  caddy-config:
 ```
 
 Public mode (`SCHEMATRIX_PUBLIC=1`) is safe because of what the server will not do, not because of a password (the
@@ -195,7 +278,7 @@ Before going public, check:
 2. **HTTPS.** Point a DNS name at the host, open ports 80 and 443, and start with the `https` profile:
    ```bash
    SCHEMATRIX_DOMAIN=schematrix.example.org SCHEMATRIX_TRUST_PROXY=1 SCHEMATRIX_BIND=127.0.0.1 \
-     docker compose -f deploy/docker-compose.public.yml --profile https up -d
+     docker compose --profile https up -d
    ```
    - `SCHEMATRIX_BIND=127.0.0.1` makes the app reachable only through the proxy.
    - `SCHEMATRIX_TRUST_PROXY=1` makes the rate limits use each visitor's address instead of the proxy's.

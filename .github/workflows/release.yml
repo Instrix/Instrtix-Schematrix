@@ -72,6 +72,7 @@ jobs:
       - id: img     # image names must be lower case
         run: echo "name=ghcr.io/${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
       - uses: docker/build-push-action@v6
+        env: { DOCKER_BUILD_RECORD_UPLOAD: false }     # no build-record artifact in the release
         with:
           push: true
           tags: |
@@ -85,7 +86,7 @@ jobs:
     permissions: { contents: write }
     steps:
       - uses: actions/download-artifact@v4
-        with: { path: files, merge-multiple: true }
+        with: { path: files, pattern: 'Schematrix-*', merge-multiple: true }
       - run: ls -l files
       - uses: softprops/action-gh-release@v2
         with:

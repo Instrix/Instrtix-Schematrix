@@ -1,5 +1,5 @@
 ; Inno Setup script for the Windows installer; packaging/package.py passes Version, Source and OutDir.
-;   ISCC /DVersion=0.2.0 /DSource=dist\Schematrix /DOutDir=dist\release packaging\schematrix.iss
+;   ISCC /DVersion=0.2.1 /DSource=dist\Schematrix /DOutDir=dist\release packaging\schematrix.iss
 #ifndef Version
   #define Version "0.0.0"
 #endif
