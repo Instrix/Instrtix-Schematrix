@@ -46,7 +46,7 @@ def vsrc(p):
 
 @symbol('isrc', 'Current source', 'Sources', 'I', 'I {p} {n} {src}',
         {'length': LEN(100), 'text': Prop('', 'str', True, label='Text inside', help='e.g. e_{n}: drawn in the circle instead of the symbol'),
-         'arrow_tail': Prop(-9, 'num', True, label='Arrow tail', help='where the arrow starts, from the centre (+ towards n)'),
+         'arrow_tail': Prop(-10, 'num', True, label='Arrow tail', help='where the arrow starts, from the centre (+ towards n)'),
          'arrow_tip': Prop(10, 'num', True, label='Arrow tip'),
          'arrow_len': Prop(7, 'num', True, label='Arrowhead length'),
          'arrow_w': Prop(4, 'num', True, label='Arrowhead half-width')},
@@ -56,7 +56,7 @@ def isrc(p):
     if p.get('text'):
         prims.append(tx(0, 0, str(p['text']), 'lbl', ctr=True, fit=26))
     else:
-        t0, t1 = float(p.get('arrow_tail', -9)), float(p.get('arrow_tip', 10))
+        t0, t1 = float(p.get('arrow_tail', -10)), float(p.get('arrow_tip', 10))
         L, W = float(p.get('arrow_len', 7)), float(p.get('arrow_w', 4))
         d = 1 if t1 >= t0 else -1
         prims += [pl([(t0, 0), (t1 - d * min(L * 2 / 7, abs(t1 - t0)), 0)]),
@@ -70,7 +70,7 @@ def isrc(p):
 def isink(p):
     h = half(p, 80)
     prims = [pl([(0, -h), (0, -14)]), pl([(0, 14), (0, h)]), ci(0, 0, 14, 'amp'), ci(0, 0, 9, 'w thin'),
-             *arrow((0, -7), (0, 8))]
+             *arrow((0, -7.5), (0, 7.5))]
     return G(prims, {'in': (0, -h), 'out': (0, h)}, right(20))
 
 
@@ -79,7 +79,7 @@ def _diamond(p, current):
     h = abs(float(p['length'])) / 2
     prims = [*leads(h, 16), pg([(-16, 0), (0, -16), (16, 0), (0, 16)])]
     if current:
-        prims += [pl([(-9, 0), (8, 0)]), pg([(3, -4), (3, 4), (10, 0)], 'arrow')]
+        prims += [pl([(-10, 0), (8, 0)]), pg([(3, -4), (3, 4), (10, 0)], 'arrow')]     # centred: -10 .. 10
     else:
         prims += [tx(-7.5, 0, '+', 'pin', ctr=True), tx(7.5, 0, '−', 'pin', ctr=True)]
     return prims, h

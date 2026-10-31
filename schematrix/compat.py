@@ -312,7 +312,7 @@ class CompatS:
             self.sch.text(x + 24, m + 13, val, 'valsm', 'start')
 
     def isrc(self, x, y1, y2, label=None, val=None):
-        self._src('isrc', x, y1, y2, label, val, 90)
+        self._src('isrc', x, y1, y2, label, val, 90, arrow_tail=-9)     # the original's arrow, a pixel off centre
 
     def vsrc(self, x, y1, y2, label=None, val=None, plus_low=False):
         self._src('vsrc', x, y1, y2, label, val, 270 if plus_low else 90, signs=False)

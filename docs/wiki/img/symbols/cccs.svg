@@ -33,4 +33,4 @@ text { font-family: "JetBrains Mono", "Inter", ui-monospace, monospace; fill: #2
 .grplbl { font-size: 10px; font-weight: 600; letter-spacing: .08em; fill: #545866; }
 .note { font-family: "Inter", system-ui, sans-serif; font-size: 12px; fill: #545866; }
 .title { font-family: "Inter", system-ui, sans-serif; font-size: 15px; font-weight: 600; }
-</style><rect x="-56" y="-22" width="112" height="44" fill="#ffffff"/><polyline class="w" points="-50,0 -16,0"/><polyline class="w" points="16,0 50,0"/><polygon class="amp" points="-16,0 0,-16 16,0 0,16"/><polyline class="w" points="-9,0 8,0"/><polygon class="arrow" points="3,-4 3,4 10,0"/></svg>
+</style><rect x="-56" y="-22" width="112" height="44" fill="#ffffff"/><polyline class="w" points="-50,0 -16,0"/><polyline class="w" points="16,0 50,0"/><polygon class="amp" points="-16,0 0,-16 16,0 0,16"/><polyline class="w" points="-10,0 8,0"/><polygon class="arrow" points="3,-4 3,4 10,0"/></svg>

@@ -783,7 +783,7 @@ Every part also has **Reference**, **Value** and **Part number**, and can carry 
 |---|---|---|---|
 | `length` (Length) | num | `100` | *shape* pin-to-pin distance |
 | `text` (Text inside) | str | `` | *shape* e.g. e_{n}: drawn in the circle instead of the symbol |
-| `arrow_tail` (Arrow tail) | num | `-9` | *shape* where the arrow starts, from the centre (+ towards n) |
+| `arrow_tail` (Arrow tail) | num | `-10` | *shape* where the arrow starts, from the centre (+ towards n) |
 | `arrow_tip` (Arrow tip) | num | `10` | *shape*  |
 | `arrow_len` (Arrowhead length) | num | `7` | *shape*  |
 | `arrow_w` (Arrowhead half-width) | num | `4` | *shape*  |
