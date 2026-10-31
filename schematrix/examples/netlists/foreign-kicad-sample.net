@@ -1,0 +1,15 @@
+(export (version "E")
+  (design (source "/home/x/board.kicad_sch") (tool "Eeschema 8.0"))
+  (components
+    (comp (ref "R1") (value "4k7") (footprint "Resistor_SMD:R_0603")
+      (fields (field (name "Footprint") "Resistor_SMD:R_0603") (field (name "Tolerance") "1%"))
+      (libsource (lib "Device") (part "R") (description "Resistor")))
+    (comp (ref "Q1") (value "BC547") (libsource (lib "Device") (part "Q_NPN_CBE")))
+    (comp (ref "D1") (value "1N4148") (libsource (lib "Device") (part "D")))
+    (comp (ref "J1") (value "Conn") (libsource (lib "Connector") (part "Conn_01x03_Pin")))
+    (comp (ref "U1") (value "NE555") (libsource (lib "Timer") (part "NE555P"))))
+  (nets
+    (net (code "1") (name "/VCC") (node (ref "R1") (pin "1") (pintype "passive")) (node (ref "J1") (pin "1")) (node (ref "U1") (pin "8") (pinfunction "VCC")))
+    (net (code "2") (name "Net-(Q1-B)") (node (ref "R1") (pin "2")) (node (ref "Q1") (pin "2") (pinfunction "B")))
+    (net (code "3") (name "GND") (node (ref "Q1") (pin "3")) (node (ref "D1") (pin "2")) (node (ref "J1") (pin "3")) (node (ref "U1") (pin "1") (pinfunction "GND")))
+    (net (code "4") (name "OUT") (node (ref "Q1") (pin "1")) (node (ref "D1") (pin "1")) (node (ref "J1") (pin "2")))))

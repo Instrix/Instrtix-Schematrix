@@ -54,6 +54,8 @@ def _auto(net) -> bool:
 def to_schematic(nl: Netlist, title=None):
     from ..document import Schematic
     s = Schematic(title or nl.title or 'Imported netlist')
+    if nl.directives:
+        s.doc['spice'] = list(nl.directives)
     nets = nl.nets()
     x = y = rowh = 0
     for p in nl.parts:

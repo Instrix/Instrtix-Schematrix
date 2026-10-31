@@ -1,0 +1,319 @@
+{
+ "version": 1,
+ "meta": {
+  "title": "Bridge and in-amp",
+  "description": "Quarter bridge, 5 V excitation, in-amp gain 100"
+ },
+ "page": {
+  "width": null,
+  "height": null,
+  "auto": true,
+  "margin": 20,
+  "grid": 5,
+  "junctions": true,
+  "hops": false
+ },
+ "theme": "instrix",
+ "elements": [
+  {
+   "type": "comp",
+   "sym": "rail",
+   "x": 60,
+   "y": 30,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "net": "+5 V",
+    "kind": "bar"
+   },
+   "style": "",
+   "id": "e1"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 60,
+   "y": 60,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "ref": "R1",
+    "value": "350 \\ohm"
+   },
+   "style": "",
+   "id": "e2"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 60,
+   "y": 120,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "ref": "R2",
+    "value": "350 \\ohm"
+   },
+   "style": "",
+   "id": "e3"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 60,
+   "y": 150,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "earth"
+   },
+   "style": "",
+   "id": "e4"
+  },
+  {
+   "type": "comp",
+   "sym": "rail",
+   "x": 180,
+   "y": 30,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "net": "+5 V",
+    "kind": "bar"
+   },
+   "style": "",
+   "id": "e5"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 180,
+   "y": 60,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "ref": "R3",
+    "value": "350 \\ohm"
+   },
+   "style": "",
+   "id": "e6"
+  },
+  {
+   "type": "comp",
+   "sym": "rvar",
+   "x": 180,
+   "y": 120,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "ref": "SG1",
+    "value": "350 \\ohm"
+   },
+   "style": "",
+   "fields": [
+    {
+     "name": "Gauge factor",
+     "value": "k = 2.1",
+     "show": true
+    }
+   ],
+   "id": "e7"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 180,
+   "y": 150,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "earth"
+   },
+   "style": "",
+   "id": "e8"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     60,
+     90
+    ],
+    [
+     30,
+     90
+    ]
+   ],
+   "style": "",
+   "id": "e9"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 30,
+   "y": 90,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "BRIDGE-",
+    "side": "left"
+   },
+   "style": "",
+   "id": "e10"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     180,
+     90
+    ],
+    [
+     230,
+     90
+    ]
+   ],
+   "style": "",
+   "id": "e11"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 230,
+   "y": 90,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "BRIDGE+",
+    "side": "right"
+   },
+   "style": "",
+   "id": "e12"
+  },
+  {
+   "type": "comp",
+   "sym": "inamp",
+   "x": 460,
+   "y": 90,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "rg": false,
+    "ref": "U1",
+    "value": "G = 100",
+    "part": "INA128"
+   },
+   "style": "",
+   "id": "e13"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     420,
+     70
+    ],
+    [
+     390,
+     70
+    ]
+   ],
+   "style": "",
+   "id": "e14"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 390,
+   "y": 70,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "BRIDGE-",
+    "side": "left"
+   },
+   "style": "",
+   "id": "e15"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     420,
+     110
+    ],
+    [
+     390,
+     110
+    ]
+   ],
+   "style": "",
+   "id": "e16"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 390,
+   "y": 110,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "BRIDGE+",
+    "side": "left"
+   },
+   "style": "",
+   "id": "e17"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 460,
+   "y": 120,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "earth"
+   },
+   "style": "",
+   "id": "e18"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     500,
+     90
+    ],
+    [
+     530,
+     90
+    ]
+   ],
+   "style": "",
+   "id": "e19"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 530,
+   "y": 90,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "V_{OUT}",
+    "side": "right"
+   },
+   "style": "",
+   "id": "e20"
+  },
+  {
+   "type": "text",
+   "x": 40,
+   "y": 245,
+   "text": "V_{OUT} = G (V_{+} \\- V_{\\-}),   G = 1 + 50 k\\ohm / R_{G}",
+   "cls": "note",
+   "anchor": "start",
+   "id": "e21"
+  }
+ ]
+}

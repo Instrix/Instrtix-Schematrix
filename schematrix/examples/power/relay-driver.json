@@ -1,0 +1,306 @@
+{
+ "version": 1,
+ "meta": {
+  "title": "Relay driver",
+  "description": "3.3 V logic switching a 12 V relay coil"
+ },
+ "page": {
+  "width": null,
+  "height": null,
+  "auto": true,
+  "margin": 20,
+  "grid": 5,
+  "junctions": true,
+  "hops": false
+ },
+ "theme": "instrix",
+ "elements": [
+  {
+   "type": "comp",
+   "sym": "relay",
+   "x": 230,
+   "y": 70,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "contact": "spdt",
+    "ref": "K1",
+    "part": "G5LE-1"
+   },
+   "style": "",
+   "label_offset": [
+    70,
+    0
+   ],
+   "fields": [
+    {
+     "name": "Coil voltage",
+     "value": "12 V",
+     "show": true
+    }
+   ],
+   "id": "e1"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     200,
+     40
+    ],
+    [
+     200,
+     20
+    ]
+   ],
+   "style": "",
+   "id": "e2"
+  },
+  {
+   "type": "comp",
+   "sym": "rail",
+   "x": 200,
+   "y": 20,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "net": "+12 V",
+    "kind": "bar"
+   },
+   "style": "",
+   "id": "e3"
+  },
+  {
+   "type": "comp",
+   "sym": "diode",
+   "x": 150,
+   "y": 70,
+   "rot": 270,
+   "mirror": false,
+   "props": {
+    "ref": "D1",
+    "part": "1N4148"
+   },
+   "style": "",
+   "label_offset": [
+    -40,
+    0
+   ],
+   "id": "e4"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     150,
+     40
+    ],
+    [
+     200,
+     40
+    ]
+   ],
+   "style": "",
+   "id": "e5"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     150,
+     100
+    ],
+    [
+     200,
+     100
+    ]
+   ],
+   "style": "",
+   "id": "e6"
+  },
+  {
+   "type": "comp",
+   "sym": "npn",
+   "x": 200,
+   "y": 170,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "ref": "Q1",
+    "part": "BC817"
+   },
+   "style": "",
+   "id": "e7"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     200,
+     100
+    ],
+    [
+     200,
+     140
+    ]
+   ],
+   "style": "",
+   "id": "e8"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 200,
+   "y": 200,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "earth"
+   },
+   "style": "",
+   "id": "e9"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 140,
+   "y": 170,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "ref": "R1",
+    "value": "1 k\\ohm"
+   },
+   "style": "",
+   "id": "e10"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     110,
+     170
+    ],
+    [
+     90,
+     170
+    ]
+   ],
+   "style": "",
+   "id": "e11"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 90,
+   "y": 170,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "RELAY_{EN}",
+    "side": "left"
+   },
+   "style": "",
+   "id": "e12"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     230,
+     40
+    ],
+    [
+     230,
+     5
+    ],
+    [
+     320,
+     5
+    ]
+   ],
+   "style": "",
+   "id": "e13"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 320,
+   "y": 5,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "LOAD_{NC}",
+    "side": "right"
+   },
+   "style": "",
+   "id": "e14"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     260,
+     40
+    ],
+    [
+     260,
+     25
+    ],
+    [
+     320,
+     25
+    ]
+   ],
+   "style": "",
+   "id": "e15"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 320,
+   "y": 25,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "LOAD_{NO}",
+    "side": "right"
+   },
+   "style": "",
+   "id": "e16"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     245,
+     100
+    ],
+    [
+     245,
+     160
+    ],
+    [
+     320,
+     160
+    ]
+   ],
+   "style": "",
+   "id": "e17"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 320,
+   "y": 160,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "LOAD_{COM}",
+    "side": "right"
+   },
+   "style": "",
+   "id": "e18"
+  }
+ ]
+}

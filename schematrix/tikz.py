@@ -237,9 +237,25 @@ def _emit(el, st, out, off=(0.0, 0.0)):
         cls = (el.get('class') or 'lbl').split()[0]
         m = re.search(r'font-size:\s*([\d.]+)px', el.get('style') or '')
         anchor = {'start': 'base west', 'middle': 'base', 'end': 'base east'}[el.get('text-anchor', 'start')]
-        text = ''.join(el.itertext())
         out.append(f'\\node[anchor={anchor}, inner sep=0, {st.text(cls, m.group(1) if m else None)}] at '
-                   f'{_coord((float(el.get("x", 0)), float(el.get("y", 0))), off)} {{{latex(text)}}};')
+                   f'{_coord((float(el.get("x", 0)), float(el.get("y", 0))), off)} {{{_runs(el)}}};')
+
+
+def _runs(el) -> str:
+    """a <text> with markup tspans (overline, sub / superscript by baseline shift) -> LaTeX"""
+    out = [latex(el.text or '')]
+    base = 0.0
+    for t in el:
+        base += float(t.get('dy') or 0)
+        body = latex(t.text or '')
+        if 'overline' in (t.get('style') or ''):
+            body = f'\\ensuremath{{\\overline{{\\mbox{{{body}}}}}}}'
+        if base > 0.01:
+            body = f'\\textsubscript{{{body}}}'
+        elif base < -0.01:
+            body = f'\\textsuperscript{{{body}}}'
+        out.append(body + latex(t.tail or ''))
+    return ''.join(out)
 
 
 def to_tikz(doc, background=True, standalone=False, scale=1.0) -> str:

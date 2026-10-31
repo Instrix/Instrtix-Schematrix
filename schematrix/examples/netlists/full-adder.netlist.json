@@ -1,0 +1,180 @@
+{
+ "format": "schematrix-netlist",
+ "version": 1,
+ "title": "Full adder",
+ "components": [
+  {
+   "ref": "U1",
+   "symbol": "gate",
+   "value": "",
+   "part": "",
+   "props": {
+    "kind": "xor"
+   },
+   "fields": {},
+   "pins": {
+    "in1": "A",
+    "in2": "B",
+    "out": "N001"
+   }
+  },
+  {
+   "ref": "U2",
+   "symbol": "gate",
+   "value": "",
+   "part": "",
+   "props": {
+    "kind": "xor"
+   },
+   "fields": {},
+   "pins": {
+    "in1": "N001",
+    "in2": "C_{in}",
+    "out": "S"
+   }
+  },
+  {
+   "ref": "U3",
+   "symbol": "gate",
+   "value": "",
+   "part": "",
+   "props": {},
+   "fields": {},
+   "pins": {
+    "in1": "A",
+    "in2": "B",
+    "out": "N002"
+   }
+  },
+  {
+   "ref": "U4",
+   "symbol": "gate",
+   "value": "",
+   "part": "",
+   "props": {},
+   "fields": {},
+   "pins": {
+    "in1": "N001",
+    "in2": "C_{in}",
+    "out": "N003"
+   }
+  },
+  {
+   "ref": "U5",
+   "symbol": "gate",
+   "value": "",
+   "part": "",
+   "props": {
+    "kind": "or"
+   },
+   "fields": {},
+   "pins": {
+    "in1": "N002",
+    "in2": "N003",
+    "out": "C_{out}"
+   }
+  }
+ ],
+ "nets": [
+  {
+   "name": "A",
+   "nodes": [
+    [
+     "U1",
+     "in1"
+    ],
+    [
+     "U3",
+     "in1"
+    ]
+   ]
+  },
+  {
+   "name": "B",
+   "nodes": [
+    [
+     "U1",
+     "in2"
+    ],
+    [
+     "U3",
+     "in2"
+    ]
+   ]
+  },
+  {
+   "name": "N001",
+   "nodes": [
+    [
+     "U1",
+     "out"
+    ],
+    [
+     "U2",
+     "in1"
+    ],
+    [
+     "U4",
+     "in1"
+    ]
+   ]
+  },
+  {
+   "name": "C_{in}",
+   "nodes": [
+    [
+     "U2",
+     "in2"
+    ],
+    [
+     "U4",
+     "in2"
+    ]
+   ]
+  },
+  {
+   "name": "S",
+   "nodes": [
+    [
+     "U2",
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "N002",
+   "nodes": [
+    [
+     "U3",
+     "out"
+    ],
+    [
+     "U5",
+     "in1"
+    ]
+   ]
+  },
+  {
+   "name": "N003",
+   "nodes": [
+    [
+     "U4",
+     "out"
+    ],
+    [
+     "U5",
+     "in2"
+    ]
+   ]
+  },
+  {
+   "name": "C_{out}",
+   "nodes": [
+    [
+     "U5",
+     "out"
+    ]
+   ]
+  }
+ ]
+}

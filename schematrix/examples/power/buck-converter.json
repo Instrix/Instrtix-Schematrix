@@ -1,0 +1,304 @@
+{
+ "version": 1,
+ "meta": {
+  "title": "Buck converter",
+  "description": "P-MOSFET high-side switch, Schottky catch diode, LC output filter"
+ },
+ "page": {
+  "width": null,
+  "height": null,
+  "auto": true,
+  "margin": 20,
+  "grid": 5,
+  "junctions": true,
+  "hops": false
+ },
+ "theme": "instrix",
+ "elements": [
+  {
+   "type": "comp",
+   "sym": "pmos",
+   "x": 160,
+   "y": 40,
+   "rot": 90,
+   "mirror": true,
+   "props": {
+    "ref": "Q1"
+   },
+   "style": "",
+   "id": "e1"
+  },
+  {
+   "type": "comp",
+   "sym": "vsrc",
+   "x": 60,
+   "y": 110,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "length": 80,
+    "ref": "V1",
+    "value": "12"
+   },
+   "style": "",
+   "id": "e2"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     60,
+     70
+    ],
+    [
+     60,
+     40
+    ],
+    [
+     130,
+     40
+    ]
+   ],
+   "style": "",
+   "id": "e3"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 60,
+   "y": 150,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "earth"
+   },
+   "style": "",
+   "id": "e4"
+  },
+  {
+   "type": "comp",
+   "sym": "vsrc",
+   "x": 160,
+   "y": 130,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "length": 80,
+    "kind": "pulse",
+    "ref": "V2",
+    "value": "PULSE(0 12 0 20n 20n 5u 10u)"
+   },
+   "style": "",
+   "id": "e5"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     160,
+     70
+    ],
+    [
+     160,
+     90
+    ]
+   ],
+   "style": "",
+   "id": "e6"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 160,
+   "y": 170,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "earth"
+   },
+   "style": "",
+   "id": "e7"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     190,
+     40
+    ],
+    [
+     220,
+     40
+    ]
+   ],
+   "style": "",
+   "id": "e8"
+  },
+  {
+   "type": "comp",
+   "sym": "diode",
+   "x": 220,
+   "y": 70,
+   "rot": 270,
+   "mirror": false,
+   "props": {
+    "kind": "schottky",
+    "ref": "D1"
+   },
+   "style": "",
+   "id": "e9"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 220,
+   "y": 100,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "earth"
+   },
+   "style": "",
+   "id": "e10"
+  },
+  {
+   "type": "comp",
+   "sym": "inductor",
+   "x": 250,
+   "y": 40,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "ref": "L1",
+    "value": "47 \\uH"
+   },
+   "style": "",
+   "id": "e11"
+  },
+  {
+   "type": "comp",
+   "sym": "capacitor",
+   "x": 320,
+   "y": 60,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "ref": "C1",
+    "value": "100 \\uF"
+   },
+   "style": "",
+   "id": "e12"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     280,
+     40
+    ],
+    [
+     320,
+     40
+    ]
+   ],
+   "style": "",
+   "id": "e13"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 320,
+   "y": 80,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "earth"
+   },
+   "style": "",
+   "id": "e14"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 390,
+   "y": 70,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "ref": "R_{L}",
+    "value": "5 \\ohm"
+   },
+   "style": "",
+   "id": "e15"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     320,
+     40
+    ],
+    [
+     390,
+     40
+    ]
+   ],
+   "style": "",
+   "id": "e16"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 390,
+   "y": 100,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "earth"
+   },
+   "style": "",
+   "id": "e17"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     390,
+     40
+    ],
+    [
+     430,
+     40
+    ]
+   ],
+   "style": "",
+   "id": "e18"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 430,
+   "y": 40,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "V_{OUT}",
+    "side": "right"
+   },
+   "style": "",
+   "id": "e19"
+  },
+  {
+   "type": "text",
+   "x": 40,
+   "y": 230,
+   "text": "V2 = 0 V turns Q1 on (V_{GS} = \\-12 V):  D = 50 %,  V_{OUT} \\approx D V_{in} \\approx 6 V",
+   "cls": "note",
+   "anchor": "start",
+   "id": "e20"
+  }
+ ],
+ "spice": [
+  ".tran 0.2u 3m uic"
+ ]
+}

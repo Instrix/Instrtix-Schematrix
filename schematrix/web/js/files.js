@@ -34,10 +34,12 @@ export async function filesDialog() {
 export async function openWorkspaceFile(path) {
   const r = await fetch('/api/files/' + encodeURI(path));
   if (!r.ok) { toast('could not open ' + path, true); return; }
+  if (NETLIST_EXT.test(path)) { await importNetlist(await r.text(), path); return; }
   if (path.endsWith('.json')) {
     const open = S.tabs.find((t) => t.path === path);
     if (open) { switchTab(open); return; }
     const doc = await r.json();
+    if (doc.format === 'schematrix-netlist') { await importNetlist(JSON.stringify(doc), path); return; }
     openTab(doc, path);
   } else if (path.endsWith('.py')) {
     $('#code').value = await r.text();

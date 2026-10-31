@@ -31,7 +31,7 @@ from . import symbols as SYM
 from . import theme as TH
 
 WEB = Path(__file__).parent / 'web'
-ALLOWED_EXT = {'.json', '.py', '.svg'}
+ALLOWED_EXT = {'.json', '.py', '.svg', '.cir', '.sp', '.net', '.tikz', '.tex'}
 
 
 def _truthy(v, default=True):
@@ -45,11 +45,34 @@ EXAMPLES = Path(__file__).parent / 'examples'
 
 def workspace() -> Path:
     p = Path(os.environ.get('SCHEMATRIX_WORKSPACE') or (Path.home() / 'Schematrix')).expanduser()
-    if not p.exists() or not any(p.iterdir()):
-        p.mkdir(parents=True, exist_ok=True)
-        shutil.copytree(EXAMPLES, p / 'examples', dirs_exist_ok=True,
-                        ignore=shutil.ignore_patterns('__pycache__'))   # first run: seed with examples
+    p.mkdir(parents=True, exist_ok=True)
+    _seed_examples(p)
     return p
+
+
+def _seed_examples(ws: Path):
+    """copy example files into ws/examples that this workspace has never received (a new version brings new
+    examples); files already given once are never copied again, so edits and deletions stick"""
+    record = ws / 'examples' / '.seeded'
+    try:
+        seeded = set(record.read_text(encoding='utf-8').split('\n')) if record.exists() else set()
+        added = []
+        for src in EXAMPLES.rglob('*'):
+            if not src.is_file() or '__pycache__' in src.parts:
+                continue
+            rel = src.relative_to(EXAMPLES).as_posix()
+            if rel in seeded:
+                continue
+            dst = ws / 'examples' / rel
+            if not dst.exists():
+                dst.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(src, dst)
+            added.append(rel)
+        if added:
+            record.parent.mkdir(parents=True, exist_ok=True)
+            record.write_text('\n'.join(sorted(seeded | set(added))), encoding='utf-8')
+    except OSError:
+        pass                                        # a read-only workspace still works, just without new examples
 
 
 def safe_path(rel: str) -> Path:

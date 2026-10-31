@@ -2,6 +2,7 @@
 import * as G from './geom.js';
 import { del, reorder, step, transformSel } from './selection.js';
 import { D, edit, pinsOf, S, selected } from './state.js';
+import { markupHelp } from './ui.js';
 import { $ } from './util.js';
 import { docBBox, pageBox } from './view.js';
 
@@ -90,6 +91,14 @@ export function seg(value, options, onChange) {
 }
 export const STYLES = [['', 'Ink'], ['acc', 'Accent'], ['para', 'Dash'], ['acc para', 'Acc·dash']];
 export const WIRE_STYLES = [...STYLES, ['bus', 'Bus']];
+function markupHint() {
+  const d = document.createElement('div'); d.className = 'sub mkhint';
+  d.innerHTML = 'Text markup: <code>~{OE}</code> <code>V_{CC}</code> <code>10 k\\ohm</code> … ';
+  const b = document.createElement('button'); b.textContent = 'Reference (F1)'; b.className = 'linkbtn';
+  b.onpointerdown = (ev) => ev.preventDefault();          // keep the focused field as the insert target
+  b.onclick = markupHelp; d.append(b);
+  return d;
+}
 const ZORDER = () => [['To front', () => reorder(true)], ['Forward', () => step(1)], ['Backward', () => step(-1)], ['To back', () => reorder(false)]];
 export const sect = (t) => { const d = document.createElement('div'); d.className = 'sect'; d.textContent = t; return d; };
 
@@ -118,6 +127,12 @@ function buildInspector() {
     p.append(field('Grid', sel_(pg.grid || 5, [1, 2, 5, 10, 20], (v) => edit(() => { pg.grid = Number(v); }))));
     p.append(field('Junctions', chk(pg.junctions !== false, (v) => edit(() => { pg.junctions = v; }))));
     p.append(field('Wire hops', chk(!!pg.hops, (v) => edit(() => { pg.hops = v; }))));
+    const sp = document.createElement('textarea'); sp.value = (d.spice || []).join('\n'); sp.rows = 3; sp.className = 'mono';
+    sp.placeholder = '.tran 10u 5m\n.ac dec 20 10 1Meg\n.include models.lib';
+    sp.onchange = () => edit(() => { const l = sp.value.split('\n').map((x) => x.trimEnd()).filter(Boolean); if (l.length) d.spice = l; else delete d.spice; });
+    sp.onkeydown = (ev) => ev.stopPropagation();
+    const spf = field('SPICE lines', sp); spf.title = 'Analyses, models and options appended to the SPICE netlist';
+    p.append(spf);
     p.append(field('Theme', sel_(typeof d.theme === 'string' ? d.theme : 'custom', [...Object.keys(S.info.themes || {}), ...(typeof d.theme === 'object' ? ['custom'] : [])], (v) => edit(() => { d.theme = v; }))));
     p.append(btns([['Fit page to drawing', () => edit(() => {
       const bb = docBBox(), m = pg.margin ?? 20;
@@ -151,6 +166,7 @@ function buildInspector() {
       if (spec.help) f.title = spec.help;
       p.append(f);
     }
+    p.append(markupHint());
     if (c?.is_part !== false) p.append(fieldsEditor(e, c));
     p.append(sect('Placement'));
     p.append(field('Position', pair(inp(e.x, set(e, 'x'), { type: 'number', mono: true }), inp(e.y, set(e, 'y'), { type: 'number', mono: true }))));
@@ -179,6 +195,7 @@ function buildInspector() {
     const ta = document.createElement('textarea'); ta.value = e.text; ta.rows = 3;
     ta.oninput = () => edit(() => { e.text = ta.value; }, e.id + '.text'); ta.onkeydown = (ev) => ev.stopPropagation();
     p.append(field('Text', ta));
+    p.append(markupHint());
     p.append(field('Class', sel_(e.cls || 'lbl', Object.entries(S.info.text_classes || {}).map(([k, v]) => [k, `${v} (${k})`]), set(e, 'cls'))));
     p.append(field('Anchor', seg(e.anchor || 'start', [['start', 'Start'], ['middle', 'Middle'], ['end', 'End']], set(e, 'anchor'))));
     p.append(field('Position', pair(inp(e.x, set(e, 'x'), { type: 'number', mono: true }), inp(e.y, set(e, 'y'), { type: 'number', mono: true }))));

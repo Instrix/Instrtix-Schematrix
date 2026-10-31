@@ -1,0 +1,377 @@
+{
+ "version": 1,
+ "meta": {
+  "title": "Linear power supply",
+  "description": "230 V AC to regulated 5 V, 1 A"
+ },
+ "page": {
+  "width": null,
+  "height": null,
+  "auto": true,
+  "margin": 20,
+  "grid": 5,
+  "junctions": true,
+  "hops": false
+ },
+ "theme": "instrix",
+ "elements": [
+  {
+   "type": "comp",
+   "sym": "terminal",
+   "x": 40,
+   "y": 50,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "L"
+   },
+   "style": "",
+   "id": "e1"
+  },
+  {
+   "type": "comp",
+   "sym": "terminal",
+   "x": 40,
+   "y": 110,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "N"
+   },
+   "style": "",
+   "id": "e2"
+  },
+  {
+   "type": "comp",
+   "sym": "fuse",
+   "x": 80,
+   "y": 50,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "length": 40,
+    "ref": "F1",
+    "value": "500 mA T"
+   },
+   "style": "",
+   "id": "e3"
+  },
+  {
+   "type": "comp",
+   "sym": "transformer",
+   "x": 160,
+   "y": 80,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "ref": "T1",
+    "value": "230 V : 9 V"
+   },
+   "style": "",
+   "id": "e4"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     40,
+     50
+    ],
+    [
+     60,
+     50
+    ]
+   ],
+   "style": "",
+   "id": "e5"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     100,
+     50
+    ],
+    [
+     130,
+     50
+    ]
+   ],
+   "style": "",
+   "id": "e6"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     40,
+     110
+    ],
+    [
+     130,
+     110
+    ]
+   ],
+   "style": "",
+   "id": "e7"
+  },
+  {
+   "type": "comp",
+   "sym": "bridge",
+   "x": 270,
+   "y": 80,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "ref": "D1",
+    "part": "DF04"
+   },
+   "style": "",
+   "id": "e8"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     190,
+     50
+    ],
+    [
+     210,
+     50
+    ],
+    [
+     210,
+     80
+    ],
+    [
+     230,
+     80
+    ]
+   ],
+   "style": "",
+   "id": "e9"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     190,
+     110
+    ],
+    [
+     210,
+     110
+    ],
+    [
+     330,
+     110
+    ],
+    [
+     330,
+     80
+    ],
+    [
+     310,
+     80
+    ]
+   ],
+   "style": "",
+   "id": "e10"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     270,
+     40
+    ],
+    [
+     270,
+     25
+    ],
+    [
+     380,
+     25
+    ]
+   ],
+   "style": "",
+   "id": "e11"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 270,
+   "y": 120,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "earth"
+   },
+   "style": "",
+   "id": "e12"
+  },
+  {
+   "type": "comp",
+   "sym": "capacitor",
+   "x": 380,
+   "y": 45,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "polarized": true,
+    "plate": "curved",
+    "ref": "C1",
+    "value": "2200 \\uF"
+   },
+   "style": "",
+   "fields": [
+    {
+     "name": "Voltage rating",
+     "value": "25 V",
+     "show": true
+    }
+   ],
+   "id": "e13"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 380,
+   "y": 65,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "earth"
+   },
+   "style": "",
+   "id": "e14"
+  },
+  {
+   "type": "comp",
+   "sym": "regulator",
+   "x": 470,
+   "y": 30,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "ref": "U1",
+    "part": "LM7805"
+   },
+   "style": "",
+   "id": "e15"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     380,
+     25
+    ],
+    [
+     430,
+     25
+    ]
+   ],
+   "style": "",
+   "id": "e16"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 470,
+   "y": 60,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "earth"
+   },
+   "style": "",
+   "id": "e17"
+  },
+  {
+   "type": "comp",
+   "sym": "capacitor",
+   "x": 540,
+   "y": 45,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "ref": "C2",
+    "value": "100 nF"
+   },
+   "style": "",
+   "id": "e18"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     510,
+     25
+    ],
+    [
+     540,
+     25
+    ]
+   ],
+   "style": "",
+   "id": "e19"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 540,
+   "y": 65,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "earth"
+   },
+   "style": "",
+   "id": "e20"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     540,
+     25
+    ],
+    [
+     590,
+     25
+    ],
+    [
+     590,
+     5
+    ]
+   ],
+   "style": "",
+   "id": "e21"
+  },
+  {
+   "type": "comp",
+   "sym": "rail",
+   "x": 590,
+   "y": 5,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "net": "+5 V",
+    "kind": "bar"
+   },
+   "style": "",
+   "id": "e22"
+  },
+  {
+   "type": "text",
+   "x": 40,
+   "y": 190,
+   "text": "V_{in(reg)} \\approx 9 V \\times \\sqrt{}2 \\- 2 V_{F} \\approx 11 V;  ripple \\approx I / (2 f C) \\approx 4.5 V_{pp} at 1 A",
+   "cls": "note",
+   "anchor": "start",
+   "id": "e23"
+  }
+ ]
+}

@@ -7,7 +7,7 @@ from .core import ENUM, FLAG, G, Prop, above, pg, pl, rc, right, symbol, tx
 @symbol('opamp', 'Op-amp', 'Analog', 'U', 'X {inp} {inm} {vp?} {vn?} {out} {model}',
         {'top': ENUM('-', ['-', '+'], 'Top input'), 'supply': FLAG(False, 'Supply pins'),
          'comparator': FLAG(False, 'Comparator', help='draws the step mark')},
-        model='OPAMP', fields=('GBW', 'Slew rate', 'Supply range', 'Offset'),
+        model=lambda p: 'OPAMP5' if p.get('supply') else 'OPAMP', fields=('GBW', 'Slew rate', 'Supply range', 'Offset'),
         pin_numbers={'out': '1', 'inm': '2', 'inp': '3', 'vn': '4', 'vp': '8'},
         aliases=('Opamp_Dual', 'Opamp', 'OPAMP', 'LM358', 'TL072', 'Comparator', 'LM393'))
 def opamp(p):

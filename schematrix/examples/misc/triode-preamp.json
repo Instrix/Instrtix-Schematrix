@@ -1,0 +1,292 @@
+{
+ "version": 1,
+ "meta": {
+  "title": "Triode preamp",
+  "description": "12AX7 common-cathode gain stage, about 35 dB"
+ },
+ "page": {
+  "width": null,
+  "height": null,
+  "auto": true,
+  "margin": 20,
+  "grid": 5,
+  "junctions": true,
+  "hops": false
+ },
+ "theme": "formal",
+ "elements": [
+  {
+   "type": "comp",
+   "sym": "triode",
+   "x": 200,
+   "y": 130,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "ref": "V1",
+    "part": "12AX7"
+   },
+   "style": "",
+   "id": "e1"
+  },
+  {
+   "type": "comp",
+   "sym": "rail",
+   "x": 200,
+   "y": 20,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "net": "B+ 250 V",
+    "kind": "bar"
+   },
+   "style": "",
+   "id": "e2"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 200,
+   "y": 50,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "ref": "R_{a}",
+    "value": "100 k\\ohm"
+   },
+   "style": "",
+   "id": "e3"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     200,
+     80
+    ],
+    [
+     200,
+     85
+    ]
+   ],
+   "style": "",
+   "id": "e4"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 215,
+   "y": 205,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "ref": "R_{k}",
+    "value": "1.5 k\\ohm"
+   },
+   "style": "",
+   "id": "e5"
+  },
+  {
+   "type": "comp",
+   "sym": "capacitor",
+   "x": 265,
+   "y": 195,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "polarized": true,
+    "plate": "curved",
+    "ref": "C_{k}",
+    "value": "22 \\uF"
+   },
+   "style": "",
+   "id": "e6"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     215,
+     175
+    ],
+    [
+     265,
+     175
+    ]
+   ],
+   "style": "",
+   "id": "e7"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 215,
+   "y": 235,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "earth"
+   },
+   "style": "",
+   "id": "e8"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 265,
+   "y": 215,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "earth"
+   },
+   "style": "",
+   "id": "e9"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 135,
+   "y": 160,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "ref": "R_{g}",
+    "value": "1 M\\ohm"
+   },
+   "style": "",
+   "id": "e10"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     155,
+     130
+    ],
+    [
+     135,
+     130
+    ]
+   ],
+   "style": "",
+   "id": "e11"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 135,
+   "y": 190,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "earth"
+   },
+   "style": "",
+   "id": "e12"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     135,
+     130
+    ],
+    [
+     60,
+     130
+    ]
+   ],
+   "style": "",
+   "id": "e13"
+  },
+  {
+   "type": "comp",
+   "sym": "terminal",
+   "x": 60,
+   "y": 130,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "IN"
+   },
+   "style": "",
+   "id": "e14"
+  },
+  {
+   "type": "comp",
+   "sym": "capacitor",
+   "x": 260,
+   "y": 50,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "ref": "C_{out}",
+    "value": "22 nF"
+   },
+   "style": "",
+   "id": "e15"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     200,
+     50
+    ],
+    [
+     240,
+     50
+    ]
+   ],
+   "style": "",
+   "id": "e16"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     280,
+     50
+    ],
+    [
+     330,
+     50
+    ]
+   ],
+   "style": "",
+   "id": "e17"
+  },
+  {
+   "type": "comp",
+   "sym": "terminal",
+   "x": 330,
+   "y": 50,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "OUT"
+   },
+   "style": "",
+   "id": "e18"
+  },
+  {
+   "type": "text",
+   "x": 40,
+   "y": 280,
+   "text": "Heater: 6.3 V_{AC} (pins 4, 5 / 9), not drawn",
+   "cls": "note",
+   "anchor": "start",
+   "id": "e19"
+  },
+  {
+   "type": "text",
+   "x": 40,
+   "y": 300,
+   "text": "Gain \\approx \\mu R_{a} / (R_{a} + r_{a}) \\approx 100 \\times 100k / 162k \\approx 62 (36 dB)",
+   "cls": "note",
+   "anchor": "start",
+   "id": "e20"
+  }
+ ]
+}

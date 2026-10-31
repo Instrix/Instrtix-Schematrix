@@ -1,0 +1,220 @@
+{
+ "version": 1,
+ "meta": {
+  "title": "Signal chain",
+  "description": "Block diagram with signal-flow symbols"
+ },
+ "page": {
+  "width": null,
+  "height": null,
+  "auto": true,
+  "margin": 20,
+  "grid": 5,
+  "junctions": true,
+  "hops": false
+ },
+ "theme": "instrix",
+ "elements": [
+  {
+   "type": "comp",
+   "sym": "sensor",
+   "x": 40,
+   "y": 100,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "quantity": "T",
+    "ref": "S1",
+    "value": "PT100"
+   },
+   "style": "",
+   "id": "e1"
+  },
+  {
+   "type": "comp",
+   "sym": "amplifier",
+   "x": 125,
+   "y": 100,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "gain": "\\times 50",
+    "ref": "A1",
+    "value": "PGA"
+   },
+   "style": "",
+   "id": "e2"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     65,
+     100
+    ],
+    [
+     95,
+     100
+    ]
+   ],
+   "style": "",
+   "id": "e3"
+  },
+  {
+   "type": "comp",
+   "sym": "filter",
+   "x": 215,
+   "y": 100,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "lp",
+    "ref": "FL1",
+    "value": "f_{c} = 1 kHz"
+   },
+   "style": "",
+   "id": "e4"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     155,
+     100
+    ],
+    [
+     185,
+     100
+    ]
+   ],
+   "style": "",
+   "id": "e5"
+  },
+  {
+   "type": "comp",
+   "sym": "converter",
+   "x": 305,
+   "y": 100,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "src": "A",
+    "dst": "D",
+    "ref": "U1",
+    "value": "24 bit"
+   },
+   "style": "",
+   "id": "e6"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     245,
+     100
+    ],
+    [
+     275,
+     100
+    ]
+   ],
+   "style": "",
+   "id": "e7"
+  },
+  {
+   "type": "comp",
+   "sym": "block",
+   "x": 375,
+   "y": 70,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "w": 110,
+    "h": 60,
+    "title": "MCU",
+    "pins": "IN:l, UART:r",
+    "show_pins": false,
+    "ref": "U2"
+   },
+   "style": "",
+   "id": "e8"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     335,
+     100
+    ],
+    [
+     375,
+     100
+    ]
+   ],
+   "style": "bus",
+   "id": "e9"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     485,
+     100
+    ],
+    [
+     515,
+     100
+    ]
+   ],
+   "style": "",
+   "id": "e10"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 515,
+   "y": 100,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "TX",
+    "side": "right"
+   },
+   "style": "",
+   "id": "e11"
+  },
+  {
+   "type": "arrow",
+   "points": [
+    [
+     60,
+     40
+    ],
+    [
+     500,
+     40
+    ]
+   ],
+   "style": "acc",
+   "id": "e12"
+  },
+  {
+   "type": "text",
+   "x": 60,
+   "y": 32,
+   "text": "signal flow",
+   "cls": "note",
+   "anchor": "start",
+   "id": "e13"
+  },
+  {
+   "type": "text",
+   "x": 60,
+   "y": 170,
+   "text": "Sampled at f_{s} = 8 kS/s; the filter keeps everything above f_{s}/2 out of the ADC",
+   "cls": "note",
+   "anchor": "start",
+   "id": "e14"
+  }
+ ]
+}

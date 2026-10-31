@@ -1,0 +1,178 @@
+{
+ "version": 1,
+ "meta": {
+  "title": "Diode clipper",
+  "description": "Antiparallel diodes clamp the output to one diode drop"
+ },
+ "page": {
+  "width": null,
+  "height": null,
+  "auto": true,
+  "margin": 20,
+  "grid": 5,
+  "junctions": true,
+  "hops": false
+ },
+ "theme": "instrix",
+ "elements": [
+  {
+   "type": "comp",
+   "sym": "vsrc",
+   "x": 60,
+   "y": 130,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "length": 80,
+    "kind": "ac",
+    "ref": "V1",
+    "value": "SIN(0 5 1k)"
+   },
+   "style": "",
+   "id": "e1"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 60,
+   "y": 170,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "earth"
+   },
+   "style": "",
+   "id": "e2"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 90,
+   "y": 60,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "ref": "R1",
+    "value": "1 k\\ohm"
+   },
+   "style": "",
+   "id": "e3"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     60,
+     90
+    ],
+    [
+     60,
+     60
+    ]
+   ],
+   "style": "",
+   "id": "e4"
+  },
+  {
+   "type": "comp",
+   "sym": "diode",
+   "x": 150,
+   "y": 90,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "ref": "D1"
+   },
+   "style": "",
+   "id": "e5"
+  },
+  {
+   "type": "comp",
+   "sym": "diode",
+   "x": 230,
+   "y": 90,
+   "rot": 270,
+   "mirror": false,
+   "props": {
+    "ref": "D2"
+   },
+   "style": "",
+   "id": "e6"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     120,
+     60
+    ],
+    [
+     230,
+     60
+    ]
+   ],
+   "style": "",
+   "id": "e7"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 150,
+   "y": 120,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "earth"
+   },
+   "style": "",
+   "id": "e8"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 230,
+   "y": 120,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "earth"
+   },
+   "style": "",
+   "id": "e9"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     230,
+     60
+    ],
+    [
+     270,
+     60
+    ]
+   ],
+   "style": "",
+   "id": "e10"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 270,
+   "y": 60,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "OUT",
+    "side": "right"
+   },
+   "style": "",
+   "id": "e11"
+  }
+ ],
+ "spice": [
+  ".tran 5u 3m",
+  ".meas tran vmax MAX v(OUT)",
+  ".meas tran vmin MIN v(OUT)"
+ ]
+}

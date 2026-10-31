@@ -186,13 +186,76 @@ print(s.spice())
 ## CLI
 
 ```
-schematrix render fig.json -o fig.svg            # or .png / .pdf / .cir; --fonts embeds fonts in the SVG
-schematrix render build_figs.py -o out/ -f svg,pdf
+schematrix render fig.json -o fig.svg            # or .png .jpg .webp .pdf .eps .tikz .tex .cir .net
+schematrix render build_figs.py -o out/ -f svg,pdf --background none --scale 3
+schematrix app --engine chromium                 # app window: chromium (default on Linux) | webview | browser
 schematrix netlist fig.json -f kicad -o fig.net  # spice (default) | kicad | json
 schematrix import-netlist board.net -f json,svg   # draw a schematic from a SPICE / KiCad / JSON netlist
 schematrix import-legacy schematics.py -o figs/  # old S-class scripts -> .json + .svg
 schematrix symbols
 ```
+
+## Drawing styles
+
+A document's theme sets colours, fonts and line weights: `instrix` (default), `instrix-dark`, `blueprint`,
+`print-mono`, `formal` (Times / LaTeX serif, thin lines, italic references, for papers), `technical` (Helvetica,
+datasheet look) and `kicad` (KiCad's classic colours). Pick one in the document inspector or `Schematic(theme=…)`.
+
+## Text markup
+
+Every label, value, field, net name and note understands a small markup language (Help > Text markup, or F1):
+
+| Type | Get |
+|---|---|
+| `~{RST}` | overbar (active low) |
+| `V_{CC}`, `x^{2}` | subscript, superscript (they nest: `~{CS_{1}}`) |
+| `4.7 k\ohm`, `10 \uF`, `25 \deg{}C` | Ω, µ, ° (`{}` ends a name) |
+| `\pm \times \le \ge \approx \inf \sqrt` | ± × ≤ ≥ ≈ ∞ √ |
+| `\alpha` … `\Omega` | Greek letters |
+| `\-` | a true minus sign |
+| `\~ \{ \} \_ \^ \\` | the literal characters |
+
+Markers only count with a brace, so `f_c` stays as typed. SPICE netlists get the plain text (`10 k\ohm` -> `10k`),
+TikZ gets LaTeX (`\overline`, `\textsubscript`).
+
+## Export
+
+File > Export… (Ctrl+E) or right-click > Export selection…: SVG, PNG, JPEG, WebP, PDF, EPS, TikZ (`\input` into a
+LaTeX document) or a standalone `.tex`; the whole sheet or only the selection, cropped with a margin; the theme's
+paper, white or a transparent background; bitmap scale up to 8x (768 dpi). Bitmaps are drawn in the browser, so
+they work without cairosvg. From Python: `s.export('fig.pdf', ids=[...], background=False)`, `s.to_tikz()`;
+over HTTP: `POST /api/export`.
+
+## Simulation
+
+A document carries SPICE lines (`s.directive('.tran 10u 5m')`, or "SPICE lines" in the document inspector) that
+end up in the netlist. Default models are written for parts that use them (`DMOD`, `NPN`, `PNP`, `NMOS`, `PMOS`,
+`NJF`, `PJF`, and an op-amp macro-model `OPAMP` / `OPAMP5`), unless you define your own `.model` / `.subckt`.
+
+```
+schematrix netlist examples/simulation/rc-step.py -o rc.cir && ngspice -b rc.cir
+```
+
+## Examples
+
+`examples/` (copied into the workspace; new versions add new examples without touching yours) holds Python
+scripts, each with ready-to-open `.json` documents beside it:
+
+- **analog**: inverting amplifier, Sallen-Key low-pass, bridge + instrumentation amp, photodiode TIA, common emitter
+- **digital**: SR latch, full adder, counter + decoder over a bus, shift register driving LEDs, debounce, accumulator
+- **power**: linear supply, buck converter, relay driver, high-side load switch
+- **simulation** (verified with ngspice, results printed by `.meas`): RC step, RLC resonance, rectifier, CMOS
+  inverter, op-amp integrator, diode clipper
+- **misc**: triode preamp, signal-chain block diagram, a LaTeX paper figure, the same circuit in every style
+- **netlists**: SPICE and KiCad files to try File > Import netlist on
+- **tr-0002**: the original figure script (runs as-is, or imports as 12 editable figures)
+
+`python scripts/build_examples.py` regenerates the `.json` documents and sample netlists.
+
+## Mouse
+
+Left drag moves, stretches wires or box-selects; right or middle drag pans; right-click opens the context menu
+(z-order, rotate, export selection…); wheel zooms.
 
 ## Layout
 
@@ -206,6 +269,9 @@ schematrix/
   render.py     document -> SVG (and PNG/PDF via cairosvg)
   document.py   the scripting API (Schematic, Comp, Pin)
   netlist.py    connectivity (which pins share a net, net names)
+  markup.py     text markup (~{x}, V_{CC}, \ohm …), shared with web/js/markup.js
+  export.py     every export format, selection cropping and backgrounds
+  tikz.py       TikZ export
   netio/        netlist files: model.py (neutral Netlist), spice.py, kicad.py, jsonfmt.py, layout.py (netlist -> sheet)
   units.py      engineering values ('1 kΩ' -> SPICE '1k')
   compat.py     legacy S-class importer

@@ -7,7 +7,7 @@ import { refreshNetlist, refreshScripts, runScript } from './panes.js';
 import { copySel, del, nudge, paste, reorder, step, toggleAccent, transformSel } from './selection.js';
 import { D, edit, newDoc, openTab, persist, redo, S, T, undo } from './state.js';
 import { finishDraft, setTool } from './tools.js';
-import { ask, closeModal, helpDialog, modal, toast } from './ui.js';
+import { ask, closeModal, helpDialog, markupHelp, modal, toast } from './ui.js';
 import { $, $$, api, svg } from './util.js';
 import { fit, render, renderOverlay, zoomAt } from './view.js';
 
@@ -29,7 +29,7 @@ export const COMMANDS = {
   rotate: () => transformSel('rot'), mirror: () => transformSel('mir'), accent: toggleAccent, front: () => reorder(true), back: () => reorder(false),
   forward: () => step(1), backward: () => step(-1),
   fit, zoomin: () => zoomAt(1.25), zoomout: () => zoomAt(0.8), zoom100: () => zoomAt(1 / T().view.k),
-  grid: () => { S.grid = !S.grid; render(); }, help: helpDialog,
+  grid: () => { S.grid = !S.grid; render(); }, help: helpDialog, markup: markupHelp,
   junctions: () => edit((d) => { d.page.junctions = d.page.junctions === false; }),
   hops: () => edit((d) => { d.page.hops = !d.page.hops; }),
   export: () => exportDialog(false), 'export-selection': () => exportDialog(true),
@@ -86,6 +86,8 @@ document.addEventListener('dragover', (ev) => ev.preventDefault());
 document.addEventListener('drop', (ev) => { ev.preventDefault(); for (const f of ev.dataTransfer.files) importFile(f); });
 window.addEventListener('beforeunload', (ev) => { persist(); if (S.tabs.some((t) => t.dirty && t.path)) { ev.preventDefault(); } });
 
+// F1 from anywhere, text fields included (they stop key events from bubbling, so listen in the capture phase)
+document.addEventListener('keydown', (ev) => { if (ev.key === 'F1') { ev.preventDefault(); ev.stopPropagation(); markupHelp(); } }, true);
 document.addEventListener('keydown', (ev) => {
   if (!$('#modal').hidden) { if (ev.key === 'Escape') closeModal(); return; }
   const tag = document.activeElement?.tagName;

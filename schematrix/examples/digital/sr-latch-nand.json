@@ -1,0 +1,234 @@
+{
+ "version": 1,
+ "meta": {
+  "title": "SR latch (NAND)",
+  "description": "Active-low set / reset latch"
+ },
+ "page": {
+  "width": null,
+  "height": null,
+  "auto": true,
+  "margin": 20,
+  "grid": 5,
+  "junctions": true,
+  "hops": true
+ },
+ "theme": "instrix",
+ "elements": [
+  {
+   "type": "comp",
+   "sym": "gate",
+   "x": 200,
+   "y": 80,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "nand",
+    "ref": "U1"
+   },
+   "style": "",
+   "id": "e1"
+  },
+  {
+   "type": "comp",
+   "sym": "gate",
+   "x": 200,
+   "y": 180,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "nand",
+    "ref": "U2"
+   },
+   "style": "",
+   "id": "e2"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     233,
+     80
+    ],
+    [
+     250,
+     80
+    ],
+    [
+     250,
+     125
+    ],
+    [
+     150,
+     125
+    ],
+    [
+     150,
+     170
+    ],
+    [
+     165,
+     170
+    ]
+   ],
+   "style": "",
+   "id": "e3"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     233,
+     180
+    ],
+    [
+     265,
+     180
+    ],
+    [
+     265,
+     140
+    ],
+    [
+     135,
+     140
+    ],
+    [
+     135,
+     90
+    ],
+    [
+     165,
+     90
+    ]
+   ],
+   "style": "",
+   "id": "e4"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     250,
+     80
+    ],
+    [
+     300,
+     80
+    ]
+   ],
+   "style": "",
+   "id": "e5"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 300,
+   "y": 80,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "Q",
+    "side": "right"
+   },
+   "style": "",
+   "id": "e6"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     265,
+     180
+    ],
+    [
+     300,
+     180
+    ]
+   ],
+   "style": "",
+   "id": "e7"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 300,
+   "y": 180,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "~{Q}",
+    "side": "right"
+   },
+   "style": "",
+   "id": "e8"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     165,
+     70
+    ],
+    [
+     90,
+     70
+    ]
+   ],
+   "style": "",
+   "id": "e9"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 90,
+   "y": 70,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "~{S}",
+    "side": "left"
+   },
+   "style": "",
+   "id": "e10"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     165,
+     190
+    ],
+    [
+     90,
+     190
+    ]
+   ],
+   "style": "",
+   "id": "e11"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 90,
+   "y": 190,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "~{R}",
+    "side": "left"
+   },
+   "style": "",
+   "id": "e12"
+  },
+  {
+   "type": "text",
+   "x": 90,
+   "y": 240,
+   "text": "~{S} = 0 sets Q,  ~{R} = 0 resets it,  both 1 holds",
+   "cls": "note",
+   "anchor": "start",
+   "id": "e13"
+  }
+ ]
+}

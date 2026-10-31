@@ -1,0 +1,136 @@
+{
+ "version": 1,
+ "meta": {
+  "title": "Style: formal",
+  "description": ""
+ },
+ "page": {
+  "width": null,
+  "height": null,
+  "auto": true,
+  "margin": 20,
+  "grid": 5,
+  "junctions": true,
+  "hops": false
+ },
+ "theme": "formal",
+ "elements": [
+  {
+   "type": "comp",
+   "sym": "nmos",
+   "x": 160,
+   "y": 90,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "ref": "Q_{1}",
+    "part": "IRLML6244"
+   },
+   "style": "",
+   "fields": [
+    {
+     "name": "R_{DS(on)}",
+     "value": "21 m\\ohm",
+     "show": true
+    }
+   ],
+   "id": "e1"
+  },
+  {
+   "type": "comp",
+   "sym": "rail",
+   "x": 160,
+   "y": 20,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "net": "V_{DD}",
+    "kind": "bar"
+   },
+   "style": "",
+   "id": "e2"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 160,
+   "y": 40,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "length": 40,
+    "body": 24,
+    "ref": "R_{L}",
+    "value": "4.7 k\\ohm \\pm1 %"
+   },
+   "style": "",
+   "id": "e3"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     160,
+     60
+    ],
+    [
+     160,
+     60
+    ]
+   ],
+   "style": "",
+   "id": "e4"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 160,
+   "y": 120,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "earth"
+   },
+   "style": "",
+   "id": "e5"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     130,
+     90
+    ],
+    [
+     90,
+     90
+    ]
+   ],
+   "style": "",
+   "id": "e6"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 90,
+   "y": 90,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "~{EN}",
+    "side": "left"
+   },
+   "style": "",
+   "id": "e7"
+  },
+  {
+   "type": "text",
+   "x": 40,
+   "y": 170,
+   "text": "I_{D} \\approx 2.5 mA,  V_{GS(th)} \\le 1.1 V,  T_{j} \\le 150 \\deg{}C",
+   "cls": "note",
+   "anchor": "start",
+   "id": "e8"
+  }
+ ]
+}

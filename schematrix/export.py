@@ -45,6 +45,66 @@ def svg_of(doc, background=True, fonts=True, ids=None, margin=None) -> str:
     return R.render_svg(subset(doc, ids, margin), embed_fonts=fonts, background=background)
 
 
+def for_cairo(svg: str, theme=None) -> str:
+    """cairosvg ignores text-decoration and anchors every tspan on its own: measure the runs of each marked-up text
+    with cairo itself (same engine, same first font family), left-anchor the text at its true start and draw each
+    overbar as a line"""
+    if '<tspan' not in svg:
+        return svg
+    import re
+    import xml.etree.ElementTree as ET
+    import cairocffi as cairo
+    from . import symbols as SYM
+    from . import theme as TH
+    NS = 'http://www.w3.org/2000/svg'
+    ET.register_namespace('', NS)
+    root = ET.fromstring(svg)
+    t = TH.resolve(theme)
+    ctx = cairo.Context(cairo.ImageSurface(cairo.FORMAT_ARGB32, 1, 1))
+    first = lambda fam: fam.split(',')[0].strip('"\' ')
+
+    def measure(text, family, size, bold, italic):
+        ctx.select_font_face(family, cairo.FONT_SLANT_ITALIC if italic else cairo.FONT_SLANT_NORMAL,
+                             cairo.FONT_WEIGHT_BOLD if bold else cairo.FONT_WEIGHT_NORMAL)
+        ctx.set_font_size(size)
+        return ctx.text_extents(text)[4]
+    for parent in root.iter():
+        for idx, el in reversed(list(enumerate(list(parent)))):
+            if el.tag != f'{{{NS}}}text' or not len(el):
+                continue
+            cls = (el.get('class') or 'lbl').split()[0]
+            m = re.search(r'font-size:\s*([\d.]+)px', el.get('style') or '')
+            fs = float(m.group(1)) if m else SYM.FONT_SIZES.get(cls, 12)
+            family = first(t['sans'] if cls in ('note', 'title') else t['mono'])
+            bold = int((t['strong'] if cls in ('pin', 'termlbl', 'accl', 'grplbl', 'title') else t['weight'])) >= 600
+            italic = cls == 'node' or (cls in ('ref', 'accl') and t['ref_style'] == 'italic')
+            color = t['accent'] if cls == 'accl' else t['muted'] if cls in ('val', 'valsm', 'grplbl', 'note') else t['text']
+            runs, x, base = [], 0.0, 0.0
+            def add(text, size, over):
+                nonlocal x
+                w = measure(text, family, size, bold, italic)
+                runs.append((x, x + w, over)); x += w
+            add(el.text or '', fs, False)
+            for c in el:
+                base += float(c.get('dy') or 0)
+                st = c.get('style') or ''
+                sm = re.search(r'font-size:\s*([\d.]+)px', st)
+                add(c.text or '', float(sm.group(1)) if sm else fs, 'overline' in st)
+                c.set('style', re.sub(r'text-decoration:overline;?', '', st).strip(';'))
+                if not c.get('style'):
+                    del c.attrib['style']
+                add(c.tail or '', fs, False)
+            x0 = float(el.get('x', 0)) - {'start': 0, 'middle': x / 2, 'end': x}[el.get('text-anchor', 'start')]
+            el.set('x', f'{x0:.2f}'); el.set('text-anchor', 'start')
+            y = float(el.get('y', 0)) - fs * 0.8
+            for a, b, over in runs:
+                if over and b > a:
+                    parent.insert(idx + 1, ET.Element(f'{{{NS}}}line', {
+                        'x1': f'{x0 + a + fs * 0.04:.2f}', 'x2': f'{x0 + b - fs * 0.04:.2f}', 'y1': f'{y:.2f}', 'y2': f'{y:.2f}',
+                        'stroke': color, 'stroke-width': f'{max(0.6, fs * 0.065):.2f}'}))
+    return ET.tostring(root, encoding='unicode')
+
+
 def export(doc, fmt='svg', *, ids=None, background=True, scale=2.0, margin=None, fonts=True, quality=92):
     """-> (bytes, mime type, file extension). background: True (theme paper), False / 'none', or a colour."""
     fmt = ALIASES.get(fmt, fmt)
@@ -60,6 +120,7 @@ def export(doc, fmt='svg', *, ids=None, background=True, scale=2.0, margin=None,
     svg = svg_of(doc, background, fonts and fmt == 'svg', ids, margin)
     if fmt == 'svg':
         return svg.encode(), mime, ext
+    svg = for_cairo(svg, doc.get('theme'))
     try:
         import cairosvg
     except Exception as e:  # noqa: BLE001

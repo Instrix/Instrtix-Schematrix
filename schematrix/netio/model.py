@@ -40,6 +40,7 @@ class Netlist:
     title: str = ''
     parts: list = field(default_factory=list)
     warnings: list = field(default_factory=list)
+    directives: list = field(default_factory=list)   # SPICE lines: .tran / .ac / .model / .include / .subckt ...
 
     def nets(self) -> dict:
         """net name -> [(ref, pin)], in part order"""
@@ -79,7 +80,7 @@ def from_doc(doc) -> Netlist:
                           props={k: v for k, v in props.items() if k not in STD and v != defaults.get(k)},
                           fields=fields_of(e), pins=pins))
     parts.sort(key=lambda p: _natural(p.ref))
-    return Netlist(doc.get('meta', {}).get('title', ''), parts, list(nx['warnings']))
+    return Netlist(doc.get('meta', {}).get('title', ''), parts, list(nx['warnings']), list(doc.get('spice') or []))
 
 
 def _natural(s):

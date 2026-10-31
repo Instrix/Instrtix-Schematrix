@@ -1,0 +1,240 @@
+{
+ "version": 1,
+ "meta": {
+  "title": "CMOS inverter",
+  "description": "Complementary pair; .dc sweep and switching threshold"
+ },
+ "page": {
+  "width": null,
+  "height": null,
+  "auto": true,
+  "margin": 20,
+  "grid": 5,
+  "junctions": true,
+  "hops": false
+ },
+ "theme": "instrix",
+ "elements": [
+  {
+   "type": "comp",
+   "sym": "vsrc",
+   "x": 320,
+   "y": 110,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "length": 80,
+    "ref": "V2",
+    "value": "5"
+   },
+   "style": "",
+   "id": "e1"
+  },
+  {
+   "type": "comp",
+   "sym": "rail",
+   "x": 320,
+   "y": 70,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "net": "VDD",
+    "kind": "bar"
+   },
+   "style": "",
+   "id": "e2"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 320,
+   "y": 150,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "earth"
+   },
+   "style": "",
+   "id": "e3"
+  },
+  {
+   "type": "comp",
+   "sym": "pmos",
+   "x": 180,
+   "y": 80,
+   "rot": 180,
+   "mirror": true,
+   "props": {
+    "ref": "M1"
+   },
+   "style": "",
+   "id": "e4"
+  },
+  {
+   "type": "comp",
+   "sym": "nmos",
+   "x": 180,
+   "y": 140,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "ref": "M2"
+   },
+   "style": "",
+   "id": "e5"
+  },
+  {
+   "type": "comp",
+   "sym": "rail",
+   "x": 180,
+   "y": 50,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "net": "VDD",
+    "kind": "bar"
+   },
+   "style": "",
+   "id": "e6"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 180,
+   "y": 170,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "earth"
+   },
+   "style": "",
+   "id": "e7"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     150,
+     80
+    ],
+    [
+     130,
+     80
+    ],
+    [
+     130,
+     140
+    ],
+    [
+     150,
+     140
+    ]
+   ],
+   "style": "",
+   "id": "e8"
+  },
+  {
+   "type": "comp",
+   "sym": "vsrc",
+   "x": 60,
+   "y": 170,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "length": 80,
+    "ref": "V1",
+    "value": "0"
+   },
+   "style": "",
+   "id": "e9"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 60,
+   "y": 210,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "earth"
+   },
+   "style": "",
+   "id": "e10"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     60,
+     130
+    ],
+    [
+     60,
+     110
+    ],
+    [
+     130,
+     110
+    ]
+   ],
+   "style": "",
+   "id": "e11"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     180,
+     110
+    ],
+    [
+     240,
+     110
+    ]
+   ],
+   "style": "",
+   "id": "e12"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 240,
+   "y": 110,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "OUT",
+    "side": "right"
+   },
+   "style": "",
+   "id": "e13"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 60,
+   "y": 110,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "IN",
+    "side": "left"
+   },
+   "style": "",
+   "id": "e14"
+  },
+  {
+   "type": "text",
+   "x": 40,
+   "y": 260,
+   "text": "Symmetric thresholds put V_{th} near V_{DD}/2 when K_{p,n}/K_{p,p} matches the mobility ratio",
+   "cls": "note",
+   "anchor": "start",
+   "id": "e15"
+  }
+ ],
+ "spice": [
+  ".dc V1 0 5 0.01",
+  ".meas dc vth WHEN v(OUT)=2.5"
+ ]
+}

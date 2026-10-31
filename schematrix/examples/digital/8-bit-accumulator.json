@@ -1,0 +1,261 @@
+{
+ "version": 1,
+ "meta": {
+  "title": "8-bit accumulator",
+  "description": "Bus-level datapath: ACC <= ACC + IN on every clock"
+ },
+ "page": {
+  "width": null,
+  "height": null,
+  "auto": true,
+  "margin": 20,
+  "grid": 5,
+  "junctions": true,
+  "hops": false
+ },
+ "theme": "instrix",
+ "elements": [
+  {
+   "type": "comp",
+   "sym": "adder",
+   "x": 160,
+   "y": 60,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "bits": 8,
+    "bus": true,
+    "carry_in": false,
+    "ref": "U1",
+    "part": "74HC283 x2"
+   },
+   "style": "",
+   "id": "e1"
+  },
+  {
+   "type": "comp",
+   "sym": "register",
+   "x": 380,
+   "y": 60,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "bits": 8,
+    "bus": true,
+    "oe": false,
+    "clear": true,
+    "ref": "U2",
+    "part": "74HC273"
+   },
+   "style": "",
+   "id": "e2"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     270,
+     80
+    ],
+    [
+     330,
+     80
+    ],
+    [
+     330,
+     80
+    ],
+    [
+     370,
+     80
+    ]
+   ],
+   "style": "bus",
+   "id": "e3"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     490,
+     80
+    ],
+    [
+     520,
+     80
+    ],
+    [
+     520,
+     10
+    ],
+    [
+     130,
+     10
+    ],
+    [
+     130,
+     80
+    ],
+    [
+     150,
+     80
+    ]
+   ],
+   "style": "bus",
+   "id": "e4"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     520,
+     80
+    ],
+    [
+     550,
+     80
+    ]
+   ],
+   "style": "bus",
+   "id": "e5"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 550,
+   "y": 80,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "ACC[7:0]",
+    "side": "right"
+   },
+   "style": "",
+   "id": "e6"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     150,
+     100
+    ],
+    [
+     100,
+     100
+    ]
+   ],
+   "style": "bus",
+   "id": "e7"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 100,
+   "y": 100,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "IN[7:0]",
+    "side": "left"
+   },
+   "style": "",
+   "id": "e8"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     370,
+     100
+    ],
+    [
+     340,
+     100
+    ]
+   ],
+   "style": "",
+   "id": "e9"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 340,
+   "y": 100,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "CLK",
+    "side": "left"
+   },
+   "style": "",
+   "id": "e10"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     370,
+     120
+    ],
+    [
+     340,
+     120
+    ]
+   ],
+   "style": "",
+   "id": "e11"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 340,
+   "y": 120,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "~{RST}",
+    "side": "left"
+   },
+   "style": "",
+   "id": "e12"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     270,
+     100
+    ],
+    [
+     285,
+     100
+    ],
+    [
+     285,
+     150
+    ],
+    [
+     305,
+     150
+    ]
+   ],
+   "style": "",
+   "id": "e13"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 305,
+   "y": 150,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "C_{out}",
+    "side": "right"
+   },
+   "style": "",
+   "id": "e14"
+  }
+ ]
+}

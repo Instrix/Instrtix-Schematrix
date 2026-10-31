@@ -1,0 +1,22 @@
+# One-bit full adder from XOR / AND / OR gates:  S = A xor B xor C_in,  C_out = AB + C_in (A xor B).
+from schematrix import Schematic
+
+s = Schematic('Full adder', description='Gate-level 1-bit full adder', hops=True)
+x1 = s.xor_gate((160, 80), ref='U1')
+x2 = s.xor_gate((300, 90), ref='U2')
+a1 = s.and_gate((300, 180), ref='U3')
+a2 = s.and_gate((300, 250), ref='U4')
+o1 = s.or_gate((440, 215), ref='U5')
+s.flag(s.wire((60, 70), x1['in1'])[0], 'A', side='left')
+s.flag(s.wire((60, 90), x1['in2'])[0], 'B', side='left')
+s.flag(s.wire((60, 130), (240, 130), (240, 100), x2['in2'])[0], 'C_{in}', side='left')
+s.wire((100, 70), (100, 170), a1['in1'])
+s.wire((85, 90), (85, 190), a1['in2'])
+s.wire(x1['out'], x2['in1'])
+s.wire((230, 80), (230, 240), a2['in1'])
+s.wire((215, 130), (215, 260), a2['in2'])
+s.flag(s.wire(x2['out'], (400, 90))[-1], 'S', side='right')
+s.wire(a1['out'], (360, 180), (360, 205), o1['in1'])
+s.wire(a2['out'], (370, 250), (370, 225), o1['in2'])
+s.flag(s.wire(o1['out'], (500, 215))[-1], 'C_{out}', side='right')
+s.show()

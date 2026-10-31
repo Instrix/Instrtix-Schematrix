@@ -1,0 +1,261 @@
+{
+ "version": 1,
+ "meta": {
+  "title": "Inverting amplifier",
+  "description": "Gain -10 op-amp stage, simulated with a 1 kHz sine"
+ },
+ "page": {
+  "width": null,
+  "height": null,
+  "auto": true,
+  "margin": 20,
+  "grid": 5,
+  "junctions": true,
+  "hops": false
+ },
+ "theme": "instrix",
+ "elements": [
+  {
+   "type": "comp",
+   "sym": "opamp",
+   "x": 240,
+   "y": 100,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "top": "-",
+    "ref": "U1"
+   },
+   "style": "",
+   "id": "e1"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 130,
+   "y": 85,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "ref": "R1",
+    "value": "1 k\\ohm"
+   },
+   "style": "",
+   "id": "e2"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     160,
+     85
+    ],
+    [
+     204,
+     85
+    ]
+   ],
+   "style": "",
+   "id": "e3"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     180,
+     85
+    ],
+    [
+     180,
+     40
+    ]
+   ],
+   "style": "",
+   "id": "e4"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 230,
+   "y": 40,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "ref": "R2",
+    "value": "10 k\\ohm"
+   },
+   "style": "",
+   "id": "e5"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     180,
+     40
+    ],
+    [
+     200,
+     40
+    ]
+   ],
+   "style": "",
+   "id": "e6"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     260,
+     40
+    ],
+    [
+     300,
+     40
+    ],
+    [
+     300,
+     100
+    ]
+   ],
+   "style": "",
+   "id": "e7"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     276,
+     100
+    ],
+    [
+     330,
+     100
+    ]
+   ],
+   "style": "",
+   "id": "e8"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 330,
+   "y": 100,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "V_{OUT}",
+    "side": "right"
+   },
+   "style": "",
+   "id": "e9"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     204,
+     115
+    ],
+    [
+     190,
+     115
+    ],
+    [
+     190,
+     135
+    ]
+   ],
+   "style": "",
+   "id": "e10"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 190,
+   "y": 135,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "earth"
+   },
+   "style": "",
+   "id": "e11"
+  },
+  {
+   "type": "comp",
+   "sym": "vsrc",
+   "x": 70,
+   "y": 150,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "length": 80,
+    "kind": "ac",
+    "ref": "V1",
+    "value": "SIN(0 100m 1k)"
+   },
+   "style": "",
+   "id": "e12"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     70,
+     110
+    ],
+    [
+     70,
+     85
+    ],
+    [
+     100,
+     85
+    ]
+   ],
+   "style": "",
+   "id": "e13"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 70,
+   "y": 190,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "earth"
+   },
+   "style": "",
+   "id": "e14"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 70,
+   "y": 85,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "V_{IN}",
+    "side": "left"
+   },
+   "style": "",
+   "id": "e15"
+  },
+  {
+   "type": "text",
+   "x": 40,
+   "y": 245,
+   "text": "A_{v} = \\-R2 / R1 = \\-10",
+   "cls": "note",
+   "anchor": "start",
+   "id": "e16"
+  }
+ ],
+ "spice": [
+  ".tran 10u 3m",
+  ".ac dec 20 10 10Meg"
+ ]
+}

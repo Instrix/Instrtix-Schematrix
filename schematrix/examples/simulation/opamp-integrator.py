@@ -1,0 +1,21 @@
+# Op-amp integrator turning a square wave into a triangle (default OPAMP macro-model).
+from schematrix import Schematic
+
+s = Schematic('Op-amp integrator', description='Square in, triangle out; R2 sets the DC gain so it cannot drift')
+u = s.opamp((260, 120), top='-', ref='U1')                       # inm (224, 105), inp (224, 135), out (296, 120)
+v1 = s.vsrc(anchor='p', at=(60, 130), rot=90, length=80, kind='square', value='PULSE(-1 1 0 1u 1u 0.5m 1m)', ref='V1')
+s.gnd(v1['n'])
+r1 = s.resistor(anchor='2', at=(180, 105), value='10 k\\ohm', ref='R1')
+s.wire(v1['p'], (60, 105), r1['1']); s.wire(r1['2'], u['inm'])
+s.wire((200, 105), (200, 60), (220, 60))
+c1 = s.capacitor(anchor='1', at=(250, 60), value='100 nF', ref='C1')
+s.wire((220, 60), c1['1'])
+s.wire(c1['2'], (320, 60), (320, 120))
+s.wire((200, 60), (200, 0), (240, 0))
+r2 = s.resistor(anchor='1', at=(240, 0), value='1 M\\ohm', ref='R2')
+s.wire(r2['2'], (320, 0), (320, 60))
+s.gnd(s.wire(u['inp'], (210, 135), (210, 155))[-1])
+s.flag(s.wire(u['out'], (350, 120))[-1], 'OUT', side='right')
+s.directive('.tran 2u 10m uic', '.meas tran vpp PP v(OUT) FROM=8m TO=10m')
+s.note(40, 240, 'Ramp slope = V / (R1 C1) = 1 V/ms:  expect about 0.5 V_{pp}')
+s.show()

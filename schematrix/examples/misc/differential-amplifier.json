@@ -1,0 +1,267 @@
+{
+ "version": 1,
+ "meta": {
+  "title": "Differential amplifier",
+  "description": "Formal style for papers: export as TikZ or PDF"
+ },
+ "page": {
+  "width": null,
+  "height": null,
+  "auto": true,
+  "margin": 20,
+  "grid": 5,
+  "junctions": true,
+  "hops": false
+ },
+ "theme": "formal",
+ "elements": [
+  {
+   "type": "comp",
+   "sym": "opamp",
+   "x": 260,
+   "y": 130,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "top": "-",
+    "ref": "U_{1}"
+   },
+   "style": "",
+   "id": "e1"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 160,
+   "y": 115,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "ref": "",
+    "value": "R_{1}"
+   },
+   "style": "",
+   "id": "e2"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 160,
+   "y": 145,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "ref": "",
+    "value": "R_{3}"
+   },
+   "style": "",
+   "id": "e3"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     190,
+     115
+    ],
+    [
+     224,
+     115
+    ]
+   ],
+   "style": "",
+   "id": "e4"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     190,
+     145
+    ],
+    [
+     224,
+     145
+    ]
+   ],
+   "style": "",
+   "id": "e5"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     205,
+     115
+    ],
+    [
+     205,
+     70
+    ],
+    [
+     230,
+     70
+    ]
+   ],
+   "style": "",
+   "id": "e6"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 260,
+   "y": 70,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "ref": "",
+    "value": "R_{2}"
+   },
+   "style": "",
+   "id": "e7"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     290,
+     70
+    ],
+    [
+     320,
+     70
+    ],
+    [
+     320,
+     130
+    ]
+   ],
+   "style": "",
+   "id": "e8"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 205,
+   "y": 175,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "length": 60,
+    "ref": "",
+    "value": "R_{4}"
+   },
+   "style": "",
+   "id": "e9"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 205,
+   "y": 205,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "earth"
+   },
+   "style": "",
+   "id": "e10"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     130,
+     115
+    ],
+    [
+     100,
+     115
+    ]
+   ],
+   "style": "",
+   "id": "e11"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 100,
+   "y": 115,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "V_{\\-}",
+    "side": "left"
+   },
+   "style": "",
+   "id": "e12"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     130,
+     145
+    ],
+    [
+     100,
+     145
+    ]
+   ],
+   "style": "",
+   "id": "e13"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 100,
+   "y": 145,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "V_{+}",
+    "side": "left"
+   },
+   "style": "",
+   "id": "e14"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     296,
+     130
+    ],
+    [
+     350,
+     130
+    ]
+   ],
+   "style": "",
+   "id": "e15"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 350,
+   "y": 130,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "V_{out}",
+    "side": "right"
+   },
+   "style": "",
+   "id": "e16"
+  },
+  {
+   "type": "text",
+   "x": 100,
+   "y": 250,
+   "text": "V_{out} = (R_{2} / R_{1}) (V_{+} \\- V_{\\-})   for  R_{2} / R_{1} = R_{4} / R_{3}",
+   "cls": "note",
+   "anchor": "start",
+   "id": "e17"
+  }
+ ]
+}

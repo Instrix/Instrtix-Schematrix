@@ -1,0 +1,372 @@
+{
+ "version": 1,
+ "meta": {
+  "title": "Common-emitter amplifier",
+  "description": "Voltage-divider bias, gain about -4.7"
+ },
+ "page": {
+  "width": null,
+  "height": null,
+  "auto": true,
+  "margin": 20,
+  "grid": 5,
+  "junctions": true,
+  "hops": false
+ },
+ "theme": "instrix",
+ "elements": [
+  {
+   "type": "comp",
+   "sym": "npn",
+   "x": 240,
+   "y": 170,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "ref": "Q1"
+   },
+   "style": "",
+   "id": "e1"
+  },
+  {
+   "type": "comp",
+   "sym": "rail",
+   "x": 160,
+   "y": 40,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "net": "+12 V",
+    "kind": "bar"
+   },
+   "style": "",
+   "id": "e2"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     160,
+     40
+    ],
+    [
+     240,
+     40
+    ]
+   ],
+   "style": "",
+   "id": "e3"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 160,
+   "y": 70,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "ref": "R1",
+    "value": "47 k\\ohm"
+   },
+   "style": "",
+   "id": "e4"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 160,
+   "y": 200,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "ref": "R2",
+    "value": "10 k\\ohm"
+   },
+   "style": "",
+   "id": "e5"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     160,
+     100
+    ],
+    [
+     160,
+     170
+    ]
+   ],
+   "style": "",
+   "id": "e6"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     160,
+     170
+    ],
+    [
+     210,
+     170
+    ]
+   ],
+   "style": "",
+   "id": "e7"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 160,
+   "y": 230,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "earth"
+   },
+   "style": "",
+   "id": "e8"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 240,
+   "y": 70,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "ref": "R3",
+    "value": "4.7 k\\ohm"
+   },
+   "style": "",
+   "id": "e9"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     240,
+     100
+    ],
+    [
+     240,
+     140
+    ]
+   ],
+   "style": "",
+   "id": "e10"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 240,
+   "y": 230,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "ref": "R4",
+    "value": "1 k\\ohm"
+   },
+   "style": "",
+   "id": "e11"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 240,
+   "y": 260,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "earth"
+   },
+   "style": "",
+   "id": "e12"
+  },
+  {
+   "type": "comp",
+   "sym": "capacitor",
+   "x": 320,
+   "y": 120,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "ref": "C2",
+    "value": "1 \\uF"
+   },
+   "style": "",
+   "id": "e13"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     240,
+     120
+    ],
+    [
+     300,
+     120
+    ]
+   ],
+   "style": "",
+   "id": "e14"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     340,
+     120
+    ],
+    [
+     370,
+     120
+    ]
+   ],
+   "style": "",
+   "id": "e15"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 370,
+   "y": 120,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "OUT",
+    "side": "right"
+   },
+   "style": "",
+   "id": "e16"
+  },
+  {
+   "type": "comp",
+   "sym": "capacitor",
+   "x": 120,
+   "y": 170,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "ref": "C1",
+    "value": "1 \\uF"
+   },
+   "style": "",
+   "id": "e17"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     140,
+     170
+    ],
+    [
+     160,
+     170
+    ]
+   ],
+   "style": "",
+   "id": "e18"
+  },
+  {
+   "type": "comp",
+   "sym": "vsrc",
+   "x": 50,
+   "y": 230,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "length": 80,
+    "kind": "ac",
+    "ref": "V1",
+    "value": "SIN(0 20m 1k)"
+   },
+   "style": "",
+   "label_offset": [
+    -150,
+    0
+   ],
+   "id": "e19"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     50,
+     190
+    ],
+    [
+     50,
+     170
+    ],
+    [
+     100,
+     170
+    ]
+   ],
+   "style": "",
+   "id": "e20"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 50,
+   "y": 270,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "earth"
+   },
+   "style": "",
+   "id": "e21"
+  },
+  {
+   "type": "comp",
+   "sym": "vsrc",
+   "x": 460,
+   "y": 100,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "length": 80,
+    "ref": "V2",
+    "value": "12"
+   },
+   "style": "",
+   "id": "e22"
+  },
+  {
+   "type": "comp",
+   "sym": "rail",
+   "x": 460,
+   "y": 60,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "net": "+12 V",
+    "kind": "bar"
+   },
+   "style": "",
+   "id": "e23"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 460,
+   "y": 140,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "earth"
+   },
+   "style": "",
+   "id": "e24"
+  }
+ ],
+ "spice": [
+  ".tran 10u 4m"
+ ]
+}

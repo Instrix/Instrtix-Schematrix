@@ -1,0 +1,22 @@
+# Common-cathode triode stage (half of a 12AX7), the classic guitar-amp input, drawn in the 'formal' style.
+from schematrix import Schematic
+
+s = Schematic('Triode preamp', description='12AX7 common-cathode gain stage, about 35 dB', theme='formal')
+v1 = s.triode((200, 130), ref='V1', part='12AX7')
+s.rail((200, 20), 'B+ 250 V')
+ra = s.resistor(anchor='1', at=(200, 20), rot=90, value='100 k\\ohm', ref='R_{a}')
+s.wire(ra['2'], v1['P'])
+rk = s.resistor(anchor='1', at=(v1['K'][0], v1['K'][1]), rot=90, value='1.5 k\\ohm', ref='R_{k}')
+ck = s.electrolytic(anchor='1', at=(v1['K'][0] + 50, v1['K'][1]), rot=90, value='22 \\uF', ref='C_{k}')
+s.wire(v1['K'], (v1['K'][0] + 50, v1['K'][1]))
+s.gnd(rk['2']); s.gnd(ck['2'])
+rg = s.resistor(anchor='1', at=(v1['G'][0] - 20, v1['G'][1]), rot=90, value='1 M\\ohm', ref='R_{g}')
+s.wire(v1['G'], (v1['G'][0] - 20, v1['G'][1]))
+s.gnd(rg['2'])
+s.terminal(s.wire((v1['G'][0] - 20, v1['G'][1]), (60, v1['G'][1]))[-1], 'IN')
+c = s.capacitor(anchor='1', at=(240, 50), value='22 nF', ref='C_{out}')
+s.wire((200, 50), c['1'])
+s.terminal(s.wire(c['2'], (330, 50))[-1], 'OUT')
+s.note(40, 280, 'Heater: 6.3 V_{AC} (pins 4, 5 / 9), not drawn')
+s.note(40, 300, 'Gain \\approx \\mu R_{a} / (R_{a} + r_{a}) \\approx 100 \\times 100k / 162k \\approx 62 (36 dB)')
+s.show()

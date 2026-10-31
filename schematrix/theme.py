@@ -14,8 +14,9 @@ FONT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'web', 'font
 
 MONO = '"JetBrains Mono", ui-monospace, monospace'
 SANS = '"Inter", system-ui, sans-serif'
-SERIF = ('"Latin Modern Roman", "CMU Serif", "TeX Gyre Termes", "Times New Roman", Times, "Nimbus Roman", '
-         '"Liberation Serif", serif')
+# Times-like faces with Greek first: cairosvg (PDF / EPS) uses only the first installed family, no per-glyph fallback
+SERIF = ('"Times New Roman", "Liberation Serif", "TeX Gyre Termes", "Nimbus Roman", Times, "Latin Modern Roman", '
+         '"CMU Serif", serif')
 HELV = '"Helvetica Neue", Helvetica, Arial, "Nimbus Sans", "Liberation Sans", sans-serif'
 
 THEMES: dict[str, dict[str, str]] = {

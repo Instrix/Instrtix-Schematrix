@@ -23,6 +23,8 @@ def export(nl: Netlist, title=None) -> str:
          'nets': [{'name': n, 'nodes': [list(x) for x in nodes]} for n, nodes in nl.nets().items()]}
     if nl.warnings:
         d['warnings'] = nl.warnings
+    if nl.directives:
+        d['spice'] = nl.directives
     return json.dumps(d, indent=1, ensure_ascii=False) + '\n'
 
 
@@ -34,7 +36,7 @@ def parse(text: str) -> Netlist:
     d = json.loads(text)
     if d.get('format') != FORMAT:
         raise ValueError(f'not a {FORMAT} file')
-    nl = Netlist(d.get('title', ''))
+    nl = Netlist(d.get('title', ''), directives=list(d.get('spice') or []))
     from_nets: dict = {}
     for n in d.get('nets', []):
         for ref, pin in n.get('nodes', []):

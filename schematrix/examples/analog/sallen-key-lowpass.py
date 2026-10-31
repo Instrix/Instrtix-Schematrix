@@ -1,0 +1,22 @@
+# Second-order Sallen-Key low-pass, unity gain, f_c ~ 1 kHz, Q ~ 0.71 (Butterworth). Simulate the .ac sweep.
+from schematrix import Schematic
+
+s = Schematic('Sallen-Key low-pass', description='2nd-order Butterworth, f_c = 1 kHz')
+u = s.opamp((260, 115), top='+', ref='U1')                      # inp (224, 100), inm (224, 130), out (296, 115)
+r1 = s.resistor(anchor='1', at=(60, 100), value='11.3 k\\ohm', ref='R1')
+r2 = s.resistor(anchor='1', at=r1['2'], value='11.3 k\\ohm', ref='R2')
+s.wire(r2['2'], u['inp'])
+c2 = s.capacitor(anchor='1', at=(190, 100), rot=90, value='10 nF', ref='C2', label_offset=(-62, 0))
+s.gnd(c2['2'])
+s.wire(r1['2'], (120, 50), (150, 50))
+c1 = s.capacitor(anchor='1', at=(150, 50), value='20 nF', ref='C1')
+s.wire(c1['2'], (320, 50), (320, 115))
+s.wire(u['out'], (350, 115))
+s.flag((350, 115), 'OUT', side='right')
+s.wire(u['inm'], (214, 130), (214, 160), (320, 160), (320, 115))
+v1 = s.vsrc(anchor='p', at=(40, 130), rot=90, length=80, kind='ac', ref='V1', value='AC 1')
+s.wire(v1['p'], (40, 100), r1['1'])
+s.gnd(v1['n'])
+s.note(40, 265, 'f_{c} = 1 / (2\\pi \\sqrt{}(R1 R2 C1 C2)) \\approx 1 kHz,  Q = 0.71')
+s.directive('.ac dec 50 10 100k')
+s.show()

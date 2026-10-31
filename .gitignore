@@ -4,3 +4,6 @@ build/
 dist/
 *.egg-info/
 .pytest_cache/
+
+# output of examples/tr-0002/schematics.py when run as a plain script
+schematrix/examples/tr-0002/tr-0002-afe1-10-analog-front-end/

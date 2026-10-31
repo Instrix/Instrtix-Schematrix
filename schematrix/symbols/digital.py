@@ -17,6 +17,16 @@ BITS = lambda d, label='Bits': Prop(d, 'num', True, label=label, help='port widt
 BUS = FLAG(False, 'Bus pins', help='one thick bus pin per port instead of one pin per bit')
 
 
+def spaced(pins):
+    """control pins one row apart (a net label is taller than the 10-unit data-bit pitch)"""
+    out = []
+    for p in pins:
+        if out:
+            out.append(None)
+        out.append(p)
+    return out
+
+
 def _g(*args, **kw):
     prims, pins, label = block(*args, **kw)
     return G(prims, pins, label)
@@ -29,11 +39,12 @@ def _g(*args, **kw):
                  ('latch8', 'Transparent latch', {'kind': 'latch'}, ('74HC573', '74HC373'))))
 def register(p):
     n, bus, latch = _n(p['bits']), p['bus'], p['kind'] == 'latch'
-    left = bus_pins('D', n, bus) + [None, pin('LE') if latch else pin('CLK', 'CLK', clk=True)]
+    ctl = [pin('LE') if latch else pin('CLK', 'CLK', clk=True)]
     if p['clear']:
-        left.append(pin('CLR', neg=True))
+        ctl.append(pin('CLR', neg=True))
     if p['oe']:
-        left.append(pin('OE', neg=True))
+        ctl.append(pin('OE', neg=True))
+    left = bus_pins('D', n, bus) + [None] + spaced(ctl)
     return _g(f'{"LATCH" if latch else "REG"}{n}', left, bus_pins('Q', n, bus))
 
 
@@ -47,14 +58,12 @@ def register(p):
 def shiftreg(p):
     n, bus, mode = _n(p['bits']), p['bus'], p['mode']
     pin_in, pout = mode[0] == 'p', mode[2] == 'p'
-    left = [pin('SER')]
-    if pin_in:
-        left = bus_pins('D', n, bus) + [None, pin('SER'), pin('LD', neg=True)]
-    left.append(pin('CLK', 'CLK', clk=True))
+    ctl = [pin('SER')] + ([pin('LD', neg=True)] if pin_in else []) + [pin('CLK', 'CLK', clk=True)]
     if p['clear']:
-        left.append(pin('CLR', neg=True))
+        ctl.append(pin('CLR', neg=True))
     if p['oe'] and pout:
-        left.append(pin('OE', neg=True))
+        ctl.append(pin('OE', neg=True))
+    left = (bus_pins('D', n, bus) + [None] if pin_in else []) + spaced(ctl)
     right = (bus_pins('Q', n, bus) + [None] if pout else []) + [pin('QS')]
     return _g(f'SRG{n}', left, right)
 
@@ -68,16 +77,15 @@ def shiftreg(p):
                   ('74HC4040', 'CD4040', '74HC393', '74HC4060'))))
 def counter(p):
     n, bus = _n(p['bits']), p['bus']
-    left = []
-    if p['load']:
-        left += bus_pins('D', n, bus) + [None, pin('LD', neg=True)]
+    ctl = [pin('LD', neg=True)] if p['load'] else []
     if p['enable']:
-        left.append(pin('EN'))
+        ctl.append(pin('EN'))
     if p['direction'] == 'updown':
-        left.append(pin('UD', 'U/D'))
-    left.append(pin('CLK', 'CLK', clk=True))
+        ctl.append(pin('UD', 'U/D'))
+    ctl.append(pin('CLK', 'CLK', clk=True))
     if p['clear']:
-        left.append(pin('CLR', neg=True))
+        ctl.append(pin('CLR', neg=True))
+    left = (bus_pins('D', n, bus) + [None] if p['load'] else []) + spaced(ctl)
     right = bus_pins('Q', n, bus)
     if p['carry']:
         right += [None, pin('CO')]

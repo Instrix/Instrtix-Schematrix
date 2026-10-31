@@ -1,0 +1,16 @@
+Colpitts oscillator (a plain SPICE deck: try File > Import netlist)
+* BJT Colpitts, about 1.6 MHz
+VCC vcc 0 DC 12
+RB1 vcc base 47k
+RB2 base 0 10k
+RC vcc coll 1k
+RE emit 0 1k
+CE emit 0 100n
+Q1 coll base emit Q2N3904
+C1 coll tank 1n
+C2 tank 0 1n
+L1 coll base 20u
+CB base 0 1n
+.model Q2N3904 NPN(Is=6.734f Bf=416.4 Vaf=74.03 Cje=4.493p Cjc=3.638p Tf=301.2p)
+.tran 10n 20u
+.end

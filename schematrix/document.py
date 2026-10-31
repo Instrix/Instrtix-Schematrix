@@ -205,6 +205,11 @@ class Schematic:
     def spice(self) -> str:
         return NET.to_spice(self.doc)
 
+    def directive(self, *lines):
+        """add SPICE lines to the netlist: analyses (.tran 1u 1m, .ac dec 20 10 1Meg), .model, .include, .param ..."""
+        self.doc.setdefault('spice', []).extend(str(x) for x in lines)
+        return self
+
     def export_netlist(self, fmt='spice') -> str:
         """netlist text: 'spice', 'kicad' or 'json'"""
         from . import netio

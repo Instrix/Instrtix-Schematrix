@@ -1,0 +1,176 @@
+{
+ "version": 1,
+ "meta": {
+  "title": "RLC resonance",
+  "description": "AC sweep of a series RLC; .meas finds the peak and its frequency"
+ },
+ "page": {
+  "width": null,
+  "height": null,
+  "auto": true,
+  "margin": 20,
+  "grid": 5,
+  "junctions": true,
+  "hops": false
+ },
+ "theme": "instrix",
+ "elements": [
+  {
+   "type": "comp",
+   "sym": "vsrc",
+   "x": 60,
+   "y": 130,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "length": 80,
+    "kind": "ac",
+    "ref": "V1",
+    "value": "AC 1"
+   },
+   "style": "",
+   "id": "e1"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 60,
+   "y": 170,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "earth"
+   },
+   "style": "",
+   "id": "e2"
+  },
+  {
+   "type": "comp",
+   "sym": "inductor",
+   "x": 90,
+   "y": 60,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "ref": "L1",
+    "value": "10 mH"
+   },
+   "style": "",
+   "id": "e3"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     60,
+     90
+    ],
+    [
+     60,
+     60
+    ]
+   ],
+   "style": "",
+   "id": "e4"
+  },
+  {
+   "type": "comp",
+   "sym": "capacitor",
+   "x": 140,
+   "y": 60,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "ref": "C1",
+    "value": "100 nF"
+   },
+   "style": "",
+   "id": "e5"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 180,
+   "y": 90,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "ref": "R1",
+    "value": "31.6 \\ohm"
+   },
+   "style": "",
+   "id": "e6"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     160,
+     60
+    ],
+    [
+     180,
+     60
+    ]
+   ],
+   "style": "",
+   "id": "e7"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 180,
+   "y": 120,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "earth"
+   },
+   "style": "",
+   "id": "e8"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     180,
+     60
+    ],
+    [
+     220,
+     60
+    ]
+   ],
+   "style": "",
+   "id": "e9"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 220,
+   "y": 60,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "OUT",
+    "side": "right"
+   },
+   "style": "",
+   "id": "e10"
+  },
+  {
+   "type": "text",
+   "x": 40,
+   "y": 200,
+   "text": "f_{0} = 1 / (2\\pi \\sqrt{}LC) \\approx 5.03 kHz,   Q = 10",
+   "cls": "note",
+   "anchor": "start",
+   "id": "e11"
+  }
+ ],
+ "spice": [
+  ".ac dec 200 100 100k",
+  ".meas ac peak MAX vm(OUT)",
+  ".meas ac f0 WHEN vp(OUT)=0"
+ ]
+}

@@ -1,0 +1,203 @@
+{
+ "version": 1,
+ "meta": {
+  "title": "Switch debounce",
+  "description": "RC + Schmitt trigger gives one clean edge per press"
+ },
+ "page": {
+  "width": null,
+  "height": null,
+  "auto": true,
+  "margin": 20,
+  "grid": 5,
+  "junctions": true,
+  "hops": false
+ },
+ "theme": "instrix",
+ "elements": [
+  {
+   "type": "comp",
+   "sym": "rail",
+   "x": 80,
+   "y": 30,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "net": "+5 V",
+    "kind": "bar"
+   },
+   "style": "",
+   "id": "e1"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 80,
+   "y": 60,
+   "rot": 270,
+   "mirror": false,
+   "props": {
+    "ref": "R1",
+    "value": "10 k\\ohm"
+   },
+   "style": "",
+   "id": "e2"
+  },
+  {
+   "type": "comp",
+   "sym": "switch",
+   "x": 80,
+   "y": 120,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "kind": "push_no",
+    "ref": "SW1"
+   },
+   "style": "",
+   "id": "e3"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 80,
+   "y": 150,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "earth"
+   },
+   "style": "",
+   "id": "e4"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 110,
+   "y": 90,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "ref": "R2",
+    "value": "10 k\\ohm"
+   },
+   "style": "",
+   "label_offset": [
+    0,
+    -4
+   ],
+   "id": "e5"
+  },
+  {
+   "type": "comp",
+   "sym": "capacitor",
+   "x": 160,
+   "y": 110,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "ref": "C1",
+    "value": "100 nF"
+   },
+   "style": "",
+   "id": "e6"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     140,
+     90
+    ],
+    [
+     160,
+     90
+    ]
+   ],
+   "style": "",
+   "id": "e7"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 160,
+   "y": 130,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "earth"
+   },
+   "style": "",
+   "id": "e8"
+  },
+  {
+   "type": "comp",
+   "sym": "buffer",
+   "x": 251,
+   "y": 90,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "invert": true,
+    "schmitt": true,
+    "ref": "U1",
+    "part": "74HC14"
+   },
+   "style": "",
+   "id": "e9"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     160,
+     90
+    ],
+    [
+     230,
+     90
+    ]
+   ],
+   "style": "",
+   "id": "e10"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     274,
+     90
+    ],
+    [
+     304,
+     90
+    ]
+   ],
+   "style": "",
+   "id": "e11"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 304,
+   "y": 90,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "~{BTN}",
+    "side": "right"
+   },
+   "style": "",
+   "id": "e12"
+  },
+  {
+   "type": "text",
+   "x": 40,
+   "y": 220,
+   "text": "\\tau = R2 C1 = 1 ms;  the Schmitt thresholds turn the slow RC edge into one clean step",
+   "cls": "note",
+   "anchor": "start",
+   "id": "e13"
+  }
+ ]
+}

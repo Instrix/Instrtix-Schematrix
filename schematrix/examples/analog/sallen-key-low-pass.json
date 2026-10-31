@@ -1,0 +1,275 @@
+{
+ "version": 1,
+ "meta": {
+  "title": "Sallen-Key low-pass",
+  "description": "2nd-order Butterworth, f_c = 1 kHz"
+ },
+ "page": {
+  "width": null,
+  "height": null,
+  "auto": true,
+  "margin": 20,
+  "grid": 5,
+  "junctions": true,
+  "hops": false
+ },
+ "theme": "instrix",
+ "elements": [
+  {
+   "type": "comp",
+   "sym": "opamp",
+   "x": 260,
+   "y": 115,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "top": "+",
+    "ref": "U1"
+   },
+   "style": "",
+   "id": "e1"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 90,
+   "y": 100,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "ref": "R1",
+    "value": "11.3 k\\ohm"
+   },
+   "style": "",
+   "id": "e2"
+  },
+  {
+   "type": "comp",
+   "sym": "resistor",
+   "x": 150,
+   "y": 100,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "ref": "R2",
+    "value": "11.3 k\\ohm"
+   },
+   "style": "",
+   "id": "e3"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     180,
+     100
+    ],
+    [
+     224,
+     100
+    ]
+   ],
+   "style": "",
+   "id": "e4"
+  },
+  {
+   "type": "comp",
+   "sym": "capacitor",
+   "x": 190,
+   "y": 120,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "ref": "C2",
+    "value": "10 nF"
+   },
+   "style": "",
+   "label_offset": [
+    -62,
+    0
+   ],
+   "id": "e5"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 190,
+   "y": 140,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "earth"
+   },
+   "style": "",
+   "id": "e6"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     120,
+     100
+    ],
+    [
+     120,
+     50
+    ],
+    [
+     150,
+     50
+    ]
+   ],
+   "style": "",
+   "id": "e7"
+  },
+  {
+   "type": "comp",
+   "sym": "capacitor",
+   "x": 170,
+   "y": 50,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "ref": "C1",
+    "value": "20 nF"
+   },
+   "style": "",
+   "id": "e8"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     190,
+     50
+    ],
+    [
+     320,
+     50
+    ],
+    [
+     320,
+     115
+    ]
+   ],
+   "style": "",
+   "id": "e9"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     296,
+     115
+    ],
+    [
+     350,
+     115
+    ]
+   ],
+   "style": "",
+   "id": "e10"
+  },
+  {
+   "type": "comp",
+   "sym": "flag",
+   "x": 350,
+   "y": 115,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "label": "OUT",
+    "side": "right"
+   },
+   "style": "",
+   "id": "e11"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     224,
+     130
+    ],
+    [
+     214,
+     130
+    ],
+    [
+     214,
+     160
+    ],
+    [
+     320,
+     160
+    ],
+    [
+     320,
+     115
+    ]
+   ],
+   "style": "",
+   "id": "e12"
+  },
+  {
+   "type": "comp",
+   "sym": "vsrc",
+   "x": 40,
+   "y": 170,
+   "rot": 90,
+   "mirror": false,
+   "props": {
+    "length": 80,
+    "kind": "ac",
+    "ref": "V1",
+    "value": "AC 1"
+   },
+   "style": "",
+   "id": "e13"
+  },
+  {
+   "type": "wire",
+   "points": [
+    [
+     40,
+     130
+    ],
+    [
+     40,
+     100
+    ],
+    [
+     60,
+     100
+    ]
+   ],
+   "style": "",
+   "id": "e14"
+  },
+  {
+   "type": "comp",
+   "sym": "ground",
+   "x": 40,
+   "y": 210,
+   "rot": 0,
+   "mirror": false,
+   "props": {
+    "kind": "earth"
+   },
+   "style": "",
+   "id": "e15"
+  },
+  {
+   "type": "text",
+   "x": 40,
+   "y": 265,
+   "text": "f_{c} = 1 / (2\\pi \\sqrt{}(R1 R2 C1 C2)) \\approx 1 kHz,  Q = 0.71",
+   "cls": "note",
+   "anchor": "start",
+   "id": "e16"
+  }
+ ],
+ "spice": [
+  ".ac dec 50 10 100k"
+ ]
+}

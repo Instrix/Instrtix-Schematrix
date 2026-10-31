@@ -1,0 +1,21 @@
+# Strain-gauge quarter bridge read by an instrumentation amplifier; the bridge nodes reach the amplifier by name.
+from schematrix import Schematic
+
+s = Schematic('Bridge and in-amp', description='Quarter bridge, 5 V excitation, in-amp gain 100')
+s.rail((60, 30), '+5 V')
+r1 = s.resistor(anchor='1', at=(60, 30), rot=90, value='350 \\ohm', ref='R1')
+r2 = s.resistor(anchor='1', at=r1['2'], rot=90, value='350 \\ohm', ref='R2')
+s.gnd(r2['2'])
+s.rail((180, 30), '+5 V')
+r3 = s.resistor(anchor='1', at=(180, 30), rot=90, value='350 \\ohm', ref='R3')
+sg = s.rvar(anchor='1', at=r3['2'], rot=90, value='350 \\ohm', ref='SG1', fields={'Gauge factor': ('k = 2.1', True)})
+s.gnd(sg['2'])
+s.flag(s.wire(r1['2'], (30, 90))[-1], 'BRIDGE-', side='left')
+s.flag(s.wire(r3['2'], (230, 90))[-1], 'BRIDGE+', side='right')
+ia = s.inamp(anchor='inm', at=(420, 70), rg=False, ref='U1', part='INA128', value='G = 100')
+s.flag(s.wire(ia['inm'], (390, 70))[-1], 'BRIDGE-', side='left')
+s.flag(s.wire(ia['inp'], (390, 110))[-1], 'BRIDGE+', side='left')
+s.gnd(ia['ref'])
+s.flag(s.wire(ia['out'], ia['out'].offset(30, 0))[-1], 'V_{OUT}', side='right')
+s.note(40, 245, 'V_{OUT} = G (V_{+} \\- V_{\\-}),   G = 1 + 50 k\\ohm / R_{G}')
+s.show()
