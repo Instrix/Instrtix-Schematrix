@@ -783,6 +783,10 @@ Every part also has **Reference**, **Value** and **Part number**, and can carry 
 |---|---|---|---|
 | `length` (Length) | num | `100` | *shape* pin-to-pin distance |
 | `text` (Text inside) | str | `` | *shape* e.g. e_{n}: drawn in the circle instead of the symbol |
+| `arrow_tail` (Arrow tail) | num | `-9` | *shape* where the arrow starts, from the centre (+ towards n) |
+| `arrow_tip` (Arrow tip) | num | `10` | *shape*  |
+| `arrow_len` (Arrowhead length) | num | `7` | *shape*  |
+| `arrow_w` (Arrowhead half-width) | num | `4` | *shape*  |
 
 ### Current-controlled I source (F)
 
@@ -818,7 +822,7 @@ Every part also has **Reference**, **Value** and **Part number**, and can carry 
 | Setting | Type | Default | |
 |---|---|---|---|
 | `length` (Length) | num | `100` | *shape* pin-to-pin distance |
-| `letter` (Letter) | str | `G` |   |
+| `letter` (Letter) | str | `G` | *shape*  |
 
 ### Solar cell
 
@@ -895,7 +899,7 @@ Every part also has **Reference**, **Value** and **Part number**, and can carry 
 | Setting | Type | Default | |
 |---|---|---|---|
 | `length` (Length) | num | `60` | *shape* pin-to-pin distance |
-| `label` (Label) | str | `LOAD` |   |
+| `label` (Label) | str | `LOAD` | *shape*  |
 | `w` (Body length) | num | `40` | *shape* along the leads |
 | `h` (Body width) | num | `20` | *shape* across the leads |
 | `fill` (Fill) | enum: box, pad | `box` | *shape* box = shaded, pad = white |

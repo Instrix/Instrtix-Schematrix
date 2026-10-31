@@ -64,7 +64,7 @@ def microphone(p):
 
 
 @symbol('load', 'Electronic load', 'Loads & meters', 'RL', None,
-        {'length': LEN(60), 'label': Prop('LOAD', label='Label'),
+        {'length': LEN(60), 'label': Prop('LOAD', 'str', True, label='Label'),
          'w': Prop(40, 'num', True, label='Body length', help='along the leads'),
          'h': Prop(20, 'num', True, label='Body width', help='across the leads'),
          'fill': ENUM('box', ['box', 'pad'], 'Fill', help='box = shaded, pad = white')},

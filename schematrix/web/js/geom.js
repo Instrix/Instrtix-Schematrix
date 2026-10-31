@@ -123,6 +123,25 @@ export function primSvg(p, c, style) {
 export const textSvg = (x, y, s, cls = 'lbl', a = 'middle') =>
   `<text class="${cls}" x="${num(x)}" y="${num(y)}" text-anchor="${a}">${svgInner(s, FONT_SIZES[cls] ?? 12, esc)}</text>`;
 
+// direction marks on a wire: [distance along it to the head's base, length, half-width]; negative length points back
+export function wireMarks(e) {
+  const P = e.points || [], cls = (e.style || '').split(/\s+/).includes('acc') ? 'accf' : 'arrow';
+  let out = '';
+  for (const m of e.marks || []) {
+    let [rem, L, W] = m.map(Number);
+    for (let i = 0; i < P.length - 1; i++) {
+      const a = P[i], b = P[i + 1], n = Math.hypot(b[0] - a[0], b[1] - a[1]);
+      if (rem <= n || i === P.length - 2) {
+        const u = [(b[0] - a[0]) / (n || 1), (b[1] - a[1]) / (n || 1)], base = [a[0] + u[0] * rem, a[1] + u[1] * rem];
+        out += arrowHead(base, [base[0] + u[0] * L, base[1] + u[1] * L], cls, Math.abs(L), W);
+        break;
+      }
+      rem -= n;
+    }
+  }
+  return out;
+}
+
 export function arrowHead(a, b, cls = 'arrow', L = 9, W = 4) {
   const dx = b[0] - a[0], dy = b[1] - a[1], n = Math.hypot(dx, dy) || 1, ux = dx / n, uy = dy / n;
   const bx = b[0] - ux * L, by = b[1] - uy * L;
@@ -143,8 +162,8 @@ export function elementSvg(e, cat, geoOf, hop) {
     }
     case 'wire':
       if ((e.points || []).length < 2) return '';
-      if (hop) return `<path class="${styleCls('w wire', e.style)}" d="${wirePath(e.points, hop)}"/>`;
-      return `<polyline class="${styleCls('w wire', e.style)}" points="${ptsAttr(e.points)}"/>`;
+      if (hop) return `<path class="${styleCls('w wire', e.style)}" d="${wirePath(e.points, hop)}"/>` + wireMarks(e);
+      return `<polyline class="${styleCls('w wire', e.style)}" points="${ptsAttr(e.points)}"/>` + wireMarks(e);
     case 'arrow': {
       const P = e.points || [];
       if (P.length < 2) return '';

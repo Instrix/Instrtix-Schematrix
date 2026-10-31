@@ -64,6 +64,24 @@ def text_svg(x, y, s, cls='lbl', anchor='middle'):
     return f'<text class="{cls}" x="{num(x)}" y="{num(y)}" text-anchor="{anchor}">{inner}</text>'
 
 
+def wire_marks(e):
+    """direction marks on a wire: [distance along it to the head's base, length, half-width]; a negative length
+    points back towards the wire's start"""
+    out, P = [], e.get('points', [])
+    cls = 'accf' if 'acc' in (e.get('style') or '').split() else 'arrow'
+    for m in e.get('marks') or []:
+        rem, L, W = (float(v) for v in m[:3])
+        for i, (a, b) in enumerate(zip(P, P[1:])):
+            n = math.hypot(b[0] - a[0], b[1] - a[1])
+            if rem <= n or i == len(P) - 2:
+                u = ((b[0] - a[0]) / (n or 1), (b[1] - a[1]) / (n or 1))
+                base = (a[0] + u[0] * rem, a[1] + u[1] * rem)
+                out.append(arrow_head(base, (base[0] + u[0] * L, base[1] + u[1] * L), cls, abs(L), W))
+                break
+            rem -= n
+    return ''.join(out)
+
+
 def arrow_size(e):
     """an arrow element's head: [length, half-width], default 9 x 4"""
     h = e.get('head') or (9, 4)
@@ -92,8 +110,8 @@ def element_svg(e, hop=None):
             return ''
         cls = style_cls('w wire', e.get('style', ''))
         if hop:
-            return f'<path class="{cls}" d="{GEO.wire_path(e["points"], hop)}"/>'
-        return f'<polyline class="{cls}" points="{" ".join(f"{num(x)},{num(y)}" for x, y in e["points"])}"/>'
+            return f'<path class="{cls}" d="{GEO.wire_path(e["points"], hop)}"/>' + wire_marks(e)
+        return f'<polyline class="{cls}" points="{" ".join(f"{num(x)},{num(y)}" for x, y in e["points"])}"/>' + wire_marks(e)
     if t == 'arrow':
         P = e.get('points', [])
         if len(P) < 2:

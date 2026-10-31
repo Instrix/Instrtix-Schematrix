@@ -57,7 +57,8 @@ z = s.zener((200, 50), value='5V1')                  # a variant: diode with kin
 g = s.nand_gate((300, 50), inputs=3, shape='iec')
 u = s.add('opamp', (400, 50), top='+')               # by name
 en = s.vsrc((500, 50), rot=90, length=32, text='e_{n}')   # a label in the circle (noise source); signs=False hides + / −
-bl = s.load((600, 50), rot=90, length=80, w=60, h=32, fill='pad')   # body size along / across the leads, white fill
+bl = s.load((600, 50), rot=90, length=80, label='B_{load}', w=60, h=32, fill='pad')   # s.load(path) still opens a file
+i1 = s.isrc((700, 50), arrow_tail=-10, arrow_tip=5, arrow_len=11, arrow_w=4)            # the arrow inside, if it matters
 ```
 
 - `anchor='pin'` places the part so that pin lands on `at`: `s.capacitor(anchor='1', at=r['2'], rot=90)`.
@@ -100,6 +101,8 @@ s.route(a, b, how='auto')                 # orthogonal: 'hv', 'vh', 'hvh', 'vhv'
 s.connect(p1, p2, p3, how='auto')         # chain routes through several points
 w = s.wire(r['2'], (220, 100)); w[-1]     # a Wire is the list of its points
 s.wire(reg['Q'], (300, 40), style='bus')  # a bus
+s.wire(a, b, marks=[(0, 10, 4)])          # direction arrowheads on the wire: (distance along it, length, half-width);
+                                         # a negative length points back; the wire stays connected
 ```
 
 ## Annotation
@@ -117,7 +120,7 @@ s.raw('<circle cx="0" cy="0" r="3"/>', x=100, y=100)    # verbatim SVG
 ## Output
 
 ```python
-s.save('fig.json'); Schematic.load('fig.json')           # or schematrix.load(path)
+s.save('fig.json'); Schematic.open('fig.json')           # or Schematic.load(path), schematrix.load(path)
 s.to_svg(embed_fonts=False); s.save_svg('fig.svg')
 s.export('fig.png', scale=3, background=False, ids=None, margin=None, fonts=True)
 s.save_png('fig.png', scale=2); s.save_pdf('fig.pdf')

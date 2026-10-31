@@ -44,14 +44,23 @@ def vsrc(p):
     return G(prims, {'p': (-h, 0), 'n': (h, 0)}, above(-24))
 
 
-@symbol('isrc', 'Current source', 'Sources', 'I', 'I {p} {n} {src}', {'length': LEN(100), 'text': Prop('', 'str', True, label='Text inside', help='e.g. e_{n}: drawn in the circle instead of the symbol')},
+@symbol('isrc', 'Current source', 'Sources', 'I', 'I {p} {n} {src}',
+        {'length': LEN(100), 'text': Prop('', 'str', True, label='Text inside', help='e.g. e_{n}: drawn in the circle instead of the symbol'),
+         'arrow_tail': Prop(-9, 'num', True, label='Arrow tail', help='where the arrow starts, from the centre (+ towards n)'),
+         'arrow_tip': Prop(10, 'num', True, label='Arrow tip'),
+         'arrow_len': Prop(7, 'num', True, label='Arrowhead length'),
+         'arrow_w': Prop(4, 'num', True, label='Arrowhead half-width')},
         fields=('Compliance voltage',), aliases=('ISOURCE', 'IDC', 'I', 'Current_Source'))
 def isrc(p):
     prims, h = _circ_src(p)
     if p.get('text'):
         prims.append(tx(0, 0, str(p['text']), 'lbl', ctr=True, fit=26))
     else:
-        prims += [pl([(-9, 0), (8, 0)]), pg([(3, -4), (3, 4), (10, 0)], 'arrow')]
+        t0, t1 = float(p.get('arrow_tail', -9)), float(p.get('arrow_tip', 10))
+        L, W = float(p.get('arrow_len', 7)), float(p.get('arrow_w', 4))
+        d = 1 if t1 >= t0 else -1
+        prims += [pl([(t0, 0), (t1 - d * min(L * 2 / 7, abs(t1 - t0)), 0)]),
+                  pg([(t1 - d * L, -W), (t1 - d * L, W), (t1, 0)], 'arrow')]
     return G(prims, {'p': (-h, 0), 'n': (h, 0)}, above(-24))
 
 
@@ -142,7 +151,7 @@ def solar(p):
     return G(prims, {'p': (-h, 0), 'n': (h, 0)}, below(24))
 
 
-@symbol('generator', 'Generator / alternator', 'Sources', 'G', None, {'length': LEN(100), 'letter': Prop('G', label='Letter')},
+@symbol('generator', 'Generator / alternator', 'Sources', 'G', None, {'length': LEN(100), 'letter': Prop('G', 'str', True, label='Letter')},
         aliases=('Generator', 'Generator_AC', 'Generator_DC'))
 def generator(p):
     prims, h = _circ_src(p)

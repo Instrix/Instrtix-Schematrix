@@ -42,6 +42,12 @@ def _pts(s):
     return [(nums[i], nums[i + 1]) for i in range(0, len(nums) - 1, 2)]
 
 
+def _key(pts):
+    """a segment, either way round, rounded for comparison"""
+    a, b = (tuple(round(float(v), 1) for v in p) for p in pts[:2]) if len(pts) == 2 else ((), ())
+    return frozenset((a, b))
+
+
 def _near(a, b, tol=1.0):
     return abs(a[0] - b[0]) <= tol and abs(a[1] - b[1]) <= tol
 
@@ -73,6 +79,7 @@ class CompatS:
         self.sch.doc['page']['margin'] = 0
         self.p = []                       # the original exposed its parts list; scripts sometimes poke at it
         self._heads, self._circles = [], []     # raw arrowheads and source circles, resolved in svg()
+        self._bars = set()                      # cathode bars of diodes drawn from raw triangles
 
     # ------------------------------------------------------------ raw markup -> elements
     def add(self, s):
@@ -120,11 +127,20 @@ class CompatS:
         if not hd:
             return None
         tip, m, L, W = hd
-        if abs(L - 2 * W) > 1.5 or not (abs(tip[0] - m[0]) < 0.01 or abs(tip[1] - m[1]) < 0.01):
-            return None                   # not the buffer's square-ish triangle
+        if not (abs(tip[0] - m[0]) < 0.01 or abs(tip[1] - m[1]) < 0.01):
+            return None
         rot = 0 if tip[0] > m[0] + 0.01 else 180 if tip[0] < m[0] - 0.01 else 90 if tip[1] > m[1] else 270
+        u = ((tip[0] - m[0]) / L, (tip[1] - m[1]) / L)
+        style = ' '.join(cls.split()[1:])
+        if abs(L - 13) < 0.01 and abs(W - 7) < 0.01:      # the diode's triangle: its bar follows as a plate wire
+            v = (-u[1] * 7, u[0] * 7)
+            self._bars.add(_key([(tip[0] + v[0], tip[1] + v[1]), (tip[0] - v[0], tip[1] - v[1])]))
+            c = (m[0] + u[0] * 7, m[1] + u[1] * 7)
+            return self.sch.add('diode', c, rot, ref='', length=14, style=style).el
+        if abs(L - 2 * W) > 0.5:
+            return None                   # not the buffer's square triangle
         c = ((tip[0] + m[0]) / 2, (tip[1] + m[1]) / 2)
-        return self.sch.add('buffer', c, rot, ref='', size=round(L, 2), style=' '.join(cls.split()[1:])).el
+        return self.sch.add('buffer', c, rot, ref='', size=round(L, 2), style=style).el
 
     def _bubble(self, c):
         """an r = 4 pad circle right after a buffer's tip: the buffer becomes inverting"""
@@ -139,7 +155,8 @@ class CompatS:
         return None
 
     def _resolve(self):
-        """arrowheads onto the wires they end, source circles into sources (both may come before their parts)"""
+        """arrowheads onto the wires they end (or as direction marks on the wire they sit on), source circles into
+        sources (all of these may come before their parts)"""
         els = self.sch.doc['elements']
         for raw, cls, (tip, m, L, W) in self._heads:
             u = ((tip[0] - m[0]) / L, (tip[1] - m[1]) / L)
@@ -166,6 +183,28 @@ class CompatS:
                 else:
                     continue
                 break
+        for raw, cls, (tip, m, L, W) in self._heads:      # left over: a head part-way along a wire, a direction mark
+            if raw not in els:
+                continue
+            u = ((tip[0] - m[0]) / L, (tip[1] - m[1]) / L)
+            for w in els:
+                if w.get('type') != 'wire' or ('acc' in w.get('style', '').split()) != (cls == 'accf'):
+                    continue
+                pos, P = 0.0, w['points']
+                for a, b in zip(P, P[1:]):
+                    n = math.hypot(b[0] - a[0], b[1] - a[1]) or 1
+                    s = ((b[0] - a[0]) / n, (b[1] - a[1]) / n)
+                    t = (m[0] - a[0]) * s[0] + (m[1] - a[1]) * s[1]
+                    if abs(s[0] * u[1] - s[1] * u[0]) < 0.02 and -0.5 <= t <= n + 0.5 \
+                            and abs((m[0] - a[0]) * s[1] - (m[1] - a[1]) * s[0]) < 0.6:
+                        sign = 1 if s[0] * u[0] + s[1] * u[1] > 0 else -1
+                        w.setdefault('marks', []).append([round(pos + t, 2), round(sign * L, 2), round(W, 2)])
+                        els.remove(raw)
+                        break
+                    pos += n
+                else:
+                    continue
+                break
         for raw, (cx, cy) in self._circles:
             label = next((e for e in els if e.get('type') == 'text' and e.get('anchor') == 'middle'
                           and _near((e['x'], e['y']), (cx, cy + 4), 0.6)), None)
@@ -182,7 +221,12 @@ class CompatS:
             else:
                 a, b = inner['points'][0], inner['points'][-1]
                 rot = round(math.degrees(math.atan2(b[1] - a[1], b[0] - a[0]))) % 360
-                c = self.sch.add('isrc', (cx, cy), rot, ref='', length=32)
+                n = math.hypot(b[0] - a[0], b[1] - a[1]) or 1
+                u = ((b[0] - a[0]) / n, (b[1] - a[1]) / n)
+                L, W = inner.get('head') or (9, 4)       # the arrow exactly as drawn: tail, tip and head size
+                c = self.sch.add('isrc', (cx, cy), rot, ref='', length=32,
+                                 arrow_tail=round((a[0] - cx) * u[0] + (a[1] - cy) * u[1], 2),
+                                 arrow_tip=round((b[0] - cx) * u[0] + (b[1] - cy) * u[1], 2), arrow_len=L, arrow_w=W)
                 els.remove(inner)
             els.remove(c.el)
             els[els.index(raw)] = c.el            # the source takes the circle's place
@@ -207,6 +251,8 @@ class CompatS:
         return self._two(kind, x1, y1, x2, y2, cls)
 
     def wire(self, *pts, cls='w'):
+        if 'plate' in cls.split() and _key(pts) in self._bars:
+            return                        # the bar of a diode already drawn by the diode symbol
         self.sch.wire(*pts, style=_style(cls))
 
     def dot(self, x, y):

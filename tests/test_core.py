@@ -197,3 +197,58 @@ def test_compat_turns_raw_markup_into_elements():
     assert (buf['x'], buf['y'], buf['props']['size'], buf['props']['invert']) == (211, 100, 22, True)
     src = next(e for e in els if e.get('sym') == 'vsrc')
     assert src['rot'] == 90 and src['props']['text'] == 'eₙ'
+
+
+def test_settings_that_change_the_drawing_are_marked_geom():
+    """geometry is cached by its geom settings only: a setting that changes the drawing without geom=True is ignored
+    (load's label used to always draw LOAD)"""
+    import json
+    from schematrix import symbols as SYM
+    from schematrix.symbols.core import REGISTRY
+    shape = lambda g: json.dumps({k: g[k] for k in ('prims', 'pins')}, sort_keys=True)
+    wrong = []
+    for e in SYM.catalog():
+        s = REGISTRY[e['name']]
+        for k, spec in e.get('props', {}).items():
+            if spec.get('geom') or k in ('ref', 'value', 'part'):
+                continue
+            d, t = spec.get('default'), spec.get('type')
+            alt = (next((c for c in spec.get('choices', []) if c != d), None) if t == 'enum'
+                   else float(d or 0) + 7 if t == 'num' else (not d) if t == 'bool' else 'XYZ')
+            if alt is not None and shape(s.geometry({})) != shape(s.geometry({k: alt})):
+                wrong.append(f'{e["name"]}.{k}')
+    assert not wrong, wrong
+
+
+def test_load_symbol_label_and_load_name():
+    """the load's label reaches the drawing, and s.load places the symbol while Schematic.load opens a file"""
+    from schematrix import geometry as GEO
+    s = Schematic()
+    c = s.load((0, 0), label='DUT')
+    assert c.sym == 'load' and any(p['k'] == 'tx' and p['s'] == 'DUT' for p in GEO.geometry(c.el)['prims'])
+
+
+def test_wire_direction_marks_keep_the_wire():
+    s = Schematic()
+    a = s.resistor((0, 0)); b = s.resistor((200, 0))
+    w = s.wire(a['2'], b['1'], marks=[(0, 10, 4)])
+    assert w.el['type'] == 'wire'
+    assert f'<polygon class="arrow" points="{a["2"][0] + 10:g},0 {a["2"][0]:g},4 {a["2"][0]:g},-4"/>' in s.to_svg()
+    assert [('R1', '2'), ('R2', '1')] in s.netlist()['nets'].values()                # still connected
+
+
+def test_compat_diodes_marks_and_source_arrows():
+    from schematrix.compat import CompatS
+    s = CompatS()
+    s.add('<polygon class="amp" points="140,93 140,107 153,100"/>'); s.wire((153, 93), (153, 107), cls='w plate')
+    s.wire((60, 200), (300, 200)); s.add('<polygon class="arrow" points="60,196 60,204 70,200"/>')   # a marker
+    s.add('<circle class="amp" cx="130" cy="300" r="16"/>')
+    s.add('<polygon class="arrow" points="124,296 124,304 135,300"/>'); s.wire((120, 300), (130, 300))
+    s.svg(400, 400, 't')
+    els = s.sch.doc['elements']
+    assert not [e for e in els if e['type'] == 'raw']
+    d = next(e for e in els if e.get('sym') == 'diode')
+    assert (d['x'], d['y'], d['rot']) == (147, 100, 0) and not [e for e in els if 'plate' in e.get('style', '')]
+    assert next(e for e in els if e.get('marks'))['marks'] == [[0, 10, 4]]
+    src = next(e for e in els if e.get('sym') == 'isrc')['props']
+    assert (src['arrow_tail'], src['arrow_tip'], src['arrow_len'], src['arrow_w']) == (-10, 5, 11, 4)

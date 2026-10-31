@@ -32,11 +32,14 @@ Markup written directly with `s.add(...)` also becomes real elements when it is 
 | `<line class="w" … stroke-dasharray="2 4">` | a dashed `rule` line |
 | `<polygon class="arrow / accf">` at the end of a wire | that wire becomes an arrow with the same head size |
 | `<polygon class="amp">` square triangle | a buffer; an `r = 4` pad circle at its tip makes it inverting |
+| `<polygon class="amp">` 13 × 14 triangle followed by its bar | a diode |
+| `<polygon class="arrow">` part-way along a wire | a direction mark on that wire (it stays connected) |
 | `<circle class="amp" r="16">` with a label centred in it | a voltage source with that text (e.g. `eₙ`) |
-| `<circle class="amp" r="16">` with an arrow inside | a current source pointing that way |
+| `<circle class="amp" r="16">` with an arrow inside | a current source with that same arrow |
 
-Anything else stays a raw element that renders exactly as before; arrowheads placed part-way along a wire (direction
-markers) stay raw too, so the wire keeps its connections. Junction dots are left as the script drew them.
+Anything else stays a raw element that renders exactly as before. The bundled example converts completely (no raw
+markup left), and 11 of its 12 figures are pixel-identical to the originals; the twelfth differs where the old script
+drew one resistor bottom-to-top and garbled its zigzag. Junction dots are left as the script drew them.
 
 Scripts written or edited for Schematrix can call these directly on `S`:
 

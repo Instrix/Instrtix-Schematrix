@@ -128,6 +128,20 @@ class Wire(list):
         self.el = el
 
 
+class _LoadOrPlace:
+    """`load` is both the document loader (Schematic.load('fig.json')) and the electronic-load symbol
+    (s.load((x, y), label='DUT')): a path means open, anything else places the symbol"""
+    def __get__(self, obj, cls):
+        def load(*args, **kw):
+            if args and isinstance(args[0], (str, os.PathLike)) and not kw:
+                return cls.open(args[0])
+            if obj is None:
+                raise TypeError('Schematic.load(path) opens a document; place a load symbol on a schematic: s.load(at)')
+            at, rest = (args[0] if args else kw.pop('at', (0, 0))), args[1:]
+            return obj.add('load', at, *rest, **kw)
+        return load
+
+
 class Schematic:
     def __init__(self, title='', width=None, height=None, *, theme='instrix', grid=5, description='',
                  junctions=True, hops=False, margin=20):
@@ -148,9 +162,12 @@ class Schematic:
         return s
 
     @classmethod
-    def load(cls, path) -> 'Schematic':
+    def open(cls, path) -> 'Schematic':
+        """a schematic from a saved .json document"""
         with open(path, encoding='utf-8') as f:
             return cls.from_dict(json.load(f))
+
+    load = _LoadOrPlace()     # Schematic.load(path) opens a document; s.load(at, ...) places the load symbol
 
     def to_dict(self):
         return copy.deepcopy(self.doc)
@@ -356,9 +373,13 @@ class Schematic:
     def dot(self, at):
         return self.add('dot', at)
 
-    def wire(self, *pts, style='') -> Wire:
+    def wire(self, *pts, style='', marks=None) -> Wire:
+        """a wire through the points; marks = [(distance along the wire, length, half-width), ...] draws direction
+        arrowheads on it (a negative length points back towards the start)"""
         pts = [p for p in pts if p is not None]
         el = self._push({'type': 'wire', 'points': [[_n(p[0]), _n(p[1])] for p in pts], 'style': style})
+        if marks:
+            el['marks'] = [[_n(v) for v in m[:3]] for m in marks]
         return Wire(el)
 
     def route(self, a, b, how='auto', style='') -> Wire:
