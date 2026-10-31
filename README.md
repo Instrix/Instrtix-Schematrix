@@ -259,6 +259,51 @@ volumes:
   caddy-config:
 ```
 
+#### Configuring: ports, token, domain, version
+
+Settings go in a `.env` file next to `docker-compose.yml` (Compose reads it by itself), one `NAME=value` per line.
+After changing it, run `docker compose up -d` again to apply. A complete `.env` for the private server:
+
+```bash
+SCHEMATRIX_TOKEN=3f9c…          # access token: openssl rand -hex 24 (private server only)
+SCHEMATRIX_BIND=127.0.0.1       # which host address listens: 127.0.0.1 = this machine only, 0.0.0.0 = the network
+SCHEMATRIX_PORT=8000            # port on the host (inside the container it is always 8000)
+SCHEMATRIX_DOMAIN=schematrix.example.org    # for --profile https
+SCHEMATRIX_VERSION=latest       # image tag: latest, or a release such as v0.2.1
+SCHEMATRIX_SCRIPTS=1            # 0 = nobody can run Python on the server, not even with the token
+SCHEMATRIX_MEMORY=1g            # container limits
+SCHEMATRIX_CPUS=2
+```
+
+**Ports.** The container always listens on 8000; `SCHEMATRIX_BIND` and `SCHEMATRIX_PORT` choose where that appears
+on the host:
+
+| You want | Set | Open |
+|---|---|---|
+| only this machine (the private default) | `SCHEMATRIX_BIND=127.0.0.1` | `http://localhost:8000` |
+| another port, e.g. 8000 is taken | `SCHEMATRIX_PORT=8080` | `http://localhost:8080` |
+| other computers on your network | `SCHEMATRIX_BIND=0.0.0.0` (allow the port in the host firewall) | `http://<server-ip>:8000` |
+| a remote server, without exposing it | keep `127.0.0.1`; tunnel: `ssh -L 8000:localhost:8000 user@server` | `http://localhost:8000` |
+| HTTPS on a domain (recommended) | `SCHEMATRIX_DOMAIN=…`, start with `--profile https`, keep `127.0.0.1` | `https://<domain>` |
+
+For HTTPS, point the domain's DNS (A / AAAA record) at the server and open ports 80 and 443; Caddy gets and renews
+the certificate by itself and reaches the app inside Docker, so the app's own port can stay on `127.0.0.1`. With your
+own reverse proxy instead (nginx, Traefik, …), skip the profile and proxy to `127.0.0.1:<SCHEMATRIX_PORT>`.
+
+**Token (private server).** Generate one with `openssl rand -hex 24` and put it in `.env`; the server refuses to start
+without it. Each person opens `https://<domain>/?token=<token>`: it sets a cookie, so the address without the token
+works until the browser is closed (bookmark the link with the token to come back). Scripts and API clients send `Authorization: Bearer <token>` instead. To revoke access,
+change the token and run `docker compose up -d`: every existing cookie stops working. Treat `.env` like a password
+(`chmod 600 .env`), and serve over HTTPS so the token never travels in clear text.
+
+**Public server.** No token. Behind the https profile (or your own proxy) also set `SCHEMATRIX_TRUST_PROXY=1` and
+`SCHEMATRIX_BIND=127.0.0.1`, so the rate limits see each visitor and the app can only be reached through the proxy.
+To change a public limit, add it under `environment:` in the compose file, e.g. `SCHEMATRIX_PUBLIC_RATE: "120"`
+(names below; defaults on the [Deployment](docs/wiki/Deployment.md#public-server) wiki page).
+
+**Version.** `latest` follows each release on `docker compose pull && docker compose up -d`; pin a release
+(`SCHEMATRIX_VERSION=v0.2.1`) to update only when you change it.
+
 Public mode (`SCHEMATRIX_PUBLIC=1`) is safe because of what the server will not do, not because of a password (the
 editor keeps showing those features, with a banner pointing to the desktop app and self-hosted servers):
 

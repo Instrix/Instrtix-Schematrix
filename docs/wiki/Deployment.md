@@ -26,7 +26,7 @@ cp deploy/.env.example deploy/.env      # set SCHEMATRIX_TOKEN:  openssl rand -h
 docker compose -f deploy/docker-compose.yml up -d
 ```
 
-Open `http://<host>:8000/?token=<token>` once per browser (it sets a cookie); API clients send
+Open `http://<host>:8000/?token=<token>` (it sets a cookie that lasts until the browser is closed; bookmark the link); API clients send
 `Authorization: Bearer <token>`. The server refuses to start without a token.
 
 **Why a token**: the editor's Script pane runs Python on the server, so anyone who reaches the port could run code in

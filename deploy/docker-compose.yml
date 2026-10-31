@@ -2,7 +2,7 @@
 #
 #   cp deploy/.env.example deploy/.env      # then edit it: at least SCHEMATRIX_TOKEN
 #   docker compose -f deploy/docker-compose.yml up -d
-#   open http://localhost:8000/?token=<your token>   (once per browser: it sets a cookie)
+#   open http://localhost:8000/?token=<your token>   (sets a cookie for the browser session)
 #
 # HTTPS on your own domain (Caddy fetches and renews the certificate; ports 80/443 must reach this host):
 #   set SCHEMATRIX_DOMAIN in .env, then
