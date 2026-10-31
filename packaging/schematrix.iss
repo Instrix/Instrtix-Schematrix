@@ -1,6 +1,6 @@
 ; Inno Setup script for the Windows installer; packaging/package.py passes Version, Source, OutDir and WebView2
 ; (Microsoft's WebView2 bootstrapper, run only on the rare Windows 10 without the WebView2 runtime).
-;   ISCC /DVersion=0.2.3 /DSource=dist\Schematrix /DOutDir=dist\release /DWebView2=dist\MicrosoftEdgeWebview2Setup.exe packaging\schematrix.iss
+;   ISCC /DVersion=0.2.4 /DSource=dist\Schematrix /DOutDir=dist\release /DWebView2=dist\MicrosoftEdgeWebview2Setup.exe packaging\schematrix.iss
 #ifndef Version
   #define Version "0.0.0"
 #endif
