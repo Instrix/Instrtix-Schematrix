@@ -55,13 +55,18 @@ def prim_svg(p, comp=None, style=''):
         a = GEO.text_anchor(p.get('a', 'middle'), rot, mir)
         fs = f' style="font-size:{num(SYM.FONT_SIZES.get(p["c"], 12) * z)}px"' if z != 1 else ''
         inner = MU.svg_inner(p['s'], SYM.FONT_SIZES.get(p['c'], 12) * z, esc)
-        return f'<text class="{p["c"]}" x="{num(x)}" y="{num(y)}" text-anchor="{a}"{fs}>{inner}</text>'
+        return f'<text class="{p["c"]}" x="{num(x)}" y="{num(y)}" text-anchor="{a}"{fs}{_src(p["s"])}>{inner}</text>'
     return ''
+
+
+def _src(s):
+    """texts with $...$ maths keep their source, for TikZ export"""
+    return f' data-src="{esc(s)}"' if MU.has_math(s) else ''
 
 
 def text_svg(x, y, s, cls='lbl', anchor='middle'):
     inner = MU.svg_inner(s, SYM.FONT_SIZES.get(cls, 12), esc)
-    return f'<text class="{cls}" x="{num(x)}" y="{num(y)}" text-anchor="{anchor}">{inner}</text>'
+    return f'<text class="{cls}" x="{num(x)}" y="{num(y)}" text-anchor="{anchor}"{_src(s)}>{inner}</text>'
 
 
 def wire_marks(e):

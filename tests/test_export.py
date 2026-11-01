@@ -161,4 +161,6 @@ def test_cairo_text_is_drawn_from_the_bundled_fonts():
     assert '<text' not in out and out.count('class="txt"') == 2
     assert 'stroke-width' in out.split('class="txt"')[1]                        # the overbar
     formal = Schematic('f', theme='formal'); formal.text(0, 20, 'Times', 'lbl')
-    assert '<text' in outline(formal.to_svg())                                    # system fonts: left as text
+    assert '<text' not in outline(formal.to_svg())                                # TeX Gyre Termes ships too
+    kicad = Schematic('k', theme='kicad'); kicad.text(0, 20, 'KiCad', 'lbl')
+    assert '<text' in outline(kicad.to_svg())                                     # system fonts: left as text

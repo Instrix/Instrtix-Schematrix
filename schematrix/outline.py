@@ -2,8 +2,9 @@
 
 cairosvg draws text with the fonts installed on the computer; where JetBrains Mono or Inter are missing it
 substitutes another font, or draws empty boxes for characters like − √ → eₙ. This turns every text set in one of
-the bundled fonts into vector paths drawn from the font files that ship with Schematrix, so nothing depends on
-the computer's fonts. Texts in other fonts (the formal, technical and kicad themes use system fonts) stay text.
+the bundled fonts (JetBrains Mono, Inter, and TeX Gyre Termes / Heros for the formal / technical themes) into vector
+paths drawn from the font files that ship with Schematrix, so nothing depends on the computer's fonts. Texts in
+other fonts (the kicad theme) stay text.
 
 Styles come from the SVG's own <style> block, so any theme, custom theme or raw legacy markup is handled.
 Needs fontTools and brotli (the bundled fonts are WOFF2); without them the SVG is returned unchanged.
@@ -19,8 +20,11 @@ import xml.etree.ElementTree as ET
 from . import theme as TH
 
 NS = 'http://www.w3.org/2000/svg'
-BUNDLED = {'jetbrains mono': 'JetBrains Mono', 'inter': 'Inter'}
-FALLBACK = {'JetBrains Mono': 'Inter', 'Inter': 'JetBrains Mono'}     # for characters a font lacks (ₙ in Mono)
+BUNDLED = {'jetbrains mono': 'JetBrains Mono', 'inter': 'Inter', 'tex gyre termes': 'TeX Gyre Termes',
+           'tex gyre heros': 'TeX Gyre Heros'}
+# for characters a font lacks (ₙ in Mono, arrows and maths in the TeX Gyre subsets)
+FALLBACK = {'JetBrains Mono': ('Inter',), 'Inter': ('JetBrains Mono',),
+            'TeX Gyre Termes': ('Inter', 'JetBrains Mono'), 'TeX Gyre Heros': ('Inter', 'JetBrains Mono')}
 ITALIC_SKEW = math.tan(math.radians(10))                               # synthetic italic where no italic face exists
 
 
@@ -54,7 +58,7 @@ def _faces(family, weight, italic):
 
 def _glyph(ch, family, weight, italic):
     """(glyph set, glyph name, advance, units per em, synthetic italic) for a character, with fallbacks"""
-    for fam in (family, FALLBACK[family]):
+    for fam in (family, *FALLBACK[family]):
         paths, real = _faces(fam, weight, italic)
         for p in paths:
             cmap, gs, hmtx, upem = _font(p)

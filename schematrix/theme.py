@@ -16,9 +16,9 @@ FONT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'web', 'font
 MONO = '"JetBrains Mono", "Inter", ui-monospace, monospace'     # Inter: glyphs JetBrains Mono lacks (ₙ, ₍, ₎)
 SANS = '"Inter", system-ui, sans-serif'
 # Times-like faces with Greek first: cairosvg (PDF / EPS) uses only the first installed family, no per-glyph fallback
-SERIF = ('"Times New Roman", "Liberation Serif", "TeX Gyre Termes", "Nimbus Roman", Times, "Latin Modern Roman", '
-         '"CMU Serif", serif')
-HELV = '"Helvetica Neue", Helvetica, Arial, "Nimbus Sans", "Liberation Sans", sans-serif'
+# TeX Gyre Termes / Heros (Times / Helvetica clones) ship with Schematrix, so formal / technical look the same everywhere
+SERIF = '"TeX Gyre Termes", "Times New Roman", "Liberation Serif", "Nimbus Roman", Times, serif'
+HELV = '"TeX Gyre Heros", "Helvetica Neue", Helvetica, Arial, "Liberation Sans", sans-serif'
 
 THEMES: dict[str, dict[str, str]] = {
     'instrix': dict(ink='#292b31', muted='#545866', rule='#d3d6df', surface='#eef0f4', accent='#23699f',
@@ -133,6 +133,14 @@ _FACES = [  # (family, weight, style, subset file stem)
     ('Inter', 400, 'normal', 'inter-{s}-400-normal'),
     ('Inter', 500, 'normal', 'inter-{s}-500-normal'),
     ('Inter', 600, 'normal', 'inter-{s}-600-normal'),
+    ('TeX Gyre Termes', 400, 'normal', 'tex-gyre-termes-{s}-400-normal'),
+    ('TeX Gyre Termes', 700, 'normal', 'tex-gyre-termes-{s}-700-normal'),
+    ('TeX Gyre Termes', 400, 'italic', 'tex-gyre-termes-{s}-400-italic'),
+    ('TeX Gyre Termes', 700, 'italic', 'tex-gyre-termes-{s}-700-italic'),
+    ('TeX Gyre Heros', 400, 'normal', 'tex-gyre-heros-{s}-400-normal'),
+    ('TeX Gyre Heros', 700, 'normal', 'tex-gyre-heros-{s}-700-normal'),
+    ('TeX Gyre Heros', 400, 'italic', 'tex-gyre-heros-{s}-400-italic'),
+    ('TeX Gyre Heros', 700, 'italic', 'tex-gyre-heros-{s}-700-italic'),
 ]
 _RANGES = {'latin': 'U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,'
                     'U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD',

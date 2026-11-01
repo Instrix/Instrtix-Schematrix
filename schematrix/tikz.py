@@ -12,6 +12,7 @@ import math
 import re
 import xml.etree.ElementTree as ET
 
+from . import markup as MU
 from . import render as R
 from . import symbols as SYM
 from . import theme as TH
@@ -238,7 +239,13 @@ def _emit(el, st, out, off=(0.0, 0.0)):
         m = re.search(r'font-size:\s*([\d.]+)px', el.get('style') or '')
         anchor = {'start': 'base west', 'middle': 'base', 'end': 'base east'}[el.get('text-anchor', 'start')]
         out.append(f'\\node[anchor={anchor}, inner sep=0, {st.text(cls, m.group(1) if m else None)}] at '
-                   f'{_coord((float(el.get("x", 0)), float(el.get("y", 0))), off)} {{{_runs(el)}}};')
+                   f'{_coord((float(el.get("x", 0)), float(el.get("y", 0))), off)} {{{_label(el)}}};')
+
+
+def _label(el) -> str:
+    """a text with $...$ maths carries its source (data-src): LaTeX gets the maths itself, not the drawing of it"""
+    src = el.get('data-src')
+    return MU.to_latex(src, latex) if src is not None else _runs(el)
 
 
 def _runs(el) -> str:

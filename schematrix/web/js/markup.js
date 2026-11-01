@@ -24,6 +24,80 @@ function close(s, i) {
 
 const key = (f) => [...f].sort().join(',');
 
+// $...$ LaTeX maths -> this markup, for drawing (fractions become a/b); TikZ export gets the LaTeX itself
+const MATH_TEXT = new Set(['mathrm', 'text', 'mathit', 'mathbf', 'mathsf', 'mathtt', 'textrm', 'textit', 'textbf', 'mbox',
+  'operatorname', 'mathcal', 'boldsymbol']);
+const MATH_SPACE = { ',': ' ', ';': ' ', ':': ' ', '!': '', ' ': ' ', quad: '  ', qquad: '   ' };
+const MATH_DROP = new Set(['left', 'right', 'big', 'Big', 'bigl', 'bigr', 'Bigl', 'Bigr', 'displaystyle', 'textstyle', 'limits']);
+const MATH_SYMBOLS = { ldots: '…', cdots: '⋯', leq: '≤', geq: '≥', neq: '≠', rightarrow: '→', leftarrow: '←', varphi: 'φ',
+  varepsilon: 'ε', ell: 'ℓ', sim: '∼', mp: '∓', circ: '°', prime: '′' };
+
+function mathArg(t, i) {
+  while (i < t.length && t[i] === ' ') i++;
+  if (i >= t.length) return ['', i];
+  if (t[i] === '{') {
+    let depth = 0;
+    for (let j = i; j < t.length; j++) {
+      if (t[j] === '\\') continue;
+      if (t[j] === '{' && t[j - 1] !== '\\') depth++;
+      else if (t[j] === '}' && t[j - 1] !== '\\') { depth--; if (depth === 0) return [t.slice(i + 1, j), j + 1]; }
+    }
+    return [t.slice(i + 1), t.length];
+  }
+  if (t[i] === '\\') { const m = /^\\([A-Za-z]+|.)/.exec(t.slice(i)); return [m[0], i + m[0].length]; }
+  return [t[i], i + 1];
+}
+const paren = (s) => ((s.match(/(?:\d+(?:\.\d+)?|\\[A-Za-z]+\{\}|[^\s_^~{}])(?:[_^]\{[^{}]*\})*/g) || []).length > 1
+  && !(s.startsWith('(') && s.endsWith(')')) ? `(${s})` : s);
+
+const MATH_REL = { '=': '=', '<': '<', '>': '>', approx: '≈', le: '≤', ge: '≥', ne: '≠', leq: '≤', geq: '≥', neq: '≠',
+  sim: '∼', to: '→', rightarrow: '→', leftarrow: '←', propto: '∝' };
+const MATH_BIN = { '+': '+', '-': '−', pm: '±', mp: '∓', times: '×', cdot: '·', div: '÷' };
+
+// like TeX: spaces in the source are ignored; relations / binary operators get their own (a leading minus stays unary)
+export function mathMarkup(t, text = false) {
+  let out = '', i = 0, a, b;
+  const op = (sym, rel) => {
+    const prev = out.trimEnd();
+    if ((rel && prev) || (prev && !'(=<>≈≤≥≠∼→←∝+−±∓×·÷,'.includes(prev.at(-1)))) out = `${prev} ${sym} `;
+    else out += sym;                                       // unary: -x, = -x
+  };
+  while (i < t.length) {
+    const c = t[i];
+    if (c === ' ' && !text) { i++; continue; }
+    if (!text && (c in MATH_REL || c in MATH_BIN)) { op(MATH_REL[c] ?? MATH_BIN[c], c in MATH_REL); i++; continue; }
+    if (c === ',' && !text) { out += ', '; i++; continue; }
+    if (c === '\\') {
+      const m = /^([A-Za-z]+|.)/.exec(t.slice(i + 1)), name = m ? m[0] : '';
+      i += 1 + name.length;
+      if (name in MATH_SPACE) out += MATH_SPACE[name];
+      else if (MATH_DROP.has(name)) { /* sizing only */ }
+      else if (name in MATH_REL || name in MATH_BIN) op(MATH_REL[name] ?? MATH_BIN[name], name in MATH_REL);
+      else if (MATH_TEXT.has(name)) { [a, i] = mathArg(t, i); out += mathMarkup(a, name.startsWith('text') || name === 'mbox'); }
+      else if (['frac', 'dfrac', 'tfrac'].includes(name)) { [a, i] = mathArg(t, i); [b, i] = mathArg(t, i); out += `${paren(mathMarkup(a))}/${paren(mathMarkup(b))}\u2009`; }
+      else if (name === 'sqrt') { [a, i] = mathArg(t, i); out += '√' + paren(mathMarkup(a)); }
+      else if (name === 'overline' || name === 'bar') { [a, i] = mathArg(t, i); out += '~{' + mathMarkup(a) + '}'; }
+      else if (name in MATH_SYMBOLS) out += MATH_SYMBOLS[name];
+      else if (name in SYMBOLS) out += '\\' + name + '{}';
+      else if (name in ESCAPES || '%&#'.includes(name)) out += name in ESCAPES ? '\\' + name : name;
+      else out += name;                                    // \sin, \log, \max: the name itself
+      continue;
+    }
+    if (c === '_' || c === '^') { [a, i] = mathArg(t, i + 1); out += c + '{' + mathMarkup(a) + '}'; continue; }
+    if (c === '{') { [a, i] = mathArg(t, i); out += mathMarkup(a); continue; }
+    out += { '~': ' ', '}': '' }[c] ?? c; i++;
+  }
+  return text ? out : out.trim();
+}
+
+function mathEnd(s, i) {
+  for (let j = i + 1; j < s.length; j++) {
+    if (s[j] === '\\') { j++; continue; }
+    if (s[j] === '$') return j > i + 1 ? j : -1;
+  }
+  return -1;
+}
+
 // -> [[text, Set of 'over' | 'sub' | 'sup']], adjacent runs with the same flags merged
 export function parse(s, flags = new Set()) {
   s = String(s ?? '');
@@ -33,6 +107,10 @@ export function parse(s, flags = new Set()) {
   let i = 0;
   while (i < s.length) {
     const c = s[i];
+    if (c === '$') {
+      const j = mathEnd(s, i);
+      if (j > 0) { flush(); out.push(...parse(mathMarkup(s.slice(i + 1, j)), flags)); i = j + 1; continue; }
+    }
     if (FLAGS[c] && s[i + 1] === '{') {
       const j = close(s, i + 1);
       if (j > 0) { flush(); out.push(...parse(s.slice(i + 2, j), new Set([...flags, FLAGS[c]]))); i = j + 1; continue; }
