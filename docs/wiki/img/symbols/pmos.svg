@@ -20,6 +20,14 @@
 .accbox { fill: #dbe8f3; stroke: #292b31; stroke-width: 1.6; }
 .grp { fill: #eef0f4; stroke: none; }
 .frame { fill: none; stroke: #d3d6df; stroke-width: 1; }
+.hl { fill: none; stroke: #23699f; stroke-width: 2.2; stroke-dasharray: 6 4; }
+.callacc { fill: #23699f; stroke: none; }
+.tdata { fill: #ffffff; stroke: #292b31; stroke-width: 1.5; stroke-linejoin: round; }
+.tdata2 { fill: #dbe8f3; stroke: #292b31; stroke-width: 1.5; stroke-linejoin: round; }
+.tx { fill: #d3d6df; stroke: #292b31; stroke-width: 1.5; stroke-linejoin: round; }
+.gap { fill: #ffffff; stroke: none; }
+.grid { fill: none; stroke: #d3d6df; stroke-width: 1; stroke-dasharray: 2 3; }
+.callink { fill: #292b31; stroke: none; }
 text { font-family: "JetBrains Mono", "Inter", ui-monospace, monospace; fill: #292b31; }
 .lbl, .ref { font-size: 12px; font-weight: 500; }
 .ref { font-style: normal; }
@@ -33,4 +41,5 @@ text { font-family: "JetBrains Mono", "Inter", ui-monospace, monospace; fill: #2
 .grplbl { font-size: 10px; font-weight: 600; letter-spacing: .08em; fill: #545866; }
 .note { font-family: "Inter", system-ui, sans-serif; font-size: 12px; fill: #545866; }
 .title { font-family: "Inter", system-ui, sans-serif; font-size: 15px; font-weight: 600; }
+.callnum { font-family: "Inter", system-ui, sans-serif; font-size: 11px; font-weight: 600; fill: #ffffff; }
 </style><rect x="-36" y="-36" width="42" height="72" fill="#ffffff"/><polyline class="w" points="0,-30 0,-15 -9,-15"/><polyline class="w" points="0,30 0,15 -9,15"/><polyline class="w" points="-9,0 0,0 0,15"/><polyline class="w plate" points="-9,-21 -9,-9"/><polyline class="w plate" points="-9,-5 -9,5"/><polyline class="w plate" points="-9,9 -9,21"/><polyline class="w plate" points="-16,-17 -16,17"/><polyline class="w" points="-30,0 -16,0"/><polygon class="arrow" points="-2,0 -8,-3.5 -8,3.5"/></svg>

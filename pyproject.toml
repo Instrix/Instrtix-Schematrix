@@ -9,8 +9,26 @@ description = "Electrical schematic editor and Python scripting library in the I
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "GPL-3.0-or-later" }
-classifiers = ["License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)"]
+authors = [{ name = "Instrix" }]
+keywords = ["schematic", "electronics", "circuit", "spice", "netlist", "tikz", "latex", "diagram", "editor"]
+classifiers = [
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Education",
+    "Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)",
+    "Topic :: Multimedia :: Graphics :: Editors :: Vector-Based",
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+    "Framework :: FastAPI",
+]
 dependencies = ["fastapi>=0.110", "uvicorn>=0.27"]
+
+[project.urls]
+Homepage = "https://github.com/Instrix/Instrtix-Schematrix"
+Documentation = "https://instrix.github.io/Instrtix-Schematrix/"
+Downloads = "https://github.com/Instrix/Instrtix-Schematrix/releases"
+Issues = "https://github.com/Instrix/Instrtix-Schematrix/issues"
 
 [project.optional-dependencies]
 export = ["cairosvg>=2.7", "pillow>=10", "fonttools>=4.40", "brotli>=1.0"]   # server-side PNG / JPEG / WebP / PDF / EPS; text drawn from the bundled fonts

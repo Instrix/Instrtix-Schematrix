@@ -14,6 +14,7 @@
 - [Styles and themes](Styles-and-Themes.md)
 - [Page frames](Page-Frames.md)
 - [Custom symbols](Custom-Symbols.md)
+- [Annotations and timing](Annotations-and-Timing.md)
 
 **Output**
 - [Exporting](Exporting.md)

@@ -25,11 +25,11 @@ from typing import Any, Callable
 from ..markup import width_chars
 
 FONT_SIZES = {'lbl': 12, 'ref': 12, 'val': 11.5, 'valsm': 10.5, 'node': 12, 'net': 11, 'pin': 13, 'termlbl': 12.5,
-              'accl': 12, 'grplbl': 10, 'note': 12, 'title': 15}
+              'accl': 12, 'grplbl': 10, 'note': 12, 'title': 15, 'callnum': 11}
 
 # palette order; a category not listed here sorts after these
 CATEGORIES = ['Passive', 'Semiconductor', 'Analog', 'Logic', 'Sources', 'Loads & meters', 'Electromechanical',
-              'Vacuum tubes', 'Signal flow', 'Generic', 'Nets']
+              'Vacuum tubes', 'Signal flow', 'Generic', 'Nets', 'Annotation']
 
 
 # ---------------------------------------------------------------- primitives

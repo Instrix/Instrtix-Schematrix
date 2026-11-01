@@ -101,6 +101,7 @@ s.route(a, b, how='auto')                 # orthogonal: 'hv', 'vh', 'hvh', 'vhv'
 s.connect(p1, p2, p3, how='auto')         # chain routes through several points
 w = s.wire(r['2'], (220, 100)); w[-1]     # a Wire is the list of its points
 s.wire(reg['Q'], (300, 40), style='bus')  # a bus
+s.autoroute(r1['2'], u1['inp'])           # finds its own way around parts and labels
 s.wire(a, b, marks=[(0, 10, 4)])          # direction arrowheads on the wire: (distance along it, length, half-width);
                                          # a negative length points back; the wire stays connected
 ```
@@ -114,6 +115,8 @@ s.rect(x, y, w, h, cls='grp', label='Input', rx=4)      # grp, box, accbox, fram
 s.group([r1, c1, u1], label='Filter', pad=12)           # shading behind parts
 s.arrow((x1, y1), (x2, y2), style='acc')              # style '' = ink; head=(length, half-width), default (9, 4)
 s.arrow((0, 0), (60, 0), style='', head=(11, 4))
+s.brace((140, 60), length=200, text='input stage')        # annotations: brace, callout, dimension, highlight
+s.timing((60, 200), signals='CLK : p.......\nDATA: x.=.=..x | A5 3C')   # see Annotations and timing diagrams
 s.raw('<circle cx="0" cy="0" r="3"/>', x=100, y=100)    # verbatim SVG
 ```
 

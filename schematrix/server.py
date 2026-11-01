@@ -190,6 +190,17 @@ def create_app() -> FastAPI:
     def health():
         return {'ok': True}
 
+    @app.post('/api/route')
+    def route_wire(body: dict = Body(...)):
+        """an orthogonal path from a to b around the parts of doc: {doc, a: [x, y], b: [x, y], ignore?: [ids]}"""
+        from .route import route
+        doc = D.normalize(body.get('doc') or {})
+        try:
+            pts = route(doc, body['a'], body['b'], body.get('ignore') or ())
+        except (KeyError, TypeError, ValueError) as e:
+            raise HTTPException(400, f'bad route request: {e}')
+        return {'points': [list(p) for p in pts]}
+
     @app.post('/api/theme-css')
     def theme_css(body: dict = Body(...)):
         """drawing CSS for a document's own theme (a dict of token overrides)"""

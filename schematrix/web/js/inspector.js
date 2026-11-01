@@ -248,7 +248,7 @@ function buildInspector() {
     p.append(btns([...ZORDER(), ['Delete', del, 'danger']]));
   } else if (e.type === 'rect') {
     head('Box', 'group shading, frame or block outline');
-    p.append(field('Kind', sel_(e.cls || 'grp', [['grp', 'Group shading'], ['box', 'Box'], ['accbox', 'Accent box'], ['frame', 'Frame outline']], set(e, 'cls'))));
+    p.append(field('Kind', sel_(e.cls || 'grp', [['grp', 'Group shading'], ['box', 'Box'], ['accbox', 'Accent box'], ['frame', 'Frame outline'], ['hl', 'Highlight (dashed accent)'], ['pad', 'White box']], set(e, 'cls'))));
     p.append(field('Label', inp(e.label || '', set(e, 'label'), { coalesce: true })));
     p.append(field('Position', pair(inp(e.x, set(e, 'x'), { type: 'number', mono: true }), inp(e.y, set(e, 'y'), { type: 'number', mono: true }))));
     p.append(field('Size', pair(inp(e.w, set(e, 'w'), { type: 'number', mono: true }), inp(e.h, set(e, 'h'), { type: 'number', mono: true }))));

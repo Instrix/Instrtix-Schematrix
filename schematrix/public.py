@@ -38,7 +38,7 @@ LIMITS = {
     'heavy_rate': _env_int('SCHEMATRIX_PUBLIC_HEAVY_RATE', 30),            # exports / imports per minute per client
     'heavy_parallel': _env_int('SCHEMATRIX_PUBLIC_PARALLEL', 2),            # exports running at once, server-wide
 }
-HEAVY = ('/api/render', '/api/export', '/api/netlist/import', '/api/netlist/export')
+HEAVY = ('/api/render', '/api/export', '/api/netlist/import', '/api/netlist/export', '/api/route')
 
 
 def enabled() -> bool:

@@ -77,7 +77,13 @@ class Styles:
                  'pad': (t['paper'], t['ink'], 'lw_thin'), 'term': (t['paper'], t['ink'], 'lw_plate'),
                  'flag': (t['surface'], t['ink'], 'lw_thin'), 'box': (t['box'], t['ink'], 'lw_body'),
                  'accbox': (t['accent_fill'], t['ink'], 'lw_body'), 'grp': (t['surface'], None, None),
-                 'frame': (None, t['rule'], 'lw_thin')}
+                 'frame': (None, t['rule'], 'lw_thin'), 'callacc': (t['accent'], None, None),
+                 'callink': (t['ink'], None, None), 'tdata': (t['paper'], t['ink'], 'lw'),
+                 'tdata2': (t['accent_fill'], t['ink'], 'lw'), 'tx': (t['rule'], t['ink'], 'lw'), 'gap': (t['paper'], None, None)}
+        if 'grid' in classes:
+            return f'draw={C(t["rule"])}, {self.lw("lw_thin")}, dash pattern=on 1.5pt off 2.25pt'
+        if 'hl' in classes:
+            return f'draw={C(t["accent"])}, {self.lw("lw_plate")}, dash pattern=on 4.5pt off 3pt'
         for k, (fill, draw, lw) in fills.items():
             if k in classes:
                 o = [f'fill={C(fill)}'] if fill else []
@@ -94,12 +100,13 @@ class Styles:
         t = self.t
         fs = float(size) if size else SYM.FONT_SIZES.get(cls, 12)
         pt = fs * PX
-        col = t['accent'] if cls == 'accl' else t['muted'] if cls in ('val', 'valsm', 'grplbl', 'note') else t['text']
+        col = (t['accent'] if cls == 'accl' else t['muted'] if cls in ('val', 'valsm', 'grplbl', 'note')
+               else t['paper'] if cls == 'callnum' else t['text'])
         font = [f'\\fontsize{{{_n(pt)}}}{{{_n(pt * 1.2)}}}\\selectfont']
         italic = cls == 'node' or (cls in ('ref', 'accl') and t['ref_style'] == 'italic')
         if italic:
             font.append('\\itshape')
-        bold = cls in ('pin', 'termlbl', 'accl', 'grplbl', 'title') and int(t['strong']) >= 600
+        bold = cls in ('pin', 'termlbl', 'accl', 'grplbl', 'title', 'callnum') and int(t['strong']) >= 600
         if bold:
             font.append('\\bfseries')
         return f'font={"".join(font)}, text={self.color(col)}'

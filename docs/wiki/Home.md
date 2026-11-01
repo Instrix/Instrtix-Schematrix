@@ -34,6 +34,7 @@ from them.
 | [Styles and themes](Styles-and-Themes.md) | the seven drawing styles, accent / dashed / bus line styles, custom themes |
 | [Page frames](Page-Frames.md) | paper sizes, borders and title blocks |
 | [Custom symbols](Custom-Symbols.md) | the symbol editor and the symbol file format |
+| [Annotations and timing](Annotations-and-Timing.md) | braces, callouts, dimensions, highlight boxes and timing diagrams |
 
 ## Output
 

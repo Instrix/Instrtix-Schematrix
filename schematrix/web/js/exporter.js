@@ -83,24 +83,46 @@ function serverBlob(o, format) {
     fonts: format === 'svg' ? o.fonts : true, name: o.name });
 }
 
+// bitmaps: rasterise the server's SVG (fonts embedded) in the browser
+async function rasterise(o) {
+  const svg = await serverBlob({ ...o, fonts: true }, 'svg');
+  const url = URL.createObjectURL(svg), img = new Image();
+  await new Promise((ok, bad) => { img.onload = ok; img.onerror = () => bad(new Error('could not rasterise the drawing')); img.src = url; });
+  const c = document.createElement('canvas');
+  c.width = Math.round(img.width * o.scale); c.height = Math.round(img.height * o.scale);
+  const ctx = c.getContext('2d');
+  if (o.format === 'jpeg' && o.bg === 'none') { ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height); }
+  ctx.scale(o.scale, o.scale); ctx.drawImage(img, 0, 0);
+  URL.revokeObjectURL(url);
+  const blob = await new Promise((ok) => c.toBlob(ok, BITMAP[o.format], 0.92));
+  if (!blob || (o.format === 'webp' && blob.type !== 'image/webp')) throw new Error(`this browser cannot write ${o.format.toUpperCase()}`);
+  return blob;
+}
+
 export async function doExport(o) {
   try {
     const ext = FORMATS.find((x) => x[0] === o.format)?.[2] || o.format;
-    if (!BITMAP[o.format]) { download(await serverBlob(o, o.format), `${o.name}.${ext}`); return; }
-    // bitmaps: rasterise the server's SVG (fonts embedded) in the browser
-    const svg = await serverBlob({ ...o, fonts: true }, 'svg');
-    const url = URL.createObjectURL(svg), img = new Image();
-    await new Promise((ok, bad) => { img.onload = ok; img.onerror = () => bad(new Error('could not rasterise the drawing')); img.src = url; });
-    const c = document.createElement('canvas');
-    c.width = Math.round(img.width * o.scale); c.height = Math.round(img.height * o.scale);
-    const ctx = c.getContext('2d');
-    if (o.format === 'jpeg' && o.bg === 'none') { ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height); }
-    ctx.scale(o.scale, o.scale); ctx.drawImage(img, 0, 0);
-    URL.revokeObjectURL(url);
-    const blob = await new Promise((ok) => c.toBlob(ok, BITMAP[o.format], 0.92));
-    if (!blob || (o.format === 'webp' && blob.type !== 'image/webp')) throw new Error(`this browser cannot write ${o.format.toUpperCase()}`);
-    download(blob, `${o.name}.${ext}`);
+    download(BITMAP[o.format] ? await rasterise(o) : await serverBlob(o, o.format), `${o.name}.${ext}`);
   } catch (err) { toast(err.message, true); }
+}
+
+// Copy as image / SVG: the selection (or the whole sheet) onto the clipboard, to paste into documents and chats
+export async function copyImage(kind = 'png') {
+  const ids = T().sel.size ? [...T().sel] : null;
+  const o = { bg: 'paper', scale: 2, margin: 20, ...saved(), format: 'png', ids, name: fileBase(), fonts: true };
+  if (o.bg === 'none') o.bg = 'paper';              // pasted images look broken on a transparent background
+  if (!navigator.clipboard || (kind === 'png' && typeof ClipboardItem === 'undefined')) {
+    toast('This window cannot write images to the clipboard; use Export instead (the browser needs https or localhost)', true);
+    return;
+  }
+  try {
+    if (kind === 'svg') {
+      await navigator.clipboard.writeText(await (await serverBlob(o, 'svg')).text());
+    } else {                                        // a promise keeps the user gesture alive while the image renders
+      await navigator.clipboard.write([new ClipboardItem({ 'image/png': rasterise(o) })]);
+    }
+    toast(`Copied ${ids ? 'the selection' : 'the sheet'} as ${kind === 'svg' ? 'SVG' : 'an image'}`);
+  } catch (err) { toast(`Could not copy: ${err.message}`, true); }
 }
 
 // the quick Export-menu items: last used options, whole sheet

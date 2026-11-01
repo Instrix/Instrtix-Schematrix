@@ -57,10 +57,28 @@ name with `{}`: `25 \deg{}C` → 25 °C. Unknown names stay as typed (`\foo`).
 | `f_{c} = 1 / (2\pi RC)` | f<sub>c</sub> = 1 / (2πRC) |
 | `I_{OUT} = 5 mA, T_{j} \le 150 \deg{}C` | I<sub>OUT</sub> = 5 mA, T<sub>j</sub> ≤ 150 °C |
 
+## LaTeX maths
+
+Put LaTeX maths between dollar signs, in any label, value, note or net name:
+
+| Type | Drawn as | In TikZ |
+|---|---|---|
+| `$V_{out} = \frac{R_2}{R_1} V_{in}$` | V<sub>out</sub> = R<sub>2</sub>/R<sub>1</sub> V<sub>in</sub> | real maths, with a stacked fraction |
+| `gain $A_v = -\frac{R_f}{R_{in}}$` | gain A<sub>v</sub> = −R<sub>f</sub>/R<sub>in</sub> | `gain $A_v = -\frac{R_f}{R_{in}}$` |
+| `$f_c = \frac{1}{2\pi RC}$` | f<sub>c</sub> = 1/(2πRC) | |
+| `$\Delta V \approx 10\,\mathrm{mV}$` | ΔV ≈ 10 mV | |
+
+In the editor, SVG, PDF and PNG the maths is drawn with the markup above: sub/superscripts, Greek letters and
+symbols, `\frac{a}{b}` as a/b (with brackets when a part has several terms), `\sqrt`, `\overline`, `\mathrm` and
+`\text`; spaces are ignored and operators spaced as TeX does. **TikZ export passes the LaTeX through unchanged**, so
+in a LaTeX document it is typeset as real maths. Write `\$` for a literal dollar sign; a single `$` with no
+closing one stays as typed.
+
 ## How it comes out
 
 - **Editor, SVG, PNG, JPEG, WebP**: overbars and sub/superscripts as typeset text.
 - **PDF, EPS, server PNG**: the same; overbars are drawn as lines measured with the output font.
-- **TikZ / LaTeX**: `\overline{}`, `\textsubscript{}`, `\textsuperscript{}` and math-mode symbols (`$\Omega$`).
+- **TikZ / LaTeX**: `\overline{}`, `\textsubscript{}`, `\textsuperscript{}` and math-mode symbols (`$\Omega$`);
+  `$...$` maths as itself.
 - **Netlists**: the plain visible text: `10 k\ohm` → SPICE value `10k`; net `V_{OUT}` → node `VOUT`.
 - **Text widths** (symbol layout, block sizes) count visible characters only.

@@ -1,5 +1,5 @@
 // Commands, menus, keyboard shortcuts and resizable panels.
-import { exportDialog, quickExport } from './exporter.js';
+import { copyImage, exportDialog, quickExport } from './exporter.js';
 import { findDialog } from './find.js';
 import { openSymbolEditor } from './symedit.js';
 import { exportAs, exportNetlist, filesDialog, importFile, save } from './files.js';
@@ -22,6 +22,21 @@ export function showPane(name) {
 export function setStyle(st) { S.style = st; $$('#stylepick button').forEach((b) => b.classList.toggle('on', b.dataset.style === st)); }
 export function closeMenus() { $$('.menu').forEach((m) => m.classList.remove('open')); $$('.ctx').forEach((m) => m.remove()); }
 
+// re-route the selected wires between their ends, around parts and labels (one after another, so they avoid each other)
+async function autoroute() {
+  const ws = selected().filter((e) => e.type === 'wire' && (e.points || []).length >= 2);
+  if (!ws.length) { toast('Select one or more wires to route'); return; }
+  try {
+    const doc = structuredClone(D()), routes = [];
+    for (const w of ws) {
+      const r = await api.post('/api/route', { doc, a: w.points[0], b: w.points.at(-1), ignore: [w.id] });
+      routes.push(r.points);
+      doc.elements.find((e) => e.id === w.id).points = r.points;
+    }
+    edit(() => ws.forEach((w, i) => { w.points = routes[i]; }));
+  } catch (err) { toast(err.message, true); }
+}
+
 export const COMMANDS = {
   new: () => openTab(newDoc()), open: filesDialog, upload: () => { $('#fileinput').dataset.legacy = ''; $('#fileinput').click(); },
   'import-legacy': () => { if (S.info.public) return fullOnly('Legacy figure import'); $('#fileinput').dataset.legacy = '1'; $('#fileinput').click(); },
@@ -39,6 +54,7 @@ export const COMMANDS = {
   junctions: () => edit((d) => { d.page.junctions = d.page.junctions === false; }),
   hops: () => edit((d) => { d.page.hops = !d.page.hops; }),
   export: () => exportDialog(false), 'export-selection': () => exportDialog(true),
+  'copy-image': () => copyImage('png'), 'copy-svg': () => copyImage('svg'), autoroute,
   'export-svg': () => quickExport('svg'), 'export-svg-plain': () => quickExport('svg-plain'), 'export-png': () => quickExport('png'),
   'export-jpeg': () => quickExport('jpeg'), 'export-pdf': () => quickExport('pdf'), 'export-eps': () => quickExport('eps'),
   'export-tikz': () => quickExport('tikz'), 'export-spice': () => exportNetlist('spice'), 'export-kicad': () => exportNetlist('kicad'), 'export-netjson': () => exportNetlist('json'),
@@ -100,7 +116,7 @@ document.addEventListener('keydown', (ev) => {
   if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
   const mod = ev.ctrlKey || ev.metaKey, k = ev.key;
   if (mod) {
-    const map = { z: ev.shiftKey ? 'redo' : 'undo', y: 'redo', c: 'copy', x: 'cut', v: 'paste', d: 'duplicate', a: 'selectall', s: ev.shiftKey ? 'saveas' : 'save', e: 'export', f: 'find', o: 'open', n: 'new', ']': 'front', '[': 'back' };
+    const map = { z: ev.shiftKey ? 'redo' : 'undo', y: 'redo', c: ev.shiftKey ? 'copy-image' : 'copy', x: 'cut', v: 'paste', d: 'duplicate', a: 'selectall', s: ev.shiftKey ? 'saveas' : 'save', e: 'export', f: 'find', o: 'open', n: 'new', ']': 'front', '[': 'back' };
     const c = map[k.toLowerCase()];
     if (c) { ev.preventDefault(); cmd(c); }
     return;

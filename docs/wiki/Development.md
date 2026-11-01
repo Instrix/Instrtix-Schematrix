@@ -101,4 +101,12 @@ publishes `docs/` (this wiki) to GitHub Pages when it changes. Packaging lives i
 (PyInstaller), `package.py` (installers), `schematrix.iss` (Inno Setup), `launcher.py` and the icons (`icon.svg`
 is the source).
 
+### PyPI
+
+On a version tag the `pypi` job uploads the wheel and source archive to [PyPI](https://pypi.org/project/schematrix/)
+with trusted publishing (no token stored anywhere). It needs a one-time setup on pypi.org, under *Your account >
+Publishing > Add a new pending publisher*: project `schematrix`, owner `Instrix`, repository `Instrtix-Schematrix`,
+workflow `release.yml`, environment `pypi`. The build rewrites the README's relative links to absolute ones at the
+tag (`packaging/pypi_readme.py`) so its pictures show on PyPI. A failed upload does not stop the GitHub release.
+
 Commit messages: plain, no co-author or tool trailers.

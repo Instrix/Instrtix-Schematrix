@@ -75,6 +75,9 @@ s = Schematic('custom', theme={'base': 'formal', 'accent': '#b00020', 'lw': '1.2
 | | | `lw_pad` | open terminals, pads, white boxes (`lw_thin`) |
 | | | `lw_term` | bold terminals (`lw_plate`) |
 
+Fonts: the instrix themes use JetBrains Mono and Inter, `formal` TeX Gyre Termes (a Times clone) and `technical` TeX
+Gyre Heros (a Helvetica clone), all bundled with Schematrix, so every export looks the same everywhere.
+
 The editor shows every token of a custom theme, colours and line widths alike. Values are plain CSS values; braces,
 semicolons and angle brackets are removed. The original Instrix documentation figures used
 `{'lw_flag': '1.2', 'lw_pad': '1.4', 'lw_term': '1.8'}` (the legacy importer sets this for you).

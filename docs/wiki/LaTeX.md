@@ -20,6 +20,10 @@ version control.
 - Keep **Auto size** on (so the export is cropped to the drawing) and no page frame.
 - Write symbols with [markup](Text-Markup.md): `R_{1}`, `10 k\ohm`, `~{CS}`, `V_{OUT}`; TikZ turns them into
   `R\textsubscript{1}`, `10 k$\Omega$`, `\overline{CS}`.
+- For equations, write LaTeX maths in the label itself: `$A_v = -\frac{R_f}{R_{in}}$`. TikZ passes it to LaTeX
+  unchanged, so it is typeset by your document with its maths fonts ([details](Text-Markup.md#latex-maths)).
+- The `formal` and `technical` themes draw with TeX Gyre Termes / Heros (free Times / Helvetica clones that ship
+  with Schematrix), so PDF and SVG exports look the same on every computer.
 
 ## 2. Export TikZ
 

@@ -27,6 +27,7 @@ Press `?` in the editor for this list, `F1` for the [text markup](Text-Markup.md
 | `Ctrl Z` / `Ctrl Y` (`Ctrl Shift Z`) | Undo / redo |
 | `Ctrl X` / `Ctrl C` / `Ctrl V` | Cut / copy / paste (through the system clipboard, so across tabs and windows) |
 | `Ctrl D` | Duplicate |
+| `Ctrl Shift C` | Copy the selection (or the sheet) as an image |
 | `Ctrl A` | Select all |
 | `Ctrl F` | Find and replace |
 | `Ctrl ]` / `Ctrl [` | Bring to front / send to back |

@@ -32,6 +32,14 @@ drawing: exports and TikZ show them too.
   double-click a segment to add a corner.
 - Moving a part drags the wires attached to its pins and any wires teeing into them.
 
+### Auto-route
+
+Select one or more wires and choose *Edit > Auto-route selected wires* (or right-click > *Auto-route wire*): each
+is redrawn between its two ends along an orthogonal path that goes around part bodies, never touches other pins or
+wire ends (which would connect to them), avoids labels and texts, keeps a grid step away from bodies, avoids
+running along other wires and uses as few bends as it can. A quick way to work: draw a rough wire from pin to pin,
+then auto-route it. From Python: `s.autoroute(a, b)` (or `s.route(a, b, how='avoid')`) after placing the parts.
+
 ## Naming nets
 
 | Symbol | Python | Names the net… |

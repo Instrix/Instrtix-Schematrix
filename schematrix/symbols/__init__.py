@@ -6,7 +6,7 @@ See core.py for the geometry conventions and helpers.
 """
 from .core import (BODY, CATEGORIES, COMMON, ENUM, FLAG, FONT_SIZES, LEN, PRESETS, REGISTRY, Prop, Symbol, by_alias, catalog, get,
                    preset_for, prim_bbox, resolve, symbol, text_width)
-from . import passive, semiconductor, analog, logic, digital, sources, loads, electromech, tubes, signal, generic, nets  # noqa: F401  (registration)
+from . import passive, semiconductor, analog, logic, digital, sources, loads, electromech, tubes, signal, generic, nets, annotation, timing  # noqa: F401,E501  (registration)
 from .generic import parse_pins
 from . import custom  # noqa: E402,F401  (user-drawn symbols)
 

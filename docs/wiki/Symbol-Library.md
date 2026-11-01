@@ -7,7 +7,7 @@ In Python each symbol is a method of `Schematic` (`s.resistor(...)`), and so is 
 Every part also has **Reference**, **Value** and **Part number**, and can carry any number of
 [fields](Fields-and-Properties.md). Pins are named as listed; the netlist uses these names.
 
-**Categories:** [Passive](#passive) · [Semiconductor](#semiconductor) · [Analog](#analog) · [Logic](#logic) · [Sources](#sources) · [Loads & meters](#loads--meters) · [Electromechanical](#electromechanical) · [Vacuum tubes](#vacuum-tubes) · [Signal flow](#signal-flow) · [Generic](#generic) · [Nets](#nets)
+**Categories:** [Passive](#passive) · [Semiconductor](#semiconductor) · [Analog](#analog) · [Logic](#logic) · [Sources](#sources) · [Loads & meters](#loads--meters) · [Electromechanical](#electromechanical) · [Vacuum tubes](#vacuum-tubes) · [Signal flow](#signal-flow) · [Generic](#generic) · [Nets](#nets) · [Annotation](#annotation)
 
 ## Passive
 
@@ -1342,4 +1342,79 @@ Every part also has **Reference**, **Value** and **Part number**, and can carry 
 | Setting | Type | Default | |
 |---|---|---|---|
 | `kind` (Kind) | enum: loop, pad | `loop` | *shape*  |
+
+## Annotation
+
+### Brace
+
+<img src="img/symbols/brace.svg" alt="Brace" height="70">
+
+- **Python:** `s.brace(...)`  ·  **Reference prefix:** `A`
+- **Pins:** 
+- a curly brace spanning several parts; rotate it to face any side
+
+| Setting | Type | Default | |
+|---|---|---|---|
+| `length` (Length) | num | `80` | *shape* pin-to-pin distance |
+| `depth` (Depth) | num | `8` | *shape*  |
+| `text` (Text) | str | `` |  the annotation; text markup and $...$ maths work |
+
+### Callout number
+
+<img src="img/symbols/callout.svg" alt="Callout number" height="70">
+
+- **Python:** `s.callout(...)`  ·  **Reference prefix:** `A`
+- **Pins:** 
+- a numbered marker for referring to parts of the figure from the text
+
+| Setting | Type | Default | |
+|---|---|---|---|
+| `number` (Number) | str | `1` | *shape*  |
+| `size` (Radius) | num | `9` | *shape*  |
+| `fill` (Style) | enum: accent, ink, outline | `accent` | *shape*  |
+
+### Dimension
+
+<img src="img/symbols/dimension.svg" alt="Dimension" height="70">
+
+- **Python:** `s.dimension(...)`  ·  **Reference prefix:** `A`
+- **Pins:** 
+- a measurement between two points: double arrow, extension lines and a label
+
+| Setting | Type | Default | |
+|---|---|---|---|
+| `length` (Length) | num | `80` | *shape* pin-to-pin distance |
+| `ext` (Extension lines) | num | `8` | *shape* 0 for none |
+| `text` (Text) | str | `` |  the annotation; text markup and $...$ maths work |
+
+### Highlight box
+
+<img src="img/symbols/highlight.svg" alt="Highlight box" height="70">
+
+- **Python:** `s.highlight(...)`  ·  **Reference prefix:** `A`
+- **Pins:** 
+- a dashed accent frame drawing the eye to part of the figure
+
+| Setting | Type | Default | |
+|---|---|---|---|
+| `w` (Width) | num | `120` | *shape*  |
+| `h` (Height) | num | `80` | *shape*  |
+| `text` (Text) | str | `` |  the annotation; text markup and $...$ maths work |
+
+### Timing diagram
+
+<img src="img/symbols/timing.svg" alt="Timing diagram" height="70">
+
+- **Python:** `s.timing(...)`  ·  **Reference prefix:** `TD`
+- **Pins:** 
+- timing / waveform diagram from a WaveDrom-like description
+
+| Setting | Type | Default | |
+|---|---|---|---|
+| `signals` (Signals) | text | `CLK : p....... EN  : 0.1.....0. DATA: x..=.=..x \| A5 3C` | *shape* NAME : wave \| labels, one per line. p n clock, 0 1 level, z, x, = 2..9 data, . extend, \| gap |
+| `step` (Cycle width) | num | `24` | *shape*  |
+| `row` (Row pitch) | num | `30` | *shape*  |
+| `height` (Signal height) | num | `14` | *shape*  |
+| `grid` (Cycle grid) | bool | `False` | *shape*  |
+| `title` (Title) | str | `` |   |
 

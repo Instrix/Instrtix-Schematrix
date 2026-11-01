@@ -383,8 +383,12 @@ class Schematic:
         return Wire(el)
 
     def route(self, a, b, how='auto', style='') -> Wire:
-        """orthogonal wire from a to b: 'hv' (horizontal first), 'vh', 'hvh' / 'vhv' (dog-leg) or 'auto'"""
+        """orthogonal wire from a to b: 'hv' (horizontal first), 'vh', 'hvh' / 'vhv' (dog-leg), 'auto' (an L), or
+        'avoid' (around parts, labels and other wires; see autoroute)"""
         (x1, y1), (x2, y2) = a, b
+        if how == 'avoid':
+            from .route import route
+            return self.wire(*route(self.doc, a, b), style=style)
         if how == 'auto':
             how = 'hv' if abs(x2 - x1) >= abs(y2 - y1) else 'vh'
         if x1 == x2 or y1 == y2:
@@ -404,6 +408,10 @@ class Schematic:
     def connect(self, *pins, how='auto', style=''):
         """chain orthogonal routes through several points"""
         return [self.route(a, b, how, style) for a, b in zip(pins, pins[1:])]
+
+    def autoroute(self, a, b, style='') -> Wire:
+        """a wire from a to b that finds its own way around parts, other pins and labels (place the parts first)"""
+        return self.route(a, b, 'avoid', style)
 
     def text(self, x, y, s, cls='lbl', anchor='start'):
         return self._push({'type': 'text', 'x': x, 'y': y, 'text': str(s), 'cls': cls, 'anchor': anchor})

@@ -27,9 +27,9 @@ WebP from the editor work without any of it.
 ### Exported PNG / PDF text looks different from the editor, or shows boxes
 
 The default themes draw PDF / PNG text from the bundled fonts, so this should not happen; if it does, the install
-lacks `fonttools` and `brotli` (part of the `export` and `desktop` extras: `pip install fonttools brotli`). The
-`formal`, `technical` and `kicad` themes use system fonts: install Times New Roman / Helvetica or their Liberation
-stand-ins. SVG viewers need *Embed fonts* (or `--fonts`).
+lacks `fonttools` and `brotli` (part of the `export` and `desktop` extras: `pip install fonttools brotli`). Only
+the `kicad` theme uses system fonts (Liberation Sans is a good stand-in). SVG viewers need *Embed fonts* (or
+`--fonts`).
 
 ### A wire looks connected but the netlist says the pin is unconnected
 
@@ -79,5 +79,5 @@ Add `\usepackage{tikz}`; for `\resizebox` also `\usepackage{graphicx}`. See [LaT
 
 ### pipx upgrade says it is already up to date
 
-Installs from git are pinned to the commit; reinstall:
-`pipx install --force "schematrix[desktop] @ git+https://github.com/Instrix/Instrtix-Schematrix.git"`.
+You have the newest release. Installs from git (`... @ git+https://...`) are pinned to the commit instead; reinstall
+those with `pipx install --force "schematrix[desktop] @ git+https://github.com/Instrix/Instrtix-Schematrix.git"`.

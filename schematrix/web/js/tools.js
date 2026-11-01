@@ -398,8 +398,10 @@ function showContextMenu(x, y, id) {
     ['Send to back', 'back', 'Ctrl ['], null,
     ['Rotate', 'rotate', 'R'], ['Mirror', 'mirror', 'M'], ['Toggle accent', 'accent', 'E'], null,
     ['Cut', 'cut', 'Ctrl X'], ['Copy', 'copy', 'Ctrl C'], ['Duplicate', 'duplicate', 'Ctrl D'], null,
-    ['Export selection…', 'export-selection', ''], ['Delete', 'delete', 'Del'],
-  ] : [['Paste', 'paste', 'Ctrl V'], ['Select all', 'selectall', 'Ctrl A'], null, ['Fit to page', 'fit', 'F'], ['Export…', 'export', 'Ctrl E']];
+    ...(selected().some((e) => e.type === 'wire') ? [['Auto-route wire', 'autoroute', ''], null] : []),
+    ['Copy as image', 'copy-image', 'Ctrl Shift C'], ['Export selection…', 'export-selection', ''], ['Delete', 'delete', 'Del'],
+  ] : [['Paste', 'paste', 'Ctrl V'], ['Select all', 'selectall', 'Ctrl A'], null, ['Fit to page', 'fit', 'F'],
+    ['Copy as image', 'copy-image', 'Ctrl Shift C'], ['Export…', 'export', 'Ctrl E']];
   contextMenu(x, y, items);
 }
 svg.addEventListener('dblclick', (ev) => {

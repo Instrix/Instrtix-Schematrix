@@ -51,8 +51,8 @@ the whole sheet with them. *SVG (plain, like the originals)* is SVG without embe
 - **PDF and EPS** (and bitmaps from the CLI / Python / API) use `cairosvg` on the server (the `export` extra). Text in
   JetBrains Mono and Inter (the default themes) is drawn as vector outlines from the fonts bundled with Schematrix,
   so it looks the same on every computer, with no fonts to install; characters like `−`, `√`, `→` and `eₙ` included.
-  The text is then not selectable in the PDF. Themes that use system fonts (`formal`: Times, `technical`: Helvetica,
-  `kicad`) keep real text and need those fonts on the machine (Liberation Serif / Sans are good stand-ins).
+  The text is then not selectable in the PDF. The `formal` and `technical` themes do the same with the bundled TeX
+  Gyre Termes / Heros (Times / Helvetica clones); only `kicad` keeps real text in system fonts.
 
 ## From the command line
 
@@ -86,5 +86,10 @@ returns the file. See [HTTP API](HTTP-API.md).
 
 ## Copy and paste
 
-*Export > Copy SVG to clipboard* puts plain SVG text on the clipboard (paste into Inkscape, a web page, a Markdown
-file). Copy / paste of elements (`Ctrl C` / `Ctrl V`) uses the clipboard too, so parts move between sheets and windows.
+- *Export > Copy as image* (`Ctrl Shift C`, also on the right-click menu) puts a PNG of the selection, or of the
+  whole sheet when nothing is selected, on the clipboard: paste it straight into Word, Google Docs, Slack or an
+  e-mail. It uses the export settings you used last (scale, margin; a transparent background becomes the paper).
+- *Export > Copy as SVG* puts the SVG text on the clipboard, for Inkscape, Figma or a web page.
+
+Browsers allow this on `localhost` and over HTTPS (the desktop app qualifies); elsewhere, use Export. Copy / paste
+of elements (`Ctrl C` / `Ctrl V`) uses the clipboard too, so parts move between sheets and windows.

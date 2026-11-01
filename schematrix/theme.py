@@ -109,6 +109,14 @@ def css(theme=None) -> str:
 .accbox {{ fill: {t['accent_fill']}; stroke: {t['ink']}; stroke-width: {t['lw_body']}; }}
 .grp {{ fill: {t['surface']}; stroke: none; }}
 .frame {{ fill: none; stroke: {t['rule']}; stroke-width: {t['lw_thin']}; }}
+.hl {{ fill: none; stroke: {t['accent']}; stroke-width: {t['lw_plate']}; stroke-dasharray: 6 4; }}
+.callacc {{ fill: {t['accent']}; stroke: none; }}
+.tdata {{ fill: {t['paper']}; stroke: {t['ink']}; stroke-width: {t['lw']}; stroke-linejoin: {t['join']}; }}
+.tdata2 {{ fill: {t['accent_fill']}; stroke: {t['ink']}; stroke-width: {t['lw']}; stroke-linejoin: {t['join']}; }}
+.tx {{ fill: {t['rule']}; stroke: {t['ink']}; stroke-width: {t['lw']}; stroke-linejoin: {t['join']}; }}
+.gap {{ fill: {t['paper']}; stroke: none; }}
+.grid {{ fill: none; stroke: {t['rule']}; stroke-width: {t['lw_thin']}; stroke-dasharray: 2 3; }}
+.callink {{ fill: {t['ink']}; stroke: none; }}
 text {{ font-family: {t['mono']}; fill: {t['text']}; }}
 .lbl, .ref {{ font-size: 12px; font-weight: {t['weight']}; }}
 .ref {{ font-style: {t['ref_style']}; }}
@@ -122,6 +130,7 @@ text {{ font-family: {t['mono']}; fill: {t['text']}; }}
 .grplbl {{ font-size: 10px; font-weight: {t['strong']}; letter-spacing: .08em; fill: {t['muted']}; }}
 .note {{ font-family: {t['sans']}; font-size: 12px; fill: {t['muted']}; }}
 .title {{ font-family: {t['sans']}; font-size: 15px; font-weight: {t['strong']}; }}
+.callnum {{ font-family: {t['sans']}; font-size: 11px; font-weight: {t['strong']}; fill: {t['paper']}; }}
 """
 
 

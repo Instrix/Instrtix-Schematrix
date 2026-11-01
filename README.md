@@ -9,12 +9,15 @@ document.
 **Documentation: the [Schematrix wiki](docs/wiki/Home.md)** — every feature, how to draw, export, use the figures in
 LaTeX, simulate, script and deploy.
 
-- **Editor**: KiCad-style wiring (snap, stretch, junction dots, hops), buses, net labels, undo, tabs, find/replace,
-  page frames, a symbol editor and a Python script pane — in the browser or its own desktop window.
+- **Editor**: KiCad-style wiring (snap, stretch, junction dots, hops) with auto-routing, buses, net labels, undo,
+  tabs, find/replace, page frames, copy as image, a symbol editor and a Python script pane — in the browser or its
+  own desktop window.
 - **Symbols**: ~150 parts and variants, from passives, diodes and transistors to op-amps, sources and tubes, plus
   configurable logic: gates, flip-flops, registers, counters, muxes and custom ICs, any width.
-- **Output**: SVG, PNG, PDF, EPS and TikZ for LaTeX, in seven themes (including a Times/LaTeX one); SPICE, KiCad and
-  JSON netlists in and out, ready for ngspice.
+- **Documentation figures**: timing diagrams, braces, callouts, dimensions and highlight boxes; `$...$` LaTeX maths
+  in any label.
+- **Output**: SVG, PNG, PDF, EPS and TikZ for LaTeX (maths stays real LaTeX), in seven themes with bundled fonts, so
+  every export looks the same on any computer; SPICE, KiCad and JSON netlists in and out, ready for ngspice.
 - **Scripting**: `from schematrix import Schematic` — the same documents from Python, the CLI or the HTTP API.
 - **Runs** natively on Windows, Linux and macOS, or as a Docker web app (private or public).
 
@@ -67,8 +70,8 @@ checksums: [Releases](https://github.com/Instrix/Instrtix-Schematrix/releases).
 
 ### With Python
 
-Needs Python 3.10 or newer. Schematrix is not on PyPI; pip installs it straight from this repository (below), or
-from the wheel attached to each release.
+Needs Python 3.10 or newer. Schematrix is on [PyPI](https://pypi.org/project/schematrix/): `pip install schematrix`
+(details below).
 
 ### Extras
 
@@ -88,12 +91,12 @@ still works without `export` (it is drawn in the browser); PDF needs it.
 PATH:
 
 ```bash
-pipx install "schematrix[desktop] @ git+https://github.com/Instrix/Instrtix-Schematrix.git"
+pipx install "schematrix[desktop]"
 schematrix                                   # opens the editor
-pipx upgrade schematrix                      # later: update to the latest main
+pipx upgrade schematrix                      # later: update to the newest release
 ```
 
-Pin a release with `...instrtix-schematrix.git@v0.1.0`.
+Pin a release with `"schematrix[desktop]==0.2.7"`; the newest unreleased code: `"schematrix[desktop] @ git+https://github.com/Instrix/Instrtix-Schematrix.git"`.
 
 ### pip in a virtual environment (recommended for scripting)
 
@@ -104,7 +107,7 @@ Linux / macOS:
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-pip install "schematrix[export] @ git+https://github.com/Instrix/Instrtix-Schematrix.git"
+pip install "schematrix[export]"
 ```
 
 Windows (PowerShell):
@@ -112,13 +115,13 @@ Windows (PowerShell):
 ```powershell
 py -m venv .venv
 .venv\Scripts\Activate.ps1
-pip install "schematrix[export] @ git+https://github.com/Instrix/Instrtix-Schematrix.git"
+pip install "schematrix[export]"
 ```
 
 To add it to a project's `requirements.txt`:
 
 ```
-schematrix[export] @ git+https://github.com/Instrix/Instrtix-Schematrix.git@v0.1.0
+schematrix[export]==0.2.7
 ```
 
 ### From a clone (for development)
