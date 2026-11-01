@@ -46,7 +46,7 @@ schematrix                      # opens the editor
 pipx upgrade schematrix         # update (pipx install --force if it says "up to date")
 ```
 
-Pin a release by adding its tag: `"schematrix[desktop] @ git+https://github.com/Instrix/Instrtix-Schematrix.git@v0.2.6"`.
+Pin a release by adding its tag: `"schematrix[desktop] @ git+https://github.com/Instrix/Instrtix-Schematrix.git@v0.2.7"`.
 
 ## pip in a virtual environment
 
@@ -59,7 +59,7 @@ python -c "import schematrix; print(schematrix.__version__)"
 In a `requirements.txt`:
 
 ```
-schematrix[export] @ git+https://github.com/Instrix/Instrtix-Schematrix.git@v0.2.6
+schematrix[export] @ git+https://github.com/Instrix/Instrtix-Schematrix.git@v0.2.7
 ```
 
 ## From a clone (development)
