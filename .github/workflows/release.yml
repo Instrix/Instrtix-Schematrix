@@ -89,8 +89,9 @@ jobs:
           path: dist/*
           if-no-files-found: error
 
-  pypi:        # trusted publishing: pypi.org must list this repo, workflow release.yml and environment pypi
-    if: startsWith(github.ref, 'refs/tags/v')
+  pypi:        # trusted publishing: pypi.org must list this repo, workflow release.yml and environment pypi;
+               # off until the repository variable PUBLISH_PYPI is set to true (Settings > Secrets and variables)
+    if: startsWith(github.ref, 'refs/tags/v') && vars.PUBLISH_PYPI == 'true'
     needs: python
     runs-on: ubuntu-latest
     environment: { name: pypi, url: 'https://pypi.org/project/schematrix/' }

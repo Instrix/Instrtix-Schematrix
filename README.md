@@ -70,8 +70,8 @@ checksums: [Releases](https://github.com/Instrix/Instrtix-Schematrix/releases).
 
 ### With Python
 
-Needs Python 3.10 or newer. Schematrix is on [PyPI](https://pypi.org/project/schematrix/): `pip install schematrix`
-(details below).
+Needs Python 3.10 or newer. pip installs Schematrix straight from this repository (below), or from the wheel
+attached to each release. (It is not on PyPI yet.)
 
 ### Extras
 
@@ -91,12 +91,12 @@ still works without `export` (it is drawn in the browser); PDF needs it.
 PATH:
 
 ```bash
-pipx install "schematrix[desktop]"
+pipx install "schematrix[desktop] @ git+https://github.com/Instrix/Instrtix-Schematrix.git"
 schematrix                                   # opens the editor
-pipx upgrade schematrix                      # later: update to the newest release
+pipx upgrade schematrix                      # later: update (pipx install --force if it says "up to date")
 ```
 
-Pin a release with `"schematrix[desktop]==0.2.7"`; the newest unreleased code: `"schematrix[desktop] @ git+https://github.com/Instrix/Instrtix-Schematrix.git"`.
+Pin a release by adding its tag: `"schematrix[desktop] @ git+https://github.com/Instrix/Instrtix-Schematrix.git@v0.2.6"`.
 
 ### pip in a virtual environment (recommended for scripting)
 
@@ -107,7 +107,7 @@ Linux / macOS:
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-pip install "schematrix[export]"
+pip install "schematrix[export] @ git+https://github.com/Instrix/Instrtix-Schematrix.git"
 ```
 
 Windows (PowerShell):
@@ -115,13 +115,13 @@ Windows (PowerShell):
 ```powershell
 py -m venv .venv
 .venv\Scripts\Activate.ps1
-pip install "schematrix[export]"
+pip install "schematrix[export] @ git+https://github.com/Instrix/Instrtix-Schematrix.git"
 ```
 
 To add it to a project's `requirements.txt`:
 
 ```
-schematrix[export]==0.2.7
+schematrix[export] @ git+https://github.com/Instrix/Instrtix-Schematrix.git@v0.2.6
 ```
 
 ### From a clone (for development)

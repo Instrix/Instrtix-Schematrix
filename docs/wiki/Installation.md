@@ -14,9 +14,8 @@ checksums: [Releases](https://github.com/Instrix/Instrtix-Schematrix/releases).
 
 ## With Python
 
-Schematrix needs **Python 3.10 or newer** and is on [PyPI](https://pypi.org/project/schematrix/):
-`pip install schematrix`. The wheel is also attached to each GitHub release, and pip can install the newest
-unreleased code from the repository (`"schematrix @ git+https://github.com/Instrix/Instrtix-Schematrix.git"`).
+Schematrix needs **Python 3.10 or newer**. pip installs it straight from the GitHub repository (below), or from the
+wheel attached to each release. It is not on PyPI yet.
 
 ## Which way?
 
@@ -42,25 +41,25 @@ unreleased code from the repository (`"schematrix @ git+https://github.com/Instr
 [pipx](https://pipx.pypa.io) installs the `schematrix` command in its own environment and puts it on your PATH.
 
 ```bash
-pipx install "schematrix[desktop]"
+pipx install "schematrix[desktop] @ git+https://github.com/Instrix/Instrtix-Schematrix.git"
 schematrix                      # opens the editor
-pipx upgrade schematrix         # update to the newest release
+pipx upgrade schematrix         # update (pipx install --force if it says "up to date")
 ```
 
-Pin a release with `"schematrix[desktop]==0.2.7"`; the newest unreleased code: `"schematrix[desktop] @ git+https://github.com/Instrix/Instrtix-Schematrix.git"`.
+Pin a release by adding its tag: `"schematrix[desktop] @ git+https://github.com/Instrix/Instrtix-Schematrix.git@v0.2.6"`.
 
 ## pip in a virtual environment
 
 ```bash
 python3 -m venv .venv && source .venv/bin/activate          # Windows: py -m venv .venv; .venv\Scripts\Activate.ps1
-pip install "schematrix[export]"
+pip install "schematrix[export] @ git+https://github.com/Instrix/Instrtix-Schematrix.git"
 python -c "import schematrix; print(schematrix.__version__)"
 ```
 
 In a `requirements.txt`:
 
 ```
-schematrix[export]==0.2.7
+schematrix[export] @ git+https://github.com/Instrix/Instrtix-Schematrix.git@v0.2.6
 ```
 
 ## From a clone (development)
