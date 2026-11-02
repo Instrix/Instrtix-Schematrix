@@ -1,6 +1,6 @@
 """Rewrite README.md's relative links for PyPI, which shows the README without the repository around it.
 
-    python packaging/pypi_readme.py v0.2.10      # images -> raw files at that tag, pages -> GitHub at that tag
+    python packaging/pypi_readme.py v0.2.11      # images -> raw files at that tag, pages -> GitHub at that tag
 """
 import re
 import sys
