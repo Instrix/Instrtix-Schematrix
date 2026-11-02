@@ -7,7 +7,7 @@ From left to right: the **tool buttons** and **symbol palette**, the **sheet**, 
 the active tool, the selection and the cursor position. The side panels can be resized by dragging their edges.
 
 The first time it opens, the editor offers a **guided tour** (*Take the tour* / *Not now*; it asks only once);
-*Help > Tour of the editor* starts it any time (add `?tour=0` to the address to skip the offer, e.g. for
+*Help > Tutorial* starts it any time (add `?tour=0` to the address to skip the offer, e.g. for
 screenshots).
 
 ## Menus

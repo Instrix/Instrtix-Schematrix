@@ -4,7 +4,7 @@ This walk-through draws an RC low-pass filter, names its nets, exports it, and t
 Python. It takes about ten minutes. Install first ([Installation](Installation.md)) and run `schematrix`.
 
 The first time the editor opens, it offers a short **guided tour** that points out each part of it: the palette, tools, sheet,
-properties, netlist and script panes, files, export and help. Replay it any time from *Help > Tour of the editor*.
+properties, netlist and script panes, files, export and help. Replay it any time from *Help > Tutorial*.
 
 ## 1. Place parts
 

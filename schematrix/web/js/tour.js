@@ -1,5 +1,5 @@
 // The guided tour: a spotlight on each part of the editor with a short explanation. The first time the editor opens
-// it offers the tour (the answer is remembered in this browser); Help > Tour of the editor starts it any time.
+// it offers the tour (the answer is remembered in this browser); Help > Tutorial starts it any time.
 // ?tour=0 keeps the offer away (screenshots, tests).
 import { showPane } from './commands.js';
 import { renderInspector } from './inspector.js';
@@ -39,7 +39,7 @@ const STEPS = [
   { title: 'Welcome to Schematrix',
     text: 'A quick tour of the editor: where the parts are, how to wire them, and how to get figures, netlists and '
       + 'LaTeX out. It takes about a minute. Use <kbd>→</kbd> / <kbd>←</kbd> or the buttons; <kbd>Esc</kbd> ends it. '
-      + 'You can replay it any time from <b>Help › Tour of the editor</b>.' },
+      + 'You can replay it any time from <b>Help › Tutorial</b>.' },
   { el: () => $('#palette').parentElement, side: 'right', title: 'The symbol palette',
     text: 'Every part, by category: passives, semiconductors, op-amps, logic, sources, nets, annotations and timing '
       + 'diagrams. <b>Drag</b> one onto the sheet, or <b>click</b> it and click on the sheet (repeatable). '
@@ -130,7 +130,7 @@ function offerTour() {
   const d = document.createElement('div');
   d.innerHTML = '<p style="margin:0 0 6px">Would you like a quick tour of the editor? It shows where everything is — '
     + 'the parts, wiring, properties, netlists, scripts and exporting — in about a minute.</p>'
-    + '<p style="margin:0 0 14px;color:var(--faint);font-size:12px">You can start it later from <b>Help › Tour of the editor</b>.</p>'
+    + '<p style="margin:0 0 14px;color:var(--faint);font-size:12px">You can start it later from <b>Help › Tutorial</b>.</p>'
     + '<div class="row" style="justify-content:flex-end"><button class="ghost" data-t="no">Not now</button>'
     + '<button class="primary" data-t="yes">Take the tour</button></div>';
   d.querySelector('[data-t=no]').onclick = () => { remember(); closeModal(); toast('The tour is in the Help menu whenever you want it'); };

@@ -54,7 +54,7 @@ def _chromium():
 def _chromium_window(exe, url):
     """open url as a standalone app window (no tabs or address bar) with its own profile; returns the process"""
     import subprocess
-    profile = Path(os.environ.get('XDG_CACHE_HOME') or Path.home() / '.cache') / 'schematrix' / 'chromium-profile'
+    profile = _app_data() / 'chromium-profile'
     profile.mkdir(parents=True, exist_ok=True)
     return subprocess.Popen([exe, f'--app={url}', f'--user-data-dir={profile}', '--no-first-run', '--no-default-browser-check',
                              '--window-size=1440,900', '--class=Schematrix'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -76,6 +76,18 @@ def cmd_serve(a):
     if a.open:
         threading.Timer(1.0, lambda: webbrowser.open(url)).start()
     _serve(a.host, a.port, a.workspace)
+
+
+def _app_data() -> Path:
+    """where the desktop app keeps its window profile (browser storage: autosave, settings)"""
+    if sys.platform == 'win32':
+        base = Path(os.environ.get('LOCALAPPDATA') or Path.home() / 'AppData' / 'Local') / 'Schematrix'
+    elif sys.platform == 'darwin':
+        base = Path.home() / 'Library' / 'Application Support' / 'Schematrix'
+    else:
+        base = Path(os.environ.get('XDG_CACHE_HOME') or Path.home() / '.cache') / 'schematrix'
+    base.mkdir(parents=True, exist_ok=True)
+    return base
 
 
 class _WindowBridge:
@@ -174,7 +186,8 @@ def cmd_app(a):
                 win = webview.create_window('Schematrix', url, width=1440, height=900, min_size=(900, 600), js_api=bridge)
                 bridge._window = win
                 win.events.closing += bridge._closing
-                webview.start(gui=gui)
+                # not private: the editor keeps its autosave and settings (and the tutorial's "asked" note) across launches
+                webview.start(gui=gui, private_mode=False, storage_path=str(_app_data() / 'webview'))
                 return
             except Exception as e:  # noqa: BLE001  (any toolkit failure: fall back to the browser)
                 why = f'the native window failed ({e})'
