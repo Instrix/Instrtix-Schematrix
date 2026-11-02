@@ -2,12 +2,15 @@
 from __future__ import annotations
 
 import argparse
+import html
 import json
 import os
 import socket
 import sys
+import tempfile
 import threading
 import time
+import traceback
 import webbrowser
 from pathlib import Path
 
@@ -62,7 +65,9 @@ def _serve(host, port, workspace=None, log='info'):
         os.environ['SCHEMATRIX_WORKSPACE'] = str(Path(workspace).expanduser().resolve())
     import uvicorn
     from .server import create_app
-    uvicorn.run(create_app(), host=host, port=port, log_level=log)
+    # no console (the Windows app, pythonw): uvicorn's own logging setup needs sys.stdout / stderr and would fail
+    quiet = sys.stdout is None or sys.stderr is None
+    uvicorn.run(create_app(), host=host, port=port, log_level=log, **({'log_config': None} if quiet else {}))
 
 
 def cmd_serve(a):
@@ -110,16 +115,35 @@ def cmd_app(a):
             webbrowser.open(url)
         return
     port = a.port or _free_port(APP_PORT)
-    t = threading.Thread(target=_serve, args=('127.0.0.1', port, a.workspace, 'warning'), daemon=True)
+    failed = []
+
+    def serve():
+        try:
+            _serve('127.0.0.1', port, a.workspace, 'warning')
+        except BaseException:  # noqa: BLE001  (shown in the window below instead of a dead page)
+            failed.append(traceback.format_exc())
+    t = threading.Thread(target=serve, daemon=True)
     t.start()
     url = f'http://127.0.0.1:{port}/'
     t0 = time.monotonic()
-    for _ in range(100):
+    up = False
+    while time.monotonic() - t0 < 30 and t.is_alive():   # a cold start of the packaged app can take a while
         try:
             with socket.create_connection(('127.0.0.1', port), timeout=0.2):
+                up = True
                 break
         except OSError:
-            time.sleep(0.05)
+            time.sleep(0.1)
+    if not up:                                           # say why in the window rather than "refused to connect"
+        why_not = failed[0] if failed else 'The editor server did not start within 30 seconds.'
+        print(why_not, file=sys.stderr)
+        page = Path(tempfile.gettempdir()) / 'schematrix-error.html'
+        page.write_text('<!doctype html><meta charset="utf-8"><title>Schematrix</title><body style="font:14px sans-serif;'
+                        'margin:2em"><h2>Schematrix could not start its editor</h2><p>Please report this, with the text below, '
+                        'at <a href="https://github.com/Instrix/Instrtix-Schematrix/issues">github.com/Instrix/'
+                        'Instrtix-Schematrix/issues</a>.</p><pre style="white-space:pre-wrap">'
+                        + html.escape(why_not) + '</pre>', encoding='utf-8')
+        url = page.as_uri()
     why = 'asked for the browser' if engine == 'browser' else None
     if engine == 'chromium':
         exe = _chromium()

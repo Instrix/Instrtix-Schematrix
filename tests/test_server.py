@@ -119,3 +119,29 @@ def test_app_window_asks_before_closing_with_unsaved_tabs():
     assert b._window.js == ['window.schematrix && window.schematrix.confirmQuit()']
     b.quit()
     assert b._window.destroyed and b._closing() is True           # Close in the dialog really quits
+
+
+def test_server_starts_without_a_console(tmp_path):
+    """the windowed Windows app has sys.stdout / stderr = None; uvicorn's logging setup used to crash on that"""
+    import socket
+    import subprocess
+    import sys
+    import time
+    import urllib.request
+    s = socket.socket(); s.bind(('127.0.0.1', 0)); port = s.getsockname()[1]; s.close()
+    code = ("import sys; sys.stdout = None; sys.stderr = None\n"
+            f"from schematrix.cli import _serve; _serve('127.0.0.1', {port}, {str(tmp_path)!r}, 'warning')")
+    p = subprocess.Popen([sys.executable, '-c', code], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    try:
+        for _ in range(100):
+            try:
+                assert urllib.request.urlopen(f'http://127.0.0.1:{port}/api/health', timeout=1).status == 200
+                break
+            except OSError:
+                if p.poll() is not None:
+                    raise AssertionError('the server exited')
+                time.sleep(0.1)
+        else:
+            raise AssertionError('the server did not start')
+    finally:
+        p.kill()

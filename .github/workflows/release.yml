@@ -66,6 +66,11 @@ jobs:
           "$exe" render schematrix/examples/analog/inverting-amplifier.json -o smoke -f pdf,png
           ls -l smoke
           ls smoke/*.pdf smoke/*.png
+          # the editor's server must come up (on Windows the app has no console, as when people double-click it)
+          "$exe" serve --port 8799 --workspace smoke-ws > /dev/null 2>&1 &
+          for i in $(seq 1 60); do curl -sf http://127.0.0.1:8799/api/health && break; sleep 1; done
+          curl -sf http://127.0.0.1:8799/api/health
+          curl -sf -o /dev/null http://127.0.0.1:8799/
       - run: python packaging/package.py
       - uses: actions/upload-artifact@v4
         with:

@@ -1,6 +1,14 @@
 """Entry point for frozen builds: no arguments opens the editor window; any arguments go to the CLI."""
 import os
 import sys
+import tempfile
+
+# a windowed build has no console: Python then sets sys.stdout / stderr to None, which breaks libraries that log
+# (uvicorn did, leaving the window on "refused to connect"). Send them to a log file people can find and send us.
+if sys.stdout is None or sys.stderr is None:
+    _log = open(os.path.join(tempfile.gettempdir(), 'schematrix.log'), 'a', buffering=1, encoding='utf-8', errors='replace')
+    sys.stdout = sys.stdout or _log
+    sys.stderr = sys.stderr or _log
 
 # Windows and macOS builds carry their own Cairo (for PDF / PNG export). cairocffi looks it up with
 # ctypes.util.find_library, which does not search the bundle: point it there before anything imports it.
