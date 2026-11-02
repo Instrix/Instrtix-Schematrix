@@ -193,11 +193,14 @@ class Prop:
     choices: list | None = None
     label: str = ''
     help: str = ''
+    labels: dict | None = None  # enum: value -> what the editor shows ('tvs_uni' -> 'TVS (unidirectional)')
 
     def spec(self, name):
         d = {'default': self.default, 'type': self.type, 'geom': self.geom, 'label': self.label or name.replace('_', ' ')}
         if self.choices:
             d['choices'] = self.choices
+        if self.labels:
+            d['choice_labels'] = self.labels
         if self.help:
             d['help'] = self.help
         return d
@@ -211,8 +214,8 @@ def BODY(d):
     return Prop(d, 'num', geom=True, label='Body')
 
 
-def ENUM(default, choices, label, geom=True, help=''):
-    return Prop(default, 'enum', geom, list(choices), label, help)
+def ENUM(default, choices, label, geom=True, help='', labels=None):
+    return Prop(default, 'enum', geom, list(choices), label, help, labels)
 
 
 def FLAG(default, label, geom=True, help=''):
@@ -245,6 +248,7 @@ class Symbol:
     # editor resize handles: {'x': size setting along local x, 'y': … along y, 'from': 'center' | 'corner'}; the editor
     # keeps the opposite side in place while a handle is dragged (web/js/tools.js, cresize)
     resize: dict | None = None
+    variant_tiles: bool = True      # False: one palette tile; the variants are a setting (and still found by search)
 
     def __post_init__(self):
         if self.is_part is None:
@@ -295,7 +299,7 @@ class Symbol:
                 'props': {k: p.spec(k) for k, p in self.all_props().items()},
                 'geom_keys': self.geom_keys(), 'geometry': self.geometry(),
                 'presets': [{'name': p[0], 'title': p[1], 'props': p[2], 'geometry': self.geometry(p[2])} for p in self.presets],
-                'custom': self.custom, 'resize': self.resize}
+                'custom': self.custom, 'resize': self.resize, 'variant_tiles': self.variant_tiles}
 
 
 REGISTRY: dict[str, Symbol] = {}

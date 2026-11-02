@@ -25,9 +25,10 @@ export function buildPalette(filter = '') {
   let lastCat = null, grid = null;
   const same = (a, b) => JSON.stringify(a || {}) === JSON.stringify(b || {});
   for (const e of S.catList) {
-    // one tile per preset (Zener diode, NAND gate, ...); the bare symbol too unless a preset stands for it
+    // one tile per preset (NAND gate, ...); the bare symbol too unless a preset stands for it. Symbols whose variants
+    // are a setting (the diode's Kind) show one tile, and their variants only when a search names them ("zener")
     const tiles = (e.presets || []).some((p) => same(p.props, {})) ? [] : [{ name: e.name, title: e.title, props: {}, geometry: e.geometry }];
-    tiles.push(...(e.presets || []));
+    if (e.variant_tiles !== false || f) tiles.push(...(e.presets || []));
     const shown = tiles.filter((t) => !f || t.title.toLowerCase().includes(f) || t.name.includes(f) || e.name.includes(f)
       || e.category.toLowerCase().includes(f));
     if (!shown.length) continue;

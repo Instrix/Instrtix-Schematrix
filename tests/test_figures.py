@@ -59,3 +59,13 @@ def test_resize_handles_name_real_size_settings():
         for axis in ('x', 'y'):
             if spec.get(axis):
                 assert props[spec[axis]]['type'] == 'num' and props[spec[axis]]['geom'], (name, axis)
+
+
+def test_diode_is_one_tile_with_named_kinds():
+    from schematrix import Schematic
+    from schematrix import symbols as SYM
+    d = next(e for e in SYM.catalog() if e['name'] == 'diode')
+    assert d['variant_tiles'] is False and len(d['presets']) >= 10          # variants: search, methods, imports
+    labels = d['props']['kind']['choice_labels']
+    assert set(labels) == set(d['props']['kind']['choices']) and labels['tvs_uni'] == 'TVS (unidirectional)'
+    assert Schematic().zener((0, 0)).props['kind'] == 'zener'               # s.zener(...) still places one

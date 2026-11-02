@@ -11,6 +11,10 @@ M_FIELDS = ('Vds max', 'Id max', 'Rds(on)', 'Vgs(th)')
 
 DIODE_KINDS = ['standard', 'schottky', 'zener', 'avalanche', 'tvs', 'tvs_uni', 'led', 'photodiode', 'varactor', 'tunnel',
                'pin', 'laser', 'step_recovery', 'shockley']
+DIODE_KIND_NAMES = {'standard': 'Standard (rectifier / signal)', 'schottky': 'Schottky', 'zener': 'Zener', 'avalanche': 'Avalanche',
+                    'tvs': 'TVS (bidirectional)', 'tvs_uni': 'TVS (unidirectional)', 'led': 'LED', 'photodiode': 'Photodiode',
+                    'varactor': 'Varactor', 'tunnel': 'Tunnel', 'pin': 'PIN', 'laser': 'Laser', 'step_recovery': 'Step recovery',
+                    'shockley': 'Shockley (4-layer)'}
 
 DIODE_PRESETS = (
     ('zener', 'Zener diode', {'kind': 'zener'}, ('D_Zener', 'D_Zener_Small', 'BZX84', 'Zener')),
@@ -31,8 +35,10 @@ DIODE_PRESETS = (
 
 # ---------------------------------------------------------------- diodes
 @symbol('diode', 'Diode', 'Semiconductor', 'D', 'D {A} {K} {model}',
-        {'length': LEN(60), 'kind': ENUM('standard', DIODE_KINDS, 'Kind')}, model='DMOD', fields=D_FIELDS,
-        pin_numbers={'K': '1', 'A': '2'}, presets=DIODE_PRESETS,
+        {'length': LEN(60), 'kind': ENUM('standard', DIODE_KINDS, 'Kind', labels=DIODE_KIND_NAMES,
+                                         help='Zener, Schottky, LED, TVS, photodiode, varactor, …')},
+        model='DMOD', fields=D_FIELDS, pin_numbers={'K': '1', 'A': '2'}, presets=DIODE_PRESETS, variant_tiles=False,
+        help='every kind of diode in one part: pick the kind in Properties',
         aliases=('D', 'D_Small', 'D_Filled', 'Diode', '1N4148', '1N4007'))
 def diode(p):
     h = abs(float(p['length'])) / 2

@@ -188,7 +188,7 @@ function buildInspector() {
       const v = e.props?.[k] ?? spec.default;
       let input;
       if (spec.type === 'bool') input = chk(v, setp(e, k));
-      else if (spec.type === 'enum') input = sel_(v, spec.choices, setp(e, k));
+      else if (spec.type === 'enum') input = sel_(v, spec.choices.map((c) => [c, spec.choice_labels?.[c] ?? c]), setp(e, k));
       else if (spec.type === 'num') input = inp(v, setp(e, k), { type: 'number', mono: true });
       else if (spec.type === 'text') {
         input = document.createElement('textarea'); input.value = v; input.rows = 3;

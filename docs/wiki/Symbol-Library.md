@@ -248,12 +248,13 @@ Every part also has **Reference**, **Value** and **Part number**, and can carry 
 
 - **Python:** `s.diode(...)`  ·  **Reference prefix:** `D`  ·  **SPICE:** `D {A} {K} {model}`
 - **Pins:** `A`, `K`
+- every kind of diode in one part: pick the kind in Properties
 - **Suggested fields:** Reverse voltage, Forward current, Forward voltage, Power
 
 | Setting | Type | Default | |
 |---|---|---|---|
 | `length` (Length) | num | `60` | *shape* pin-to-pin distance |
-| `kind` (Kind) | enum: standard, schottky, zener, avalanche, tvs, tvs_uni, led, photodiode, varactor, tunnel, pin, laser, step_recovery, shockley | `standard` | *shape*  |
+| `kind` (Kind) | enum: standard, schottky, zener, avalanche, tvs, tvs_uni, led, photodiode, varactor, tunnel, pin, laser, step_recovery, shockley | `standard` | *shape* Zener, Schottky, LED, TVS, photodiode, varactor, … |
 
 **Named variants** (each has its own palette tile and Python method):
 

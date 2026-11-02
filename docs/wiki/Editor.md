@@ -42,8 +42,9 @@ Most tools return to Select with `Esc`.
 - **Search** with the box above (or `/`); it matches titles, names, categories and variants ("zener", "nand",
   "shift register").
 - **Fold** a category by clicking its heading (remembered per browser).
-- **Variants** such as *Zener diode* or *NAND gate* have their own tiles; they are the same symbol with preset settings
-  (see [Symbol library](Symbol-Library.md)).
+- **Variants** such as *NAND gate* have their own tiles; they are the same symbol with preset settings (see
+  [Symbol library](Symbol-Library.md)). **Diodes** are one tile: place a *Diode* and choose its *Kind* in Properties
+  (Zener, Schottky, LED, TVS, photodiode, varactor, …); searching for a kind ("zener") still shows its own tile.
 - **Place**: drag a tile onto the sheet for one part, or click it and then click the sheet repeatedly.
 - **Right-click** a tile to start a [custom symbol](Custom-Symbols.md) from it (or to edit a custom one; those carry
   a ✎ mark).

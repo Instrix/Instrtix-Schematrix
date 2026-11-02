@@ -2,13 +2,38 @@
 // it offers the tour (the answer is remembered in this browser); Help > Tour of the editor starts it any time.
 // ?tour=0 keeps the offer away (screenshots, tests).
 import { showPane } from './commands.js';
-import { S } from './state.js';
+import { renderInspector } from './inspector.js';
+import { newDoc, openTab, renderTabs, S, switchTab } from './state.js';
 import { closeModal, modal, toast } from './ui.js';
 import { $ } from './util.js';
 
 const KEY = 'schematrix-tour-done';
 const WIKI = 'https://instrix.github.io/Instrtix-Schematrix/wiki/Home.html';
 const menu = (name) => [...document.querySelectorAll('.menus .menu')].find((m) => m.firstElementChild?.textContent.trim() === name);
+
+// a throw-away sheet with one selected diode, to show where a part's type is chosen; removed when the step ends
+let demo = null;
+function openDemo() {
+  if (demo) return;
+  const prev = S.cur, doc = newDoc();
+  doc.meta.title = 'Tour example';
+  doc.elements.push({ id: 'e1', type: 'comp', sym: 'diode', x: 120, y: 80, rot: 0, props: { kind: 'zener', ref: 'D1', value: '5V1' } });
+  const t = openTab(doc);
+  t.sel = new Set(['e1']);
+  showPane('props'); renderInspector();
+  demo = { t, prev };
+}
+function closeDemo() {
+  if (!demo) return;
+  const { t, prev } = demo;
+  demo = null;
+  S.tabs.splice(S.tabs.indexOf(t), 1);
+  if (S.tabs.includes(prev)) switchTab(prev);
+  else if (S.tabs.length) switchTab(S.tabs[0]);
+  else openTab(newDoc());
+  renderTabs();
+}
+const field = (label) => [...document.querySelectorAll('#pane-props .f')].find((f) => f.firstElementChild?.textContent === label);
 
 const STEPS = [
   { title: 'Welcome to Schematrix',
@@ -19,6 +44,11 @@ const STEPS = [
     text: 'Every part, by category: passives, semiconductors, op-amps, logic, sources, nets, annotations and timing '
       + 'diagrams. <b>Drag</b> one onto the sheet, or <b>click</b> it and click on the sheet (repeatable). '
       + 'Press <kbd>/</kbd> to search. Right-click a tile to customise it in the symbol editor.' },
+  { el: () => field('Kind') || $('#right'), side: 'left', before: openDemo, after: closeDemo, title: 'Choosing a type',
+    text: 'Many parts come in several types, chosen in <b>Properties</b> once the part is selected. A <b>Diode</b> '
+      + 'is one tile in the palette: place it, then pick its <b>Kind</b> here — Zener, Schottky, LED, TVS, photodiode, '
+      + 'varactor… The same goes for gates (inputs, shape), sources (DC, AC, pulse…) and transistors. Searching the '
+      + 'palette for a type (<code>zener</code>) also finds it.' },
   { el: () => $('#tools'), side: 'right', title: 'Tools',
     text: '<kbd>V</kbd> select, <kbd>W</kbd> wire, <kbd>L</kbd> net label, <kbd>T</kbd> text, <kbd>B</kbd> box, '
       + '<kbd>A</kbd> arrow. Each tool shows its keys in the hint bar at the bottom of the sheet.' },
