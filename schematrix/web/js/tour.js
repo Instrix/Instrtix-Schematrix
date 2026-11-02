@@ -1,8 +1,9 @@
-// The guided tour: a spotlight on each part of the editor with a short explanation. It starts by itself the first
-// time the editor opens (remembered in this browser) and from Help > Tour of the editor. ?tour=0 keeps it away
-// (screenshots, tests).
+// The guided tour: a spotlight on each part of the editor with a short explanation. The first time the editor opens
+// it offers the tour (the answer is remembered in this browser); Help > Tour of the editor starts it any time.
+// ?tour=0 keeps the offer away (screenshots, tests).
 import { showPane } from './commands.js';
 import { S } from './state.js';
+import { closeModal, modal, toast } from './ui.js';
 import { $ } from './util.js';
 
 const KEY = 'schematrix-tour-done';
@@ -85,12 +86,30 @@ export function endTour(done = true) {
   if (done) try { localStorage.setItem(KEY, '1'); } catch { /* storage blocked: it may show again */ }
 }
 
-// the first time the editor opens in this browser
+// the first time the editor opens in this browser: offer the tour
 export function maybeStartTour() {
   if (new URLSearchParams(location.search).get('tour') === '0') return;
   let seen = false;
-  try { seen = !!localStorage.getItem(KEY); } catch { seen = true; }   // no storage: don't nag on every visit
-  if (!seen) setTimeout(startTour, 600);
+  try { seen = !!localStorage.getItem(KEY); } catch { seen = true; }   // no storage: don't ask on every visit
+  if (!seen) setTimeout(offerTour, 600);
+}
+
+function offerTour() {
+  if (!$('#modal').hidden) return;                  // something else is open (a file dialog): ask another time
+  const remember = () => { try { localStorage.setItem(KEY, '1'); } catch { /* best effort */ } };
+  const d = document.createElement('div');
+  d.innerHTML = '<p style="margin:0 0 6px">Would you like a quick tour of the editor? It shows where everything is — '
+    + 'the parts, wiring, properties, netlists, scripts and exporting — in about a minute.</p>'
+    + '<p style="margin:0 0 14px;color:var(--faint);font-size:12px">You can start it later from <b>Help › Tour of the editor</b>.</p>'
+    + '<div class="row" style="justify-content:flex-end"><button class="ghost" data-t="no">Not now</button>'
+    + '<button class="primary" data-t="yes">Take the tour</button></div>';
+  d.querySelector('[data-t=no]').onclick = () => { remember(); closeModal(); toast('The tour is in the Help menu whenever you want it'); };
+  d.querySelector('[data-t=yes]').onclick = () => { remember(); closeModal(); startTour(); };
+  modal('Welcome to Schematrix', d);
+  // closing the dialog with × or a click outside counts as "not now"
+  const obs = new MutationObserver(() => { if ($('#modal').hidden) { obs.disconnect(); remember(); } });
+  obs.observe($('#modal'), { attributes: true });
+  setTimeout(() => d.querySelector('[data-t=yes]').focus(), 0);
 }
 
 function onKey(ev) {
