@@ -73,6 +73,28 @@ def cmd_serve(a):
     _serve(a.host, a.port, a.workspace)
 
 
+class _WindowBridge:
+    """the editor tells the app window how many tabs are unsaved; closing then asks first (the browser's own warning
+    does not show in pywebview). Underscored members stay hidden from the page."""
+    def __init__(self):
+        self._window, self._unsaved, self._quit = None, 0, False
+
+    def set_unsaved(self, n):
+        self._unsaved = int(n or 0)
+
+    def quit(self):
+        self._quit = True
+        self._window.destroy()
+
+    def _closing(self):
+        if self._unsaved and not self._quit:
+            # cancel, and ask in the page from another thread (the GUI thread is busy closing)
+            threading.Thread(target=lambda: self._window.evaluate_js('window.schematrix && window.schematrix.confirmQuit()'),
+                             daemon=True).start()
+            return False
+        return True
+
+
 def cmd_app(a):
     """local server + an app window: Chromium app mode (fastest on Linux) or pywebview, else the default browser"""
     engine = a.engine or os.environ.get('SCHEMATRIX_ENGINE') or 'auto'
@@ -124,7 +146,10 @@ def cmd_app(a):
                    'or add Qt: "pipx inject schematrix qtpy pyqt6 pyqt6-webengine"')
         else:
             try:
-                webview.create_window('Schematrix', url, width=1440, height=900, min_size=(900, 600))
+                bridge = _WindowBridge()
+                win = webview.create_window('Schematrix', url, width=1440, height=900, min_size=(900, 600), js_api=bridge)
+                bridge._window = win
+                win.events.closing += bridge._closing
                 webview.start(gui=gui)
                 return
             except Exception as e:  # noqa: BLE001  (any toolkit failure: fall back to the browser)

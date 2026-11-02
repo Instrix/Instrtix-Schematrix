@@ -106,7 +106,8 @@ $('#code').addEventListener('keydown', (ev) => {
 $('#code').addEventListener('input', () => { try { localStorage.setItem('schematrix-script', $('#code').value); } catch { /* best effort */ } });
 document.addEventListener('dragover', (ev) => ev.preventDefault());
 document.addEventListener('drop', (ev) => { ev.preventDefault(); for (const f of ev.dataTransfer.files) importFile(f); });
-window.addEventListener('beforeunload', (ev) => { persist(); if (S.tabs.some((t) => t.dirty && t.path)) { ev.preventDefault(); } });
+// closing the window or tab with unsaved changes: the browser asks (autosave keeps them, but a file is safer)
+window.addEventListener('beforeunload', (ev) => { persist(); if (S.tabs.some((t) => t.dirty)) { ev.preventDefault(); ev.returnValue = ''; } });
 
 // F1 from anywhere, text fields included (they stop key events from bubbling, so listen in the capture phase)
 document.addEventListener('keydown', (ev) => { if (ev.key === 'F1') { ev.preventDefault(); ev.stopPropagation(); markupHelp(); } }, true);

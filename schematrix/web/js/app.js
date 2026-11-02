@@ -4,7 +4,7 @@ import { cmd } from './commands.js';
 import { openWorkspaceFile } from './files.js';
 import { buildPalette } from './palette.js';
 import { refreshScripts, SAMPLE } from './panes.js';
-import { geoKey, newDoc, openTab, restore, S } from './state.js';
+import { confirmQuit, geoKey, newDoc, openTab, renderTabs, restore, S } from './state.js';
 import { setTool } from './tools.js';
 import { FULL_ONLY, fullOnlyHtml, toast } from './ui.js';
 import { $, api } from './util.js';
@@ -56,6 +56,7 @@ export async function boot() {
   refreshScripts();
   const q = new URLSearchParams(location.search).get('open');
   if (q) openWorkspaceFile(q);
-  window.schematrix = { S, api, cmd, openTab, render };   // for debugging from the console
+  window.schematrix = { S, api, cmd, openTab, render, confirmQuit };   // confirmQuit: called by the app window (cli.py)
+  window.addEventListener('pywebviewready', renderTabs);             // report unsaved tabs once the bridge is up
 }
 boot();

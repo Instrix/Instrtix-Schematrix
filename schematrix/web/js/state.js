@@ -80,6 +80,15 @@ export async function closeTab(t) {
   renderTabs(); persist();
 }
 export const tabTitle = (t) => t.doc.meta?.title || (t.path ? t.path.replace(/\.json$/, '') : 'Untitled');
+export const unsaved = () => S.tabs.filter((t) => t.dirty).map(tabTitle);
+
+// closing the whole window with unsaved tabs: the app window (pywebview) cannot show the browser's warning, so it
+// cancels the close and asks here; Close really quits
+export async function confirmQuit() {
+  const names = unsaved();
+  const what = names.length === 1 ? `“${names[0]}” has` : `${names.length} sheets (${names.join(', ')}) have`;
+  if (!names.length || await confirmBox(`${what} unsaved changes. Close Schematrix anyway?`, 'Close')) window.pywebview?.api?.quit?.();
+}
 export function renderTabs() {
   const el = $('#tabs');
   el.innerHTML = '';
@@ -97,6 +106,7 @@ export function renderTabs() {
   nb.onclick = () => cmd('new');
   el.append(nb);
   $('#savebtn').classList.toggle('dirty', !!S.cur?.dirty);
+  window.pywebview?.api?.set_unsaved?.(unsaved().length);    // the app window asks before closing (cli.py)
   document.title = (S.cur?.dirty ? '• ' : '') + (S.cur ? tabTitle(S.cur) + ' — ' : '') + 'Schematrix';
 }
 

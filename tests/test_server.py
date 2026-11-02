@@ -96,3 +96,26 @@ def test_token_server_answers_to_any_name(tmp_path, monkeypatch):
     from schematrix.server import create_app
     c = TestClient(create_app(), base_url='https://schematrix.example.org')
     assert c.get('/api/info', headers={'Authorization': 'Bearer sekrit'}).status_code == 200
+
+
+def test_app_window_asks_before_closing_with_unsaved_tabs():
+    import time
+    from schematrix.cli import _WindowBridge
+
+    class Win:
+        def __init__(self):
+            self.js, self.destroyed = [], False
+
+        def evaluate_js(self, s):
+            self.js.append(s)
+
+        def destroy(self):
+            self.destroyed = True
+    b = _WindowBridge(); b._window = Win()
+    assert b._closing() is True                                   # nothing unsaved: closes
+    b.set_unsaved(2)
+    assert b._closing() is False                                  # cancelled, asked in the page instead
+    time.sleep(0.2)
+    assert b._window.js == ['window.schematrix && window.schematrix.confirmQuit()']
+    b.quit()
+    assert b._window.destroyed and b._closing() is True           # Close in the dialog really quits
