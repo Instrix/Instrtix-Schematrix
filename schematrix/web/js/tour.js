@@ -6,23 +6,56 @@ import { renderInspector } from './inspector.js';
 import { newDoc, openTab, renderTabs, S, switchTab } from './state.js';
 import { closeModal, modal, toast } from './ui.js';
 import { $ } from './util.js';
+import { render } from './view.js';
 
 const KEY = 'schematrix-tour-done';
 const WIKI = 'https://instrix.github.io/Instrtix-Schematrix/wiki/Home.html';
 const menu = (name) => [...document.querySelectorAll('.menus .menu')].find((m) => m.firstElementChild?.textContent.trim() === name);
 
-// a throw-away sheet with one selected diode, to show where a part's type is chosen; removed when the step ends
+// throw-away example sheets, removed when their step ends: one selected diode (where a part's type is chosen), or a
+// small circuit with nothing selected (the document's settings and themes)
+const comp = (id, sym, x, y, rot, props) => ({ id, type: 'comp', sym, x, y, rot, props });
+const wire = (id, ...points) => ({ id, type: 'wire', points, style: '' });
+const DEMOS = {
+  diode: { sel: ['e1'], elements: [comp('e1', 'diode', 120, 80, 0, { kind: 'zener', ref: 'D1', value: '5V1' })] },
+  circuit: { sel: [], elements: [
+    comp('e1', 'vsrc', 40, 110, 90, { length: 60, kind: 'ac', ref: 'V1', value: 'AC 1' }),
+    comp('e2', 'resistor', 110, 80, 0, { ref: 'R1', value: '10 k\\ohm' }),
+    comp('e3', 'capacitor', 180, 110, 90, { ref: 'C1', value: '10 nF' }),
+    comp('e4', 'ground', 40, 140, 0, {}), comp('e5', 'ground', 180, 140, 0, {}),
+    comp('e6', 'flag', 250, 80, 0, { label: 'V_{OUT}', side: 'right' }),
+    wire('e7', [40, 80], [80, 80]), wire('e8', [140, 80], [250, 80]),
+    { id: 'e9', type: 'text', x: 30, y: 185, text: '$f_c = \\frac{1}{2\\pi RC} \\approx 1.6\\,\\mathrm{kHz}$', cls: 'note', anchor: 'start' },
+  ] },
+};
 let demo = null;
-function openDemo() {
+function openDemo(kind = 'diode') {
   if (demo) return;
-  const prev = S.cur, doc = newDoc();
+  const prev = S.cur, doc = newDoc(), d = DEMOS[kind];
   doc.meta.title = 'Tour example';
-  doc.elements.push({ id: 'e1', type: 'comp', sym: 'diode', x: 120, y: 80, rot: 0, props: { kind: 'zener', ref: 'D1', value: '5V1' } });
+  doc.page = { ...doc.page, auto: true, margin: 30 };      // the page hugs the drawing, so the view zooms in on it
+  doc.elements.push(...structuredClone(d.elements));
   const t = openTab(doc);
-  t.sel = new Set(['e1']);
+  t.sel = new Set(d.sel);
   showPane('props'); renderInspector();
   demo = { t, prev };
 }
+// the theme step: the example sheet runs through every theme, the card names the current one
+let cycle = 0;
+function cycleThemes() {
+  const names = Object.keys(S.info.themes || {});
+  let i = 0;
+  const step = () => {
+    if (!demo) return;
+    demo.t.doc.theme = names[i % names.length];
+    const n = document.getElementById('tour-theme');
+    if (n) n.textContent = names[i % names.length];
+    i++; render(); renderInspector(); place();
+  };
+  step();
+  cycle = setInterval(step, 1600);
+}
+function stopCycle() { clearInterval(cycle); cycle = 0; }
 function closeDemo() {
   if (!demo) return;
   const { t, prev } = demo;
@@ -44,7 +77,7 @@ const STEPS = [
     text: 'Every part, by category: passives, semiconductors, op-amps, logic, sources, nets, annotations and timing '
       + 'diagrams. <b>Drag</b> one onto the sheet, or <b>click</b> it and click on the sheet (repeatable). '
       + 'Press <kbd>/</kbd> to search. Right-click a tile to customise it in the symbol editor.' },
-  { el: () => field('Kind') || $('#right'), side: 'left', before: openDemo, after: closeDemo, title: 'Choosing a type',
+  { el: () => field('Kind') || $('#right'), side: 'left', before: () => openDemo('diode'), after: closeDemo, title: 'Choosing a type',
     text: 'Many parts come in several types, chosen in <b>Properties</b> once the part is selected. A <b>Diode</b> '
       + 'is one tile in the palette: place it, then pick its <b>Kind</b> here — Zener, Schottky, LED, TVS, photodiode, '
       + 'varactor… The same goes for gates (inputs, shape), sources (DC, AC, pulse…) and transistors. Searching the '
@@ -61,9 +94,22 @@ const STEPS = [
     text: 'Everything about the selection: reference, value, part number, the symbol\'s settings and your own fields. '
       + 'With nothing selected: the page, grid, theme and SPICE lines. Text takes <b>markup</b> — <code>10 k\\ohm</code>, '
       + '<code>V_{OUT}</code>, <code>~{RST}</code> — and <code>$\\frac{R_2}{R_1}$</code> LaTeX maths (<kbd>F1</kbd> for the list).' },
+  { el: () => $('#pane-props'), side: 'left', before: () => openDemo('circuit'), after: closeDemo, title: 'The document',
+    text: 'Click empty space and Properties shows the <b>document</b>: its title and description, the page — '
+      + '<b>Auto size</b> crops it to the drawing, or set a size and margin —, the grid, junction dots, wire hops, '
+      + 'the <b>SPICE lines</b> used for simulation, the <b>theme</b>, and a <b>page frame</b> with a title block '
+      + '(A4, A3, Letter…) for printed drawings.' },
+  { el: () => field('Theme') || $('#pane-props'), side: 'left', before: () => { openDemo('circuit'); cycleThemes(); },
+    after: () => { stopCycle(); closeDemo(); }, title: 'Drawing styles',
+    text: 'The <b>Theme</b> sets the colours, fonts and line weights of the whole sheet, in the editor and in every '
+      + 'export. This example is cycling through them — now: <b id="tour-theme">instrix</b>.<br>'
+      + '<b>formal</b>: Times, thin black lines, italic references — for LaTeX papers and theses. <b>technical</b>: '
+      + 'Helvetica, datasheet look. <b>print-mono</b>: black on white. <b>instrix</b> (the house style), '
+      + '<b>instrix-dark</b>, <b>blueprint</b> and <b>kicad</b>. The fonts ship with Schematrix, so exports look the '
+      + 'same on every computer.' },
   { el: () => $('#stylepick'), side: 'below', title: 'Line styles',
     text: 'The style for new wires and parts: ink, accent colour, dashed or both. <kbd>E</kbd> toggles the accent on '
-      + 'the selection. Themes (formal for LaTeX papers, technical, blueprint, dark…) are in the page properties.' },
+      + 'the selection.' },
   { el: () => $('#right'), side: 'left', before: () => showPane('netlist'), title: 'Netlist',
     text: 'The connectivity of the sheet: nets, pins and warnings (unconnected pins, clashing names), as SPICE, KiCad '
       + 'or JSON. SPICE decks run in ngspice as they are; netlists also import as new sheets (File menu).' },
