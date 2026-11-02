@@ -6,7 +6,7 @@ document.
 
 ![Editor](docs/wiki/img/editor.png)
 
-**Documentation: the [Schematrix wiki](docs/wiki/Home.md)** — every feature, how to draw, export, use the figures in
+**Documentation: the [Schematrix wiki](https://instrix.github.io/Instrtix-Schematrix/wiki/Home.html)** — every feature, how to draw, export, use the figures in
 LaTeX, simulate, script and deploy.
 
 - **Editor**: KiCad-style wiring (snap, stretch, junction dots, hops) with auto-routing, buses, net labels, undo,
@@ -52,7 +52,7 @@ The same sheet in each built-in theme (`scripts/build_docs_images.py`):
 |---|---|---|
 | ![Export](docs/wiki/img/export-dialog.png) | ![Symbol editor](docs/wiki/img/symbol-editor.png) | ![Markup](docs/wiki/img/markup.png) |
 
-The full symbol set, one picture per part and variant: [Symbol library](docs/wiki/Symbol-Library.md).
+The full symbol set, one picture per part and variant: [Symbol library](https://instrix.github.io/Instrtix-Schematrix/wiki/Symbol-Library.html).
 
 ## Install
 
@@ -357,7 +357,7 @@ Everything the private server keeps is in the `schematrix_data` volume; back it 
 
 **Limits.** `mem_limit` and `cpus` cap the container. The public server's rate and size limits can be changed by
 adding lines under `environment:`, e.g. `SCHEMATRIX_PUBLIC_RATE: "120"` (all of them, with defaults, on the
-[Deployment](docs/wiki/Deployment.md#public-server) wiki page).
+[Deployment](https://instrix.github.io/Instrtix-Schematrix/wiki/Deployment.html#public-server) wiki page).
 
 #### All server settings
 
