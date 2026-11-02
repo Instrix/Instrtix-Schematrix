@@ -183,7 +183,8 @@ def _mos(p, pchan):
     prims = [pl([(0, -30), (0, -15), (-9, -15)]), pl([(0, 30), (0, 15), (-9, 15)]),
              pl([(-9, 0), (20, 0)]) if bulk else pl([(-9, 0), (0, 0), (0, 15)]),
              *channel, pl([(-16, -17), (-16, 17)], 'w plate'), pl([(-30, 0), (-16, 0)]),
-             pg([(-2, 0), (-8, -3.5), (-8, 3.5)] if pchan else [(-9, 0), (-3, -3.5), (-3, 3.5)], 'arrow')]
+             # the N arrow points into the channel, the P one out to the source line: mirror images in the 9 px gap
+             pg([(0, 0), (-6, -3.5), (-6, 3.5)] if pchan else [(-9, 0), (-3, -3.5), (-3, 3.5)], 'arrow')]
     if p.get('body_diode') and not bulk:
         prims += [pl([(0, -22), (10, -22), (10, 22), (0, 22)], 'w thin'),
                   pg([(5.5, 4), (14.5, 4), (10, -3)] if not pchan else [(5.5, -4), (14.5, -4), (10, 3)], 'amp'),
@@ -191,7 +192,7 @@ def _mos(p, pchan):
     pins = {'D': (0, -30), 'G': (-30, 0), 'S': (0, 30)}
     if bulk:
         pins['B'] = (20, 0)
-    return G(prims, pins, right(22 if bulk else 16 if p.get('body_diode') else 8, -14 if bulk else 0))
+    return G(prims, pins, right(22 if bulk or p.get('body_diode') else 8, -14 if bulk else 0))
 
 
 MOSPROPS = {'body_diode': FLAG(False, 'Body diode'), 'mode': ENUM('enhancement', ['enhancement', 'depletion'], 'Mode'),
