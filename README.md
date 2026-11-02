@@ -1,13 +1,24 @@
 # Schematrix
 
+[![Latest release](https://img.shields.io/github/v/release/Instrix/Instrtix-Schematrix?label=release&color=23699f)](https://github.com/Instrix/Instrtix-Schematrix/releases/latest)
+[![Downloads](https://img.shields.io/github/downloads/Instrix/Instrtix-Schematrix/total?color=23699f)](https://github.com/Instrix/Instrtix-Schematrix/releases)
+[![Build and release](https://github.com/Instrix/Instrtix-Schematrix/actions/workflows/release.yml/badge.svg)](https://github.com/Instrix/Instrtix-Schematrix/actions/workflows/release.yml)
+[![Tests](https://github.com/Instrix/Instrtix-Schematrix/actions/workflows/ci.yml/badge.svg)](https://github.com/Instrix/Instrtix-Schematrix/actions/workflows/ci.yml)
+[![Docs](https://github.com/Instrix/Instrtix-Schematrix/actions/workflows/pages.yml/badge.svg)](https://instrix.github.io/Instrtix-Schematrix/wiki/Home.html)
+[![Docker image](https://img.shields.io/badge/docker-ghcr.io-2496ed?logo=docker&logoColor=white)](https://github.com/Instrix/Instrtix-Schematrix/pkgs/container/instrtix-schematrix)
+[![Python](https://img.shields.io/badge/python-3.10%2B-3776ab?logo=python&logoColor=white)](#with-python)
+[![Platforms](https://img.shields.io/badge/platforms-Windows%20%7C%20Linux%20%7C%20macOS%20%7C%20web-555)](#install)
+[![License: GPL v3+](https://img.shields.io/badge/license-GPL%20v3%2B-blue)](LICENSE)
+
 An electrical schematic editor in the Instrix house style, with a Python scripting library behind it. The same core
 renders, netlists and serves the GUI, so a schematic drawn by hand and one built by a script are the same kind of
 document.
 
 ![Editor](docs/wiki/img/editor.png)
 
-**Documentation: the [Schematrix wiki](https://instrix.github.io/Instrtix-Schematrix/wiki/Home.html)** — every feature, how to draw, export, use the figures in
-LaTeX, simulate, script and deploy.
+**[⬇ Download the latest release](https://github.com/Instrix/Instrtix-Schematrix/releases/latest)** — Windows, Linux and macOS apps
+([which file?](#download-the-app)) · **Documentation: the [Schematrix wiki](https://instrix.github.io/Instrtix-Schematrix/wiki/Home.html)** — every
+feature, how to draw, export, use the figures in LaTeX, simulate, script and deploy.
 
 - **Editor**: KiCad-style wiring (snap, stretch, junction dots, hops) with auto-routing, buses, net labels, undo,
   tabs, find/replace, page frames, copy as image, a symbol editor and a Python script pane — in the browser or its
@@ -58,15 +69,22 @@ The full symbol set, one picture per part and variant: [Symbol library](https://
 
 ### Download the app
 
-| System | Download | |
-|---|---|---|
-| Windows 10 / 11 | [Schematrix-Setup.exe](https://github.com/Instrix/Instrtix-Schematrix/releases/latest/download/Schematrix-Setup.exe) | installer; or the portable [.zip](https://github.com/Instrix/Instrtix-Schematrix/releases/latest/download/Schematrix-windows.zip) |
-| Linux (any, x86-64) | [Schematrix-x86_64.AppImage](https://github.com/Instrix/Instrtix-Schematrix/releases/latest/download/Schematrix-x86_64.AppImage) | `chmod +x` and run |
-| Debian / Ubuntu | [schematrix_amd64.deb](https://github.com/Instrix/Instrtix-Schematrix/releases/latest/download/schematrix_amd64.deb) | `sudo apt install ./schematrix_amd64.deb` |
-| macOS (Apple silicon) | [Schematrix-macos.dmg](https://github.com/Instrix/Instrtix-Schematrix/releases/latest/download/Schematrix-macos.dmg) | drag to Applications; unsigned: first open with right-click > Open |
+The links below always fetch the **[latest release](https://github.com/Instrix/Instrtix-Schematrix/releases/latest)** (what changed: its release notes).
 
-Each includes its own Python, the editor, the `schematrix` command line and PDF / PNG export. Older versions and
-checksums: [Releases](https://github.com/Instrix/Instrtix-Schematrix/releases).
+| System | File | How | Notes |
+|---|---|---|---|
+| **Windows** 10 / 11 | [Schematrix-Setup.exe](https://github.com/Instrix/Instrtix-Schematrix/releases/latest/download/Schematrix-Setup.exe) | run it | installs for you alone (no admin needed) or for everyone; Start menu entry and uninstaller; adds Microsoft WebView2 if a rare older Windows lacks it |
+| Windows, portable | [Schematrix-windows.zip](https://github.com/Instrix/Instrtix-Schematrix/releases/latest/download/Schematrix-windows.zip) | unzip, run `Schematrix.exe` | nothing installed; good for USB sticks or locked-down PCs |
+| **Linux**, any distribution (x86-64) | [Schematrix-x86_64.AppImage](https://github.com/Instrix/Instrtix-Schematrix/releases/latest/download/Schematrix-x86_64.AppImage) | `chmod +x Schematrix-x86_64.AppImage` and run it | one file, nothing installed; uses Chrome / Chromium for the window if present |
+| **Debian / Ubuntu** (x86-64) | [schematrix_amd64.deb](https://github.com/Instrix/Instrtix-Schematrix/releases/latest/download/schematrix_amd64.deb) | `sudo apt install ./schematrix_amd64.deb` | menu entry and the `schematrix` command; updates by installing the next `.deb`; remove with `sudo apt remove schematrix` |
+| **macOS** (Apple silicon) | [Schematrix-macos.dmg](https://github.com/Instrix/Instrtix-Schematrix/releases/latest/download/Schematrix-macos.dmg) | open, drag to Applications | not signed by Apple yet: the first time, right-click the app › Open |
+| **Python** (any system) | [wheel](https://github.com/Instrix/Instrtix-Schematrix/releases/latest) | `pip install` it, or install from this repository ([below](#with-python)) | for scripting and Jupyter; the app too (`schematrix`) |
+| **Server** (team or public) | [Docker image](https://github.com/Instrix/Instrtix-Schematrix/pkgs/container/instrtix-schematrix) | `docker compose up -d` ([below](#docker)) | the editor in the browser for a team (with a token) or for anyone |
+
+Each app includes its own Python, the editor, the `schematrix` command line, the fonts and PDF / PNG export:
+nothing else to install. Every release lists its files with SHA-256 checksums;
+[all releases](https://github.com/Instrix/Instrtix-Schematrix/releases) keeps the older versions. Updating: install the newer download over the old one
+(your sheets in `~/Schematrix` stay).
 
 ### With Python
 
