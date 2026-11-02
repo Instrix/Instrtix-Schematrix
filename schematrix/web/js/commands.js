@@ -1,6 +1,7 @@
 // Commands, menus, keyboard shortcuts and resizable panels.
 import { copyImage, exportDialog, quickExport } from './exporter.js';
 import { findDialog } from './find.js';
+import { startTour } from './tour.js';
 import { openSymbolEditor } from './symedit.js';
 import { exportAs, exportNetlist, filesDialog, importFile, save } from './files.js';
 import { renderInspector } from './inspector.js';
@@ -50,7 +51,7 @@ export const COMMANDS = {
   'align-top': () => align('top'), 'align-middle': () => align('middle'), 'align-bottom': () => align('bottom'),
   'distribute-h': () => distribute('h'), 'distribute-v': () => distribute('v'),
   fit, zoomin: () => zoomAt(1.25), zoomout: () => zoomAt(0.8), zoom100: () => zoomAt(1 / T().view.k),
-  grid: () => { S.grid = !S.grid; render(); }, help: helpDialog, markup: markupHelp,
+  grid: () => { S.grid = !S.grid; render(); }, help: helpDialog, markup: markupHelp, tour: startTour,
   junctions: () => edit((d) => { d.page.junctions = d.page.junctions === false; }),
   hops: () => edit((d) => { d.page.hops = !d.page.hops; }),
   export: () => exportDialog(false), 'export-selection': () => exportDialog(true),

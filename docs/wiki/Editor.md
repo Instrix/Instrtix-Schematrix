@@ -6,6 +6,9 @@ From left to right: the **tool buttons** and **symbol palette**, the **sheet**, 
 (**Properties**, **Netlist**, **Script**). Tabs above the sheet hold several schematics at once; the status bar shows
 the active tool, the selection and the cursor position. The side panels can be resized by dragging their edges.
 
+The first time it opens, a **guided tour** walks through the editor; *Help > Tour of the editor* replays it
+(add `?tour=0` to the address to keep it away, e.g. for screenshots).
+
 ## Menus
 
 | Menu | Contents |

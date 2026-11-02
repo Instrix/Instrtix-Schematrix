@@ -3,6 +3,9 @@
 This walk-through draws an RC low-pass filter, names its nets, exports it, and then builds the same circuit in
 Python. It takes about ten minutes. Install first ([Installation](Installation.md)) and run `schematrix`.
 
+The first time the editor opens, a short **guided tour** points out each part of it: the palette, tools, sheet,
+properties, netlist and script panes, files, export and help. Replay it any time from *Help > Tour of the editor*.
+
 ## 1. Place parts
 
 The **palette** on the left lists every symbol by category; type in **Find a symbol…** (or press `/`) to filter.
