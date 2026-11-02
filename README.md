@@ -114,7 +114,7 @@ schematrix                                   # opens the editor
 pipx upgrade schematrix                      # later: update (pipx install --force if it says "up to date")
 ```
 
-Pin a release by adding its tag: `"schematrix[desktop] @ git+https://github.com/Instrix/Instrtix-Schematrix.git@v0.2.11"`.
+Pin a release by adding its tag: `"schematrix[desktop] @ git+https://github.com/Instrix/Instrtix-Schematrix.git@v0.2.12"`.
 
 ### pip in a virtual environment (recommended for scripting)
 
@@ -139,7 +139,7 @@ pip install "schematrix[export] @ git+https://github.com/Instrix/Instrtix-Schema
 To add it to a project's `requirements.txt`:
 
 ```
-schematrix[export] @ git+https://github.com/Instrix/Instrtix-Schematrix.git@v0.2.11
+schematrix[export] @ git+https://github.com/Instrix/Instrtix-Schematrix.git@v0.2.12
 ```
 
 ### From a clone (for development)
@@ -259,7 +259,7 @@ cat .env                                   # the token, for the link: http://loc
 name: schematrix
 services:
   schematrix:
-    image: ghcr.io/instrix/instrtix-schematrix:latest       # or a fixed release, e.g. :v0.2.11
+    image: ghcr.io/instrix/instrtix-schematrix:latest       # or a fixed release, e.g. :v0.2.12
     restart: unless-stopped
     ports:
       # "<address>:<port>:8000" - where the app appears on this computer (8000 at the end never changes)
@@ -309,7 +309,7 @@ docker compose up -d                       # http://<this-ip>:8000
 name: schematrix-public
 services:
   schematrix:
-    image: ghcr.io/instrix/instrtix-schematrix:latest       # or a fixed release, e.g. :v0.2.11
+    image: ghcr.io/instrix/instrtix-schematrix:latest       # or a fixed release, e.g. :v0.2.12
     restart: unless-stopped
     ports:
       # "<address>:<port>:8000": 0.0.0.0 = open to the network; with HTTPS (below) use "127.0.0.1:8000:8000"
