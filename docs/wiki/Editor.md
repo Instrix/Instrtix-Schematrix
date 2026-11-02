@@ -52,6 +52,10 @@ Most tools return to Select with `Esc`.
 - **Move** by dragging. Wires attached to a moved part stretch along, staying orthogonal, and wires that tee into
   those wires follow too.
 - **Nudge** with the arrow keys (`Shift` = 4 grid steps).
+- **Resize** by dragging the square handles on a selected box (corners and edges), and on parts that have a size:
+  highlight boxes, braces and dimensions, blocks, loads and impedances. The side or corner you drag follows the
+  pointer on the grid and the opposite side stays where it is, also on rotated parts; the matching settings
+  (*Width*, *Height*, *Length*, *Body length*, …) update in the inspector. `Ctrl Z` undoes a resize.
 - Locked items (a [page frame](Page-Frames.md)) cannot be selected.
 
 ## Wires

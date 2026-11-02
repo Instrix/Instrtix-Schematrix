@@ -9,7 +9,7 @@ import { applyView, fit, render } from './view.js';
 
 // ---------------------------------------------------------------- state
 export const S = {
-  info: {}, cat: {}, catList: [], geo: new Map(), geoQueue: new Map(), geoTimer: 0,
+  info: {}, cat: {}, catList: [], geo: new Map(), geoLast: new Map(), geoQueue: new Map(), geoTimer: 0,
   tabs: [], cur: null, tool: 'select', placing: null, draft: null, drag: null, style: '',
   mouse: [0, 0], space: false, grid: true, lastFlag: 'NET', wireMode: 'auto', rawBB: new Map(), netHL: null,
 };
@@ -30,7 +30,7 @@ export function geoKey(sym, props) {
 export function geoOf(e) {
   const k = geoKey(e.sym, e.props);
   const g = S.geo.get(k);
-  if (g) return g;
+  if (g) { if (e.id) S.geoLast.set(e.id, g); return g; }
   if (!S.geoQueue.has(k)) {
     const c = S.cat[e.sym];
     const props = {};
@@ -39,7 +39,7 @@ export function geoOf(e) {
     clearTimeout(S.geoTimer);
     S.geoTimer = setTimeout(flushGeo, 15);
   }
-  return null;
+  return S.geoLast.get(e.id) || null;     // while the new shape loads (a resize drag), keep drawing the last one
 }
 export async function flushGeo() {
   const items = [...S.geoQueue];

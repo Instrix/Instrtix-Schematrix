@@ -2,7 +2,8 @@
 
 The **Annotation** palette category holds drawing aids that are not circuit parts: they have no pins and stay out
 of netlists and bills of materials. Like any symbol they move, rotate, take [styles](Styles-and-Themes.md) and
-export to every format, TikZ included. Their text takes [markup and `$...$` maths](Text-Markup.md).
+export to every format, TikZ included. Their text takes [markup and `$...$` maths](Text-Markup.md). Braces,
+dimensions and highlight boxes resize by dragging their handles, like boxes.
 
 ![Annotations](img/annotations.png)
 

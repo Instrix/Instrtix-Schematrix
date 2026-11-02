@@ -28,7 +28,7 @@ def parse_pins(spec: str, w, h):
          'pins': Prop('', 'str', True, label='Pins', help='e.g. "IN:l, OUT:r, VDD:t@0.5"'),
          'accent': FLAG(False, 'Accent fill'),
          'show_pins': FLAG(True, 'Pin names')},
-        lines=(('ref', 'ref'),), model=lambda p: p.get('title') or 'BLOCK')
+        lines=(('ref', 'ref'),), model=lambda p: p.get('title') or 'BLOCK', resize={'x': 'w', 'y': 'h', 'from': 'corner'})
 def block(p):
     w, h = float(p['w']), float(p['h'])
     prims = [rc(0, 0, w, h, 'accbox' if p['accent'] else 'box', 3), tx(w / 2, 18, str(p['title']), 'ref', fit=w - 10)]
@@ -52,7 +52,8 @@ def block(p):
         {'length': LEN(60), 'label': Prop('Z', 'str', True, label='Text inside'),
          'w': Prop(32, 'num', True, label='Body length', help='along the leads'),
          'h': Prop(16, 'num', True, label='Body width', help='across the leads'),
-         'fill': ENUM('box', ['box', 'pad'], 'Fill', help='box = shaded, pad = white')})
+         'fill': ENUM('box', ['box', 'pad'], 'Fill', help='box = shaded, pad = white')},
+        resize={'x': 'w', 'y': 'h', 'from': 'center'})
 def impedance(p):
     w, bh = max(4.0, float(p.get('w') or 32)), max(4.0, float(p.get('h') or 16))
     h = max(half(p), w / 2)

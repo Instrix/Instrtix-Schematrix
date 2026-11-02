@@ -47,3 +47,15 @@ def test_autoroute_goes_around_parts_and_never_through_pins():
         assert tuple(p) not in [tuple(q) for q in pts]
     w = s.autoroute(r['1'], u['out'])
     assert [tuple(p) for p in w.el['points']] == [tuple(p) for p in pts]
+
+
+def test_resize_handles_name_real_size_settings():
+    from schematrix import symbols as SYM
+    specs = {e['name']: e['resize'] for e in SYM.catalog() if e.get('resize')}
+    assert {'block', 'highlight', 'brace', 'dimension', 'load', 'impedance'} <= set(specs)
+    for name, spec in specs.items():
+        props = next(e for e in SYM.catalog() if e['name'] == name)['props']
+        assert spec['from'] in ('center', 'corner')
+        for axis in ('x', 'y'):
+            if spec.get(axis):
+                assert props[spec[axis]]['type'] == 'num' and props[spec[axis]]['geom'], (name, axis)

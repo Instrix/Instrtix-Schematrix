@@ -16,7 +16,26 @@ export function xf(px, py, rot = 0, mirror = false) {
   return [px, py];
 }
 
+// the inverse of xf: a sheet-space offset in a part's own (unrotated, unmirrored) frame
+export function invXf(X, Y, rot = 0, mirror = false) {
+  const r = ((rot % 360) + 360) % 360;
+  let [px, py] = r === 90 ? [Y, -X] : r === 180 ? [-X, -Y] : r === 270 ? [-Y, X] : [X, Y];
+  if (mirror) px = -px;
+  return [px, py];
+}
+
 export const r2 = (v) => Math.round(v * 100) / 100;
+
+// a resizable part's handles: [{lx, ly, hx, hy}] in its own frame; hx / hy = which edge (-1, 0, 1) each one moves
+export function resizeHandles(spec, size) {
+  const span = (k) => (spec.from === 'corner' ? [0, size[k]] : [-size[k] / 2, size[k] / 2]);
+  const [x0, x1] = spec.x ? span('x') : [0, 0], [y0, y1] = spec.y ? span('y') : [0, 0];
+  const xs = spec.x ? [[x0, -1], [(x0 + x1) / 2, 0], [x1, 1]] : [[0, 0]];
+  const ys = spec.y ? [[y0, -1], [(y0 + y1) / 2, 0], [y1, 1]] : [[(y0 + y1) / 2, 0]];
+  const out = [];
+  for (const [lx, hx] of xs) for (const [ly, hy] of ys) if (hx || hy) out.push({ lx, ly, hx, hy });
+  return out;
+}
 
 export function place(c, px, py) {
   const [dx, dy] = xf(px, py, c.rot || 0, !!c.mirror);

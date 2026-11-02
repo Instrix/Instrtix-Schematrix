@@ -242,6 +242,9 @@ class Symbol:
     is_part: bool | None = None     # a real component (BOM / netlist); default: it has a reference
     presets: tuple = ()             # named variants: (key, title, props[, aliases]) — own palette tile and method
     custom: dict | None = None      # the JSON definition of a user-drawn symbol (custom.py), None for built-ins
+    # editor resize handles: {'x': size setting along local x, 'y': … along y, 'from': 'center' | 'corner'}; the editor
+    # keeps the opposite side in place while a handle is dragged (web/js/tools.js, cresize)
+    resize: dict | None = None
 
     def __post_init__(self):
         if self.is_part is None:
@@ -292,7 +295,7 @@ class Symbol:
                 'props': {k: p.spec(k) for k, p in self.all_props().items()},
                 'geom_keys': self.geom_keys(), 'geometry': self.geometry(),
                 'presets': [{'name': p[0], 'title': p[1], 'props': p[2], 'geometry': self.geometry(p[2])} for p in self.presets],
-                'custom': self.custom}
+                'custom': self.custom, 'resize': self.resize}
 
 
 REGISTRY: dict[str, Symbol] = {}

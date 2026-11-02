@@ -8,6 +8,7 @@ TEXT = {'text': Prop('', 'str', label='Text', help='the annotation; text markup 
 
 @symbol('brace', 'Brace', 'Annotation', 'A', None,
         {'length': LEN(80), 'depth': Prop(8, 'num', True, label='Depth'), **TEXT}, lines=(('text', 'lbl'),),
+        resize={'x': 'length', 'from': 'center'},
         help='a curly brace spanning several parts; rotate it to face any side')
 def brace(p):
     h, d = abs(float(p['length'])) / 2, max(2.0, float(p.get('depth') or 8))
@@ -31,7 +32,8 @@ def callout(p):
 
 @symbol('dimension', 'Dimension', 'Annotation', 'A', None,
         {'length': LEN(80), 'ext': Prop(8, 'num', True, label='Extension lines', help='0 for none'), **TEXT},
-        lines=(('text', 'lbl'),), help='a measurement between two points: double arrow, extension lines and a label')
+        lines=(('text', 'lbl'),), resize={'x': 'length', 'from': 'center'},
+        help='a measurement between two points: double arrow, extension lines and a label')
 def dimension(p):
     h, e = abs(float(p['length'])) / 2, float(p.get('ext') or 0)
     prims = [pl([(-h + 3, 0), (h - 3, 0)], 'w thin'), head((-h, 0), (0, 0), 7, 3), head((h, 0), (0, 0), 7, 3)]
@@ -42,7 +44,8 @@ def dimension(p):
 
 @symbol('highlight', 'Highlight box', 'Annotation', 'A', None,
         {'w': Prop(120, 'num', True, label='Width'), 'h': Prop(80, 'num', True, label='Height'), **TEXT},
-        lines=(('text', 'accl'),), help='a dashed accent frame drawing the eye to part of the figure')
+        lines=(('text', 'accl'),), resize={'x': 'w', 'y': 'h', 'from': 'center'},
+        help='a dashed accent frame drawing the eye to part of the figure')
 def highlight(p):
     w, h = max(4.0, float(p.get('w') or 120)), max(4.0, float(p.get('h') or 80))
     return G([rc(-w / 2, -h / 2, w, h, 'hl', 4)], {}, above(-h / 2 - 6))

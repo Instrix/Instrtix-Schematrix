@@ -142,6 +142,30 @@ export function render() {
   renderStatus();
 }
 
+// square handles on a box's corners and edges, or a resizable part's body (its symbol says which settings they drive)
+const CURSOR = (hx, hy) => (hx && hy ? (hx * hy > 0 ? 'nwse-resize' : 'nesw-resize') : hx ? 'ew-resize' : 'ns-resize');
+export function sizeOf(e) {
+  const c = S.cat[e.sym], spec = c?.resize;
+  const v = (k) => Math.abs(Number(e.props?.[k] ?? c.props[k]?.default ?? 0));
+  return spec ? { x: spec.x ? v(spec.x) : 0, y: spec.y ? v(spec.y) : 0 } : null;
+}
+function resizeHandlesSvg(e, k) {
+  const sq = (x, y, attrs, cur) => `<rect class="vh h" ${attrs} style="cursor:${cur}" x="${x - 4 / k}" y="${y - 4 / k}" width="${8 / k}" height="${8 / k}"/>`;
+  if (e.type === 'rect') {
+    let s = '';
+    for (const hx of [-1, 0, 1]) for (const hy of [-1, 0, 1]) {
+      if (hx || hy) s += sq(e.x + (hx + 1) / 2 * e.w, e.y + (hy + 1) / 2 * e.h, `data-resize="${e.id}" data-dir="${hx},${hy}"`, CURSOR(hx, hy));
+    }
+    return s;
+  }
+  const spec = e.type === 'comp' && S.cat[e.sym]?.resize;
+  if (!spec) return '';
+  return G.resizeHandles(spec, sizeOf(e)).map(({ lx, ly, hx, hy }) => {
+    const [x, y] = G.place(e, lx, ly), [wx, wy] = G.xf(hx, hy, e.rot || 0, !!e.mirror);
+    return sq(x, y, `data-cresize="${hx},${hy}" data-cid="${e.id}"`, CURSOR(Math.sign(wx), Math.sign(wy)));
+  }).join('');
+}
+
 export function renderOverlay() {
   if (overlayFrame) { cancelAnimationFrame(overlayFrame); overlayFrame = 0; }
   const ov = $('#overlay'), t = T(), k = t.view?.k || 1;
@@ -153,7 +177,7 @@ export function renderOverlay() {
     } else {
       const b = bboxOf(e);
       if (b) s += `<rect class="selbox" x="${b[0] - 3}" y="${b[1] - 3}" width="${b[2] - b[0] + 6}" height="${b[3] - b[1] + 6}"/>`;
-      if (e.type === 'rect' && t.sel.size === 1) s += `<rect class="vh h" data-resize="${e.id}" x="${e.x + e.w - 4 / k}" y="${e.y + e.h - 4 / k}" width="${8 / k}" height="${8 / k}"/>`;
+      if (t.sel.size === 1 && !e.locked) s += resizeHandlesSvg(e, k);
     }
   }
   if (S.tool === 'wire' || S.draft?.kind === 'wire') {

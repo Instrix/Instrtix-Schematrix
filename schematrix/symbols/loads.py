@@ -68,7 +68,8 @@ def microphone(p):
          'w': Prop(40, 'num', True, label='Body length', help='along the leads'),
          'h': Prop(20, 'num', True, label='Body width', help='across the leads'),
          'fill': ENUM('box', ['box', 'pad'], 'Fill', help='box = shaded, pad = white')},
-        fields=('Mode', 'Setpoint', 'Power'), help='a generic load or DUT drawn as a box')
+        fields=('Mode', 'Setpoint', 'Power'), help='a generic load or DUT drawn as a box',
+        resize={'x': 'w', 'y': 'h', 'from': 'center'})
 def load(p):
     w, bh = max(4.0, float(p.get('w') or 40)), max(4.0, float(p.get('h') or 20))
     h = max(half(p), w / 2)

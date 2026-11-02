@@ -247,7 +247,7 @@ export function endDrag() {
   const dr = S.drag;
   S.drag = null;
   if (!dr) return;
-  if (['move', 'vertex', 'label', 'resize', 'wend', 'wseg'].includes(dr.kind)) {
+  if (['move', 'vertex', 'label', 'resize', 'cresize', 'wend', 'wseg'].includes(dr.kind)) {
     for (const a of [...(dr.attached || []), ...(dr.tees || [])]) { const e = byId(a.id); if (e) e.points = simplify(e.points); }
     if (['vertex', 'wend', 'wseg'].includes(dr.kind)) {
       const e = byId(dr.id);
@@ -314,7 +314,14 @@ svg.addEventListener('pointerdown', (ev) => {
     if (e.type === 'wire' && (i === 0 || i === e.points.length - 1)) { startWireDrag(e, w, i); return; }
     S.drag = { kind: 'vertex', id: h.dataset.wid, idx: i, snap: snapshot() }; return;
   }
-  if (h?.dataset.resize) { S.drag = { kind: 'resize', id: h.dataset.resize, snap: snapshot() }; return; }
+  if (h?.dataset.resize) {
+    const e = byId(h.dataset.resize), [hx, hy] = (h.dataset.dir || '1,1').split(',').map(Number);
+    S.drag = { kind: 'resize', id: e.id, hx, hy, orig: { x: e.x, y: e.y, w: e.w, h: e.h }, snap: snapshot() }; return;
+  }
+  if (h?.dataset.cresize) {
+    const e = byId(h.dataset.cid), [hx, hy] = h.dataset.cresize.split(',').map(Number);
+    S.drag = { kind: 'cresize', id: e.id, hx, hy, start: w, x0: e.x, y0: e.y, props0: { ...(e.props || {}) }, snap: snapshot() }; return;
+  }
   const elg = ev.target.closest('#content [data-id]');
   const id = elg?.dataset.id;
   const t = T();
@@ -371,9 +378,26 @@ svg.addEventListener('pointermove', (ev) => {
   } else if (dr.kind === 'label') {
     const e = byId(dr.id);
     e.label_offset = [dr.orig[0] + Math.round(w[0] - dr.start[0]), dr.orig[1] + Math.round(w[1] - dr.start[1])]; renderSoon();
-  } else if (dr.kind === 'resize') {
-    const e = byId(dr.id);
-    e.w = Math.max(10, snapTo(w[0], g) - e.x); e.h = Math.max(10, snapTo(w[1], g) - e.y); renderSoon();
+  } else if (dr.kind === 'resize') {                // a box: the dragged sides follow the pointer, the others stay
+    const e = byId(dr.id), o = dr.orig, p = [snapTo(w[0], g), snapTo(w[1], g)];
+    let x0 = o.x, y0 = o.y, x1 = o.x + o.w, y1 = o.y + o.h;
+    if (dr.hx < 0) x0 = Math.min(p[0], x1 - 10); else if (dr.hx > 0) x1 = Math.max(p[0], x0 + 10);
+    if (dr.hy < 0) y0 = Math.min(p[1], y1 - 10); else if (dr.hy > 0) y1 = Math.max(p[1], y0 + 10);
+    Object.assign(e, { x: x0, y: y0, w: x1 - x0, h: y1 - y0 }); renderSoon();
+  } else if (dr.kind === 'cresize') {               // a part: change its size settings in its own frame, keep the far side put
+    const e = byId(dr.id), c = S.cat[e.sym], spec = c.resize;
+    const [lx, ly] = G.invXf(w[0] - dr.start[0], w[1] - dr.start[1], e.rot || 0, !!e.mirror);
+    const props = { ...dr.props0 }, shift = [0, 0];
+    [['x', dr.hx, lx, 0], ['y', dr.hy, ly, 1]].forEach(([axis, hd, d, i]) => {
+      const key = spec[axis];
+      if (!key || !hd) return;
+      const s0 = Math.abs(Number(dr.props0[key] ?? c.props[key]?.default ?? 0));
+      const s1 = Math.max(2 * g, Math.round((s0 + hd * d) / g) * g), ds = s1 - s0;
+      props[key] = s1;
+      shift[i] = spec.from === 'corner' ? (hd < 0 ? -ds : 0) : hd * ds / 2;
+    });
+    const [wx, wy] = G.xf(shift[0], shift[1], e.rot || 0, !!e.mirror);
+    e.props = props; e.x = G.r2(dr.x0 + wx); e.y = G.r2(dr.y0 + wy); renderSoon();
   } else if (dr.kind === 'marquee') { dr.cur = w; overlaySoon(); } else if (dr.kind === 'rect') { dr.cur = [snapTo(w[0], g), snapTo(w[1], g)]; overlaySoon(); }
 });
 
