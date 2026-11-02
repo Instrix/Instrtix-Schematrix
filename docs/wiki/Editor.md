@@ -125,6 +125,8 @@ highlighted hit, **Replace all** every hit (one undo step). Options: match case,
 - **Open file from computer** (or drag a file onto the window) opens `.json` documents, netlists (`.cir`, `.net`,
   `.sp`, …), Python scripts and legacy figure scripts.
 - Everything is **autosaved** in the browser while you work, and restored when the editor reopens.
+- **Closing with unsaved changes asks first**: closing a tab (its ×, or a middle click) and closing the whole window
+  or browser tab, in the desktop app too.
 - On a [public server](Deployment.md#public-server) Save downloads the `.json` instead (nothing is kept on the
   server).
 
